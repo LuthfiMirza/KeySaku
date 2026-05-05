@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+
+@layer base {
+    html {
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply font-sans;
+    }
+
+    * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+@layer utilities {
+    .glass {
+        @apply bg-white/80 backdrop-blur-sm border border-white/60;
+    }
+
+    .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom, 1rem);
+    }
+}

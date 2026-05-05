@@ -1,0 +1,13 @@
+# Ignore from agent context to avoid noise
+vendor/
+node_modules/
+public/build/
+storage/framework/cache/
+storage/framework/sessions/
+storage/framework/views/
+storage/logs/
+bootstrap/cache/
+.env
+.env.*
+*.log
+*.lock

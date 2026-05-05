@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Livewire\Transactions;
+
+use App\Models\Category;
+use App\Models\Transaction;
+use Illuminate\Contracts\View\View;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
+
+class CreateTransaction extends Component
+{
+    public string $type = Transaction::TYPE_EXPENSE;
+
+    public ?int $category_id = null;
+
+    public string $amount = '';
+
+    public string $transaction_date = '';
+
+    public string $note = '';
+
+    public function mount(): void
+    {
+        $this->transaction_date = now()->toDateString();
+        $this->category_id = $this->categories()->first()?->id;
+    }
+
+    public function updatedType(): void
+    {
+        $this->category_id = $this->categories()->first()?->id;
+    }
+
+    public function save(): void
+    {
+        $validated = $this->validate([
+            'type' => ['required', Rule::in(Transaction::types())],
+            'category_id' => ['required', 'integer'],
+            'amount' => ['required', 'numeric', 'gt:0'],
+            'transaction_date' => ['required', 'date'],
+            'note' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $category = auth()->user()
+            ->categories()
+            ->whereKey($validated['category_id'])
+            ->first();
+
+        if (! $category) {
+            $this->addError('category_id', 'Kategori tidak ditemukan.');
+            return;
+        }
+
+        if ($category->type !== $validated['type']) {
+            $this->addError('category_id', 'Kategori tidak sesuai dengan jenis transaksi.');
+            return;
+        }
+
+        Transaction::create([
+            'user_id' => auth()->id(),
+            'category_id' => $category->id,
+            'type' => $validated['type'],
+            'amount' => $validated['amount'],
+            'transaction_date' => $validated['transaction_date'],
+            'note' => $validated['note'] ?: null,
+            'source' => Transaction::SOURCE_MANUAL,
+            'raw_voice_text' => null,
+        ]);
+
+        $this->reset(['amount', 'note']);
+        $this->category_id = $this->categories()->first()?->id;
+        $this->resetValidation();
+
+        session()->flash('transaction_status', 'Transaksi berhasil disimpan.');
+    }
+
+    public function render(): View
+    {
+        return view('livewire.transactions.create-transaction', [
+            'categories' => $this->categories()->get(),
+        ]);
+    }
+
+    private function categories()
+    {
+        return auth()->user()
+            ->categories()
+            ->where('type', $this->type)
+            ->orderBy('name');
+    }
+}
