@@ -116,10 +116,47 @@ Active task board. Update this file as tasks are picked up and completed.
 
 ---
 
+## Phase 5B — SpeechRecognition Capture
+- [x] Browser SpeechRecognition support detection
+- [x] Microphone permission requested on click only
+- [x] Transcript capture and preview
+- [x] Unsupported browser fallback
+- [x] Friendly recognition error messages
+- [x] Clear transcript action
+
+---
+
+## Phase 5C — Editable Transcript Preview
+- [x] Store original voice transcript separately
+- [x] Editable transcript textarea
+- [x] Reset transcript to original voice result
+- [x] Clear original and editable transcript
+
+---
+
+## Phase 5D — Simple Transcript Parser
+- [x] VoiceTransactionParser service
+- [x] Parse numeric and simple Indonesian word amounts
+- [x] Detect and match category phrase
+- [x] Parsed transaction preview on voice page
+- [x] Parser unit tests
+- [ ] Save parsed voice transaction after confirmation
+
+---
+
+## Phase 5E — Voice Transaction Confirmation Save
+- [x] Save parsed voice transaction after confirmation
+- [x] Store source as voice
+- [x] Preserve editable transcript as raw_voice_text
+- [x] Guard incomplete parsed drafts
+- [x] Voice save feature tests
+
+---
+
 ## Milestone 5 — Voice & Insights
-- [ ] SpeechRecognition JS module
+- [x] SpeechRecognition JS module
 - [ ] Voice input modal
-- [ ] Text parser for voice → transaction
+- [x] Text parser for voice → transaction
 - [ ] Chart.js integration
 - [ ] Monthly summary chart
 - [ ] Category breakdown chart
