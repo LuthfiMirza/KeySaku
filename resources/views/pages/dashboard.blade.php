@@ -150,42 +150,60 @@
         <section>
             <div class="flex items-center justify-between mb-3">
                 <h2 class="text-sm font-bold text-slate-700">Target Tabungan</h2>
-                <a href="{{ route('savings.index') }}" class="text-xs text-indigo-500 font-medium">Lihat semua →</a>
+                <a href="{{ route('savings.index') }}" aria-label="Lihat halaman tabungan" class="inline-flex min-h-9 items-center text-xs text-indigo-500 font-medium">Lihat tabungan →</a>
             </div>
+
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xl">🏠</span>
+                @if (! $savingsGoalInsight['hasGoals'])
+                    <p class="text-sm font-medium text-slate-500">Belum ada target tabungan aktif.</p>
+                    <p class="mt-1 text-xs text-slate-400">Buat target untuk mulai memantau progres tabunganmu.</p>
+                    <a href="{{ route('savings.index') }}" aria-label="Buat target tabungan" class="mt-3 inline-flex min-h-11 items-center rounded-2xl bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-600">Lihat tabungan</a>
+                @else
+                    <div class="grid grid-cols-3 gap-3 text-xs">
                         <div>
-                            <p class="text-sm font-semibold text-slate-800">Dana Darurat</p>
-                            <p class="text-xs text-slate-400">Target: Rp 10.000.000</p>
+                            <p class="text-slate-400">Terkumpul</p>
+                            <p class="mt-1 text-sm font-extrabold text-emerald-600 tabular-nums">{{ $formatRupiah($savingsGoalInsight['totalSavingsCurrent']) }}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400">Total Target</p>
+                            <p class="mt-1 text-sm font-extrabold text-slate-800 tabular-nums">{{ $formatRupiah($savingsGoalInsight['totalSavingsTarget']) }}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400">Progress</p>
+                            <p class="mt-1 text-sm font-extrabold text-indigo-600">{{ $savingsGoalInsight['savingsProgressPercentage'] }}%</p>
                         </div>
                     </div>
-                    <span class="text-sm font-bold text-indigo-600">42%</span>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-2">
-                    <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full" style="width: 42%"></div>
-                </div>
-                <p class="text-xs text-slate-400 mt-2">Terkumpul: Rp 4.200.000</p>
+
+                    <div class="mt-4 h-2 rounded-full bg-slate-100" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ $savingsGoalInsight['barPercentage'] }}" aria-label="Progress total target tabungan">
+                        <div class="h-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" style="width: {{ $savingsGoalInsight['barPercentage'] }}%"></div>
+                    </div>
+
+                    <div class="mt-4 space-y-3">
+                        @foreach ($savingsGoalInsight['topSavingsGoals'] as $item)
+                            <div class="rounded-2xl border border-slate-100 bg-white/70 p-3">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="min-w-0">
+                                        <p class="truncate text-sm font-bold text-slate-800">{{ $item['goal']->name }}</p>
+                                        <p class="mt-1 text-xs text-slate-400 tabular-nums">{{ $formatRupiah($item['goal']->current_amount) }} dari {{ $formatRupiah($item['goal']->target_amount) }}</p>
+                                    </div>
+                                    <span class="shrink-0 rounded-full bg-indigo-50 px-2 py-1 text-xs font-bold text-indigo-600">{{ $item['progressPercentage'] }}%</span>
+                                </div>
+                                <div class="mt-2 h-1.5 rounded-full bg-slate-100" aria-hidden="true">
+                                    <div class="h-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" style="width: {{ $item['barPercentage'] }}%"></div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </section>
 
         {{-- Insight --}}
         <section>
             <h2 class="text-sm font-bold text-slate-700 mb-3">Insight Keuangan</h2>
-            <div class="space-y-3">
-                <x-insight-card
-                    title="Pengeluaran makanan naik 18%"
-                    description="Coba kurangi makan di luar untuk menghemat lebih banyak bulan ini."
-                    icon="🍜"
-                    type="warning"
-                />
-                <x-insight-card
-                    title="Anggaran transportasi aman"
-                    description="Kamu masih dalam batas anggaran transportasi bulan ini. Bagus!"
-                    icon="🚗"
-                    type="success"
-                />
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
+                <p class="text-sm font-medium text-slate-500">Insight otomatis belum tersedia.</p>
+                <p class="mt-1 text-xs leading-relaxed text-slate-400">Gunakan ringkasan transaksi, anggaran, dan tabungan di atas untuk memantau kondisi keuangan keluarga.</p>
             </div>
         </section>
 

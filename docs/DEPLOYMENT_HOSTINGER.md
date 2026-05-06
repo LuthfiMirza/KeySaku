@@ -130,6 +130,7 @@ If Hostinger cannot point the domain to `keysaku/public`, keep the app outside `
     ├── .htaccess
     ├── build/
     ├── manifest.json
+    ├── browserconfig.xml
     └── images/
 ```
 
@@ -228,7 +229,7 @@ After `.env` is set, run:
 php artisan migrate --force
 ```
 
-This creates the auth, cache, categories, and transactions tables.
+This creates the auth, cache, categories, transactions, budgets, savings goals, and savings contributions tables.
 
 ---
 
@@ -292,12 +293,32 @@ php artisan storage:link
 
 ---
 
-## 8. PWA Notes
+## 8. Demo Data Seeder
+
+Demo data is available for local or staging demos only. It is not called automatically from the default seeder. Run it explicitly only when you want the demo account and sample data:
+
+```bash
+php artisan db:seed --class=DemoSeeder
+```
+
+Demo login:
+
+```text
+Email: demo@keysaku.test
+Password: password
+```
+
+Do not run the demo seeder for real production users unless you intentionally want a demo account on that environment.
+
+---
+
+## 9. PWA Notes
 
 Current PWA readiness includes:
 
 ```text
 public/manifest.json
+public/browserconfig.xml
 resources/views/layouts/partials/pwa-meta.blade.php
 ```
 
@@ -312,7 +333,7 @@ If icons are missing, the app still loads, but browser install prompts may show 
 
 ---
 
-## 9. Security Checklist
+## 10. Security Checklist
 
 Never expose these inside `public_html`:
 
@@ -410,7 +431,7 @@ Common causes:
 
 ### CSS/JS not loading
 
-Check:
+Check these files after running `npm run build` and uploading `public/build/`:
 
 ```text
 public/build/manifest.json
@@ -468,16 +489,18 @@ php artisan migrate:status
 
 ---
 
-## 12. Deployment Quick Runbook
+## 13. Deployment Quick Runbook
 
 Local:
 
 ```bash
-composer install --no-dev --optimize-autoloader
+composer install
 npm install
 npm run build
 rm -f public/hot
+php artisan route:list --except-vendor
 php artisan test
+composer install --no-dev --optimize-autoloader
 ```
 
 Upload files to Hostinger.

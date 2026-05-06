@@ -3,6 +3,7 @@
 namespace Tests\Feature\Savings;
 
 use App\Livewire\Savings\ManageSavingsGoals;
+use App\Models\SavingsContribution;
 use App\Models\SavingsGoal;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -440,6 +441,79 @@ class ManageSavingsGoalsTest extends TestCase
         $this->assertSame(SavingsGoal::STATUS_ACTIVE, $otherGoal->fresh()->status);
     }
 
+    public function test_recent_contributions_appear_for_own_active_goal(): void
+    {
+        $user = User::factory()->create();
+        $goal = $this->goal($user, 'Dana Darurat', 1000000);
+
+        $this->contribution($goal, 250000, now()->subDay()->toDateString(), 'Setoran awal');
+
+        Livewire::actingAs($user)
+            ->test(ManageSavingsGoals::class)
+            ->assertSee('Dana Darurat')
+            ->assertSee('Riwayat Dana')
+            ->assertSee('Rp 250.000')
+            ->assertSee('Setoran awal')
+            ->assertSee('Catatan')
+            ->assertDontSee('Belum ada dana masuk.');
+    }
+
+    public function test_only_latest_three_contributions_are_shown_newest_first(): void
+    {
+        $user = User::factory()->create();
+        $goal = $this->goal($user, 'Dana Darurat', 1000000);
+
+        $this->contribution($goal, 100000, '2026-01-01', 'Pertama');
+        $this->contribution($goal, 200000, '2026-01-02', 'Kedua');
+        $this->contribution($goal, 300000, '2026-01-03', 'Ketiga');
+        $this->contribution($goal, 400000, '2026-01-04', 'Keempat');
+
+        Livewire::actingAs($user)
+            ->test(ManageSavingsGoals::class)
+            ->assertSeeInOrder(['Keempat', 'Ketiga', 'Kedua'])
+            ->assertSee('Rp 400.000')
+            ->assertSee('Rp 300.000')
+            ->assertSee('Rp 200.000')
+            ->assertDontSee('Pertama')
+            ->assertDontSee('Rp 100.000');
+    }
+
+    public function test_contribution_empty_state_appears_when_goal_has_no_contributions(): void
+    {
+        $user = User::factory()->create();
+        $this->goal($user, 'Dana Darurat', 1000000);
+
+        Livewire::actingAs($user)
+            ->test(ManageSavingsGoals::class)
+            ->assertSee('Riwayat Dana')
+            ->assertSee('Belum ada dana masuk.')
+            ->assertSee('Tambahkan dana untuk melihat riwayat kontribusi.');
+    }
+
+    public function test_archived_and_other_users_contributions_are_not_shown(): void
+    {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $activeGoal = $this->goal($user, 'Dana Darurat', 1000000);
+        $archivedGoal = $this->goal($user, 'Liburan Lama', 2000000);
+        $otherGoal = $this->goal($otherUser, 'Target User Lain', 3000000);
+
+        $archivedGoal->update(['status' => SavingsGoal::STATUS_ARCHIVED]);
+
+        $this->contribution($activeGoal, 250000, '2026-01-03', 'Milik sendiri');
+        $this->contribution($archivedGoal, 500000, '2026-01-04', 'Dana arsip');
+        $this->contribution($otherGoal, 750000, '2026-01-05', 'Dana user lain');
+
+        Livewire::actingAs($user)
+            ->test(ManageSavingsGoals::class)
+            ->assertSee('Dana Darurat')
+            ->assertSee('Milik sendiri')
+            ->assertDontSee('Liburan Lama')
+            ->assertDontSee('Dana arsip')
+            ->assertDontSee('Target User Lain')
+            ->assertDontSee('Dana user lain');
+    }
+
     private function goal(User $user, string $name, int $targetAmount): SavingsGoal
     {
         return SavingsGoal::create([
@@ -449,6 +523,16 @@ class ManageSavingsGoalsTest extends TestCase
             'current_amount' => 0,
             'deadline' => now()->addMonth()->toDateString(),
             'status' => SavingsGoal::STATUS_ACTIVE,
+        ]);
+    }
+
+    private function contribution(SavingsGoal $goal, int $amount, string $date, ?string $note = null): SavingsContribution
+    {
+        return SavingsContribution::create([
+            'savings_goal_id' => $goal->id,
+            'amount' => $amount,
+            'contribution_date' => $date,
+            'note' => $note,
         ]);
     }
 }

@@ -285,6 +285,34 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Keep savings contributions untouched
 - [x] Add focused savings archive feature tests
 
+## Phase 8F — Dashboard Savings Insight
+- [x] Add active savings goals summary to dashboard
+- [x] Show total saved, total target, and overall progress
+- [x] Show compact active goal previews
+- [x] Exclude archived and other users' goals
+- [x] Add focused dashboard savings insight tests
+
+## Phase 8G — Savings Contribution History Preview
+- [x] Load recent contributions for active savings goals
+- [x] Show latest 3 contribution rows per goal
+- [x] Show contribution amount, date, and note preview
+- [x] Show per-goal empty contribution state
+- [x] Add focused contribution history preview tests
+
+## Phase 9A — MVP QA Polish
+- [x] Fix bottom navigation primary add action link
+- [x] Remove misleading static dashboard insight examples
+- [x] Replace leftover savings progress placeholder copy
+- [x] Refresh Hostinger deployment notes for current MVP tables and assets
+- [x] Run route, build, and full test validation
+
+## Phase 9B — Demo Data Seeder
+- [x] Add manual-only demo data seeder
+- [x] Seed demo user, categories, transactions, budgets, and savings goals
+- [x] Include manual and voice transaction examples
+- [x] Include current and previous month demo data
+- [x] Document explicit demo seeding command
+
 ---
 
 ## Milestone 5 — Voice & Insights

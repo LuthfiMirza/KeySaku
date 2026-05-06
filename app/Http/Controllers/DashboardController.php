@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SavingsGoal;
 use App\Models\Transaction;
 use Illuminate\View\View;
 
@@ -69,6 +70,33 @@ class DashboardController extends Controller
             fn ($budget) => (float) ($budgetExpenseTotals[$budget->category_id] ?? 0)
         );
 
+        $activeSavingsGoals = $user->savingsGoals()
+            ->where('status', SavingsGoal::STATUS_ACTIVE)
+            ->latest('id')
+            ->get();
+
+        $totalSavingsTarget = (float) $activeSavingsGoals->sum('target_amount');
+        $totalSavingsCurrent = (float) $activeSavingsGoals->sum('current_amount');
+        $savingsProgressPercentage = $totalSavingsTarget > 0
+            ? round(($totalSavingsCurrent / $totalSavingsTarget) * 100)
+            : 0;
+
+        $topSavingsGoals = $activeSavingsGoals
+            ->map(function ($goal) {
+                $progressPercentage = (float) $goal->target_amount > 0
+                    ? round(((float) $goal->current_amount / (float) $goal->target_amount) * 100)
+                    : 0;
+
+                return [
+                    'goal' => $goal,
+                    'progressPercentage' => $progressPercentage,
+                    'barPercentage' => min(100, max(0, $progressPercentage)),
+                ];
+            })
+            ->sortByDesc('progressPercentage')
+            ->take(3)
+            ->values();
+
         return view('pages.dashboard', [
             'thisMonthIncome' => $thisMonthIncome,
             'thisMonthExpense' => $thisMonthExpense,
@@ -83,6 +111,15 @@ class DashboardController extends Controller
                 'overLimitCount' => $currentMonthBudgets
                     ->filter(fn ($budget) => (float) ($budgetExpenseTotals[$budget->category_id] ?? 0) > (float) $budget->amount)
                     ->count(),
+            ],
+            'savingsGoalInsight' => [
+                'hasGoals' => $activeSavingsGoals->isNotEmpty(),
+                'activeSavingsGoalCount' => $activeSavingsGoals->count(),
+                'totalSavingsTarget' => $totalSavingsTarget,
+                'totalSavingsCurrent' => $totalSavingsCurrent,
+                'savingsProgressPercentage' => $savingsProgressPercentage,
+                'barPercentage' => min(100, max(0, $savingsProgressPercentage)),
+                'topSavingsGoals' => $topSavingsGoals,
             ],
             'latestTransactions' => $user->transactions()
                 ->with('category')

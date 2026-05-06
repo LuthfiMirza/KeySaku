@@ -220,6 +220,9 @@ class ManageSavingsGoals extends Component
         return view('livewire.savings.manage-savings-goals', [
             'goals' => auth()->user()
                 ->savingsGoals()
+                ->with(['contributions' => fn ($query) => $query
+                    ->latest('contribution_date')
+                    ->latest('id')])
                 ->where('status', SavingsGoal::STATUS_ACTIVE)
                 ->latest('id')
                 ->get(),

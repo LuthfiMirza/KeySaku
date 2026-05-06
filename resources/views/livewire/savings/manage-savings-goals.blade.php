@@ -183,11 +183,38 @@
                         <div class="mt-4">
                             <div class="mb-2 flex items-center justify-between text-xs font-bold">
                                 <span class="text-slate-500">{{ $percentage }}% terkumpul</span>
-                                <span class="text-slate-400">Placeholder</span>
+                                <span class="text-slate-400">{{ $currentAmount >= $targetAmount ? 'Target tercapai' : 'Dalam proses' }}</span>
                             </div>
                             <div class="h-3 overflow-hidden rounded-full bg-slate-100" role="progressbar" aria-label="Progres target tabungan {{ $goal->name }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ $barPercentage }}">
                                 <div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-600" style="width: {{ $barPercentage }}%"></div>
                             </div>
+                        </div>
+
+                        <div class="mt-4 rounded-2xl border border-slate-100 bg-slate-50/80 px-4 py-3">
+                            <h4 class="text-sm font-bold text-slate-800">Riwayat Dana</h4>
+
+                            @if ($goal->contributions->isEmpty())
+                                <div class="mt-3 rounded-2xl bg-white/80 px-3 py-3">
+                                    <p class="text-sm font-semibold text-slate-500">Belum ada dana masuk.</p>
+                                    <p class="mt-1 text-xs leading-relaxed text-slate-400">Tambahkan dana untuk melihat riwayat kontribusi.</p>
+                                </div>
+                            @else
+                                <div class="mt-3 space-y-2">
+                                    @foreach ($goal->contributions->take(3) as $contribution)
+                                        <div class="rounded-2xl bg-white/80 px-3 py-3">
+                                            <div class="flex items-start justify-between gap-3">
+                                                <div class="min-w-0">
+                                                    <p class="text-sm font-extrabold text-emerald-600 tabular-nums">Rp {{ number_format((float) $contribution->amount, 0, ',', '.') }}</p>
+                                                    <p class="mt-1 text-xs text-slate-400">{{ $contribution->contribution_date->translatedFormat('d F Y') }}</p>
+                                                </div>
+                                            </div>
+                                            @if ($contribution->note)
+                                                <p class="mt-2 text-xs leading-relaxed text-slate-500"><span class="font-bold text-slate-600">Catatan:</span> {{ $contribution->note }}</p>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
                     </article>
                 @endforeach
