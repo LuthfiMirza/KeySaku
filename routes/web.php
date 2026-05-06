@@ -11,7 +11,7 @@ Route::redirect('/welcome', '/login')->name('welcome');
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/anggaran', [PageController::class, 'budgets'])->name('budgets.index');
-    Route::get('/tabungan', [PageController::class, 'goals'])->name('goals');
+    Route::get('/tabungan', [PageController::class, 'goals'])->name('savings.index');
     Route::get('/pengaturan', [PageController::class, 'settings'])->name('settings');
     Route::get('/kategori', [PageController::class, 'categories'])->name('categories');
     Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');

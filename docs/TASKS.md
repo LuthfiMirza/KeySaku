@@ -248,6 +248,43 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Add copy helper UI and status messages
 - [x] Add focused copy budget feature tests
 
+## Phase 8A — Savings Goals Foundation
+- [x] Create savings goals and contributions migrations
+- [x] Create SavingsGoal and SavingsContribution models
+- [x] Add user, goal, and contribution relationships
+- [x] Rename savings route to savings.index
+- [x] Add authenticated savings page skeleton
+- [x] Add savings foundation feature tests
+
+## Phase 8B — Savings Goals Create/List MVP
+- [x] Create Livewire savings goals management component
+- [x] Add savings goal create form
+- [x] Save goals for authenticated user with active status
+- [x] Show current user's savings goal list
+- [x] Keep empty state for users without goals
+- [x] Add focused savings create/list feature tests
+
+## Phase 8C — Savings Contributions MVP
+- [x] Add inline contribution mode per savings goal
+- [x] Save contributions for authenticated user's goals
+- [x] Update savings goal current amount after contribution
+- [x] Refresh progress, remaining amount, and target reached label
+- [x] Add focused savings contribution feature tests
+
+## Phase 8D — Edit Savings Goal
+- [x] Add inline edit mode per savings goal
+- [x] Update goal name, target amount, and deadline
+- [x] Keep current amount, contributions, and status unchanged
+- [x] Recalculate progress display after goal update
+- [x] Add focused savings goal edit feature tests
+
+## Phase 8E — Archive Savings Goal
+- [x] Add scoped archive action for savings goals
+- [x] Add confirmation before archiving goals
+- [x] Hide archived goals from active list
+- [x] Keep savings contributions untouched
+- [x] Add focused savings archive feature tests
+
 ---
 
 ## Milestone 5 — Voice & Insights

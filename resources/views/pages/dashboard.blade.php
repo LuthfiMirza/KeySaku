@@ -142,7 +142,7 @@
                 <x-quick-action label="Tambah Manual" icon="✏️" color="indigo" href="{{ route('transactions.create') }}" />
                 <x-quick-action label="Input Suara" icon="🎙️" color="purple" href="{{ route('transactions.voice') }}" />
                 <x-quick-action label="Anggaran" icon="📊" color="emerald" href="{{ route('budgets.index') }}" />
-                <x-quick-action label="Tabungan" icon="🎯" color="amber" href="{{ route('goals') }}" />
+                <x-quick-action label="Tabungan" icon="🎯" color="amber" href="{{ route('savings.index') }}" />
             </div>
         </section>
 
@@ -150,7 +150,7 @@
         <section>
             <div class="flex items-center justify-between mb-3">
                 <h2 class="text-sm font-bold text-slate-700">Target Tabungan</h2>
-                <a href="{{ route('goals') }}" class="text-xs text-indigo-500 font-medium">Lihat semua →</a>
+                <a href="{{ route('savings.index') }}" class="text-xs text-indigo-500 font-medium">Lihat semua →</a>
             </div>
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
                 <div class="flex items-center justify-between mb-2">
