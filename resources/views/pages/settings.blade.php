@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot:title>Pengaturan</x-slot:title>
 
-    <div class="px-4 pt-6 space-y-5 pb-4">
+    <div class="px-4 pt-6 space-y-5 pb-4 lg:px-8 lg:pt-8 lg:pb-8 lg:max-w-5xl lg:mx-auto">
         <div>
             <h2 class="text-base font-bold text-slate-800">Pengaturan</h2>
             <p class="mt-1 text-xs leading-relaxed text-slate-400">Kelola akun, kategori, dan preferensi aplikasi yang tersedia.</p>

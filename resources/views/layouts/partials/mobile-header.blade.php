@@ -1,4 +1,4 @@
-<header class="sticky top-0 z-30 px-4 pt-8 pb-3 bg-transparent">
+<header class="sticky top-0 z-30 lg:hidden px-4 pt-8 pb-3 bg-transparent">
     <div class="flex items-center justify-between">
         <div>
             <p class="text-xs font-medium text-white/70">

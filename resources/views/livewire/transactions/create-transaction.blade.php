@@ -1,4 +1,4 @@
-<div class="space-y-5">
+<div class="space-y-5 lg:max-w-5xl lg:mx-auto">
     @if (session('transaction_status'))
         <div class="rounded-2xl bg-emerald-400/15 border border-emerald-400/25 px-4 py-3 text-sm font-medium text-emerald-300">
             {{ session('transaction_status') }}

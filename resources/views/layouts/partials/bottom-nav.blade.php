@@ -1,4 +1,4 @@
-<nav class="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto">
+<nav class="fixed bottom-0 left-0 right-0 z-40 lg:hidden max-w-md mx-auto">
     <div class="mx-4 mb-4 bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl shadow-black/30 border border-white/60 px-2 py-1.5">
         <div class="flex items-center justify-around">
             {{-- Beranda --}}

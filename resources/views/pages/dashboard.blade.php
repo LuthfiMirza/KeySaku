@@ -4,7 +4,7 @@
     @endphp
     <x-slot:title>Beranda</x-slot:title>
 
-    <div class="px-4 pt-6 space-y-6 pb-4">
+    <div class="px-4 pt-6 space-y-6 pb-4 lg:px-8 lg:pt-8 lg:pb-8 lg:max-w-5xl lg:mx-auto">
 
         <div class="flex items-center gap-3">
             <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 text-sm font-extrabold text-white shadow-lg shadow-indigo-900/30">

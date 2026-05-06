@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot:title>Mata Uang</x-slot:title>
 
-    <div class="px-4 pt-6 space-y-5 pb-4">
+    <div class="px-4 pt-6 space-y-5 pb-4 lg:px-8 lg:pt-8 lg:pb-8 lg:max-w-5xl lg:mx-auto">
         <div class="flex items-center justify-between gap-3">
             <div>
                 <p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Pengaturan</p>
