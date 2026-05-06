@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -25,6 +27,42 @@ class PageController extends Controller
     public function notificationSettings(): View
     {
         return view('pages.settings.notifications');
+    }
+
+    public function currencySettings(): View
+    {
+        return view('pages.settings.currency');
+    }
+
+    public function updateCurrency(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'preferred_currency' => ['required', 'in:IDR,USD'],
+        ]);
+
+        $request->user()->update([
+            'preferred_currency' => $validated['preferred_currency'],
+        ]);
+
+        return back()->with('settings_status', 'Mata uang berhasil diperbarui.');
+    }
+
+    public function languageSettings(): View
+    {
+        return view('pages.settings.language');
+    }
+
+    public function updateLanguage(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'language' => ['required', 'in:id,en'],
+        ]);
+
+        $request->user()->update([
+            'language' => $validated['language'],
+        ]);
+
+        return back()->with('settings_status', 'Bahasa berhasil diperbarui.');
     }
 
     public function securitySettings(): View

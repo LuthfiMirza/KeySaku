@@ -24,10 +24,110 @@ class SettingsPageTest extends TestCase
             ->assertSee('Pasang di Layar Utama')
             ->assertSee('Mata Uang')
             ->assertSee('Bahasa')
-            ->assertSee('Belum tersedia di versi ini')
-            ->assertSee('Nonaktif')
+            ->assertDontSee('Belum tersedia di versi ini')
+            ->assertDontSee('Nonaktif')
             ->assertDontSee('NANTI')
             ->assertDontSee('Segera');
+    }
+
+
+    public function test_authenticated_user_can_open_currency_settings_page(): void
+    {
+        $user = User::factory()->create();
+
+        $this->get(route('settings.currency'))->assertRedirect(route('login', absolute: false));
+
+        $this->actingAs($user)
+            ->get(route('settings.currency'))
+            ->assertOk()
+            ->assertSee('Mata Uang')
+            ->assertSee('Pilih mata uang utama untuk tampilan nominal.')
+            ->assertSee('IDR')
+            ->assertSee('Rupiah Indonesia')
+            ->assertSee('USD')
+            ->assertSee('US Dollar')
+            ->assertSee('Simpan Mata Uang');
+    }
+
+    public function test_authenticated_user_can_update_currency_to_idr_and_usd(): void
+    {
+        $user = User::factory()->create(['preferred_currency' => 'IDR']);
+
+        $this->actingAs($user)
+            ->patch(route('settings.currency.update'), ['preferred_currency' => 'USD'])
+            ->assertRedirect();
+
+        $this->assertSame('USD', $user->fresh()->preferred_currency);
+
+        $this->actingAs($user)
+            ->from(route('settings.currency'))
+            ->patch(route('settings.currency.update'), ['preferred_currency' => 'IDR'])
+            ->assertRedirect(route('settings.currency'));
+
+        $this->assertSame('IDR', $user->fresh()->preferred_currency);
+    }
+
+    public function test_invalid_currency_is_rejected(): void
+    {
+        $user = User::factory()->create(['preferred_currency' => 'IDR']);
+
+        $this->actingAs($user)
+            ->from(route('settings.currency'))
+            ->patch(route('settings.currency.update'), ['preferred_currency' => 'EUR'])
+            ->assertRedirect(route('settings.currency'))
+            ->assertSessionHasErrors('preferred_currency');
+
+        $this->assertSame('IDR', $user->fresh()->preferred_currency);
+    }
+
+    public function test_authenticated_user_can_open_language_settings_page(): void
+    {
+        $user = User::factory()->create();
+
+        $this->get(route('settings.language'))->assertRedirect(route('login', absolute: false));
+
+        $this->actingAs($user)
+            ->get(route('settings.language'))
+            ->assertOk()
+            ->assertSee('Bahasa')
+            ->assertSee('Pilih bahasa tampilan aplikasi.')
+            ->assertSee('id')
+            ->assertSee('Indonesia')
+            ->assertSee('en')
+            ->assertSee('English')
+            ->assertSee('Simpan Bahasa')
+            ->assertSee('Terjemahan penuh aplikasi dapat diterapkan bertahap setelah preferensi bahasa aktif.');
+    }
+
+    public function test_authenticated_user_can_update_language_to_id_and_en(): void
+    {
+        $user = User::factory()->create(['language' => 'id']);
+
+        $this->actingAs($user)
+            ->patch(route('settings.language.update'), ['language' => 'en'])
+            ->assertRedirect();
+
+        $this->assertSame('en', $user->fresh()->language);
+
+        $this->actingAs($user)
+            ->from(route('settings.language'))
+            ->patch(route('settings.language.update'), ['language' => 'id'])
+            ->assertRedirect(route('settings.language'));
+
+        $this->assertSame('id', $user->fresh()->language);
+    }
+
+    public function test_invalid_language_is_rejected(): void
+    {
+        $user = User::factory()->create(['language' => 'id']);
+
+        $this->actingAs($user)
+            ->from(route('settings.language'))
+            ->patch(route('settings.language.update'), ['language' => 'fr'])
+            ->assertRedirect(route('settings.language'))
+            ->assertSessionHasErrors('language');
+
+        $this->assertSame('id', $user->fresh()->language);
     }
 
     public function test_notification_settings_page_is_authenticated_and_informational(): void

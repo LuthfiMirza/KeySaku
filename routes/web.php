@@ -14,6 +14,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tabungan', [PageController::class, 'goals'])->name('savings.index');
     Route::get('/pengaturan', [PageController::class, 'settings'])->name('settings');
     Route::get('/pengaturan/notifikasi', [PageController::class, 'notificationSettings'])->name('settings.notifications');
+    Route::get('/pengaturan/mata-uang', [PageController::class, 'currencySettings'])->name('settings.currency');
+    Route::patch('/pengaturan/mata-uang', [PageController::class, 'updateCurrency'])->name('settings.currency.update');
+    Route::get('/pengaturan/bahasa', [PageController::class, 'languageSettings'])->name('settings.language');
+    Route::patch('/pengaturan/bahasa', [PageController::class, 'updateLanguage'])->name('settings.language.update');
     Route::get('/pengaturan/keamanan', [PageController::class, 'securitySettings'])->name('settings.security');
     Route::get('/pengaturan/pasang', [PageController::class, 'installSettings'])->name('settings.install');
     Route::get('/kategori', [PageController::class, 'categories'])->name('categories');

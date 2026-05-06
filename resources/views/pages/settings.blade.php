@@ -12,6 +12,8 @@
                 ['icon' => '👤', 'label' => 'Profil Pengguna', 'href' => route('profile.edit')],
                 ['icon' => '🏷️', 'label' => 'Kategori Transaksi', 'href' => route('categories')],
                 ['icon' => '🔔', 'label' => 'Notifikasi', 'href' => route('settings.notifications')],
+                ['icon' => '💱', 'label' => 'Mata Uang', 'href' => route('settings.currency')],
+                ['icon' => '🌐', 'label' => 'Bahasa', 'href' => route('settings.language')],
                 ['icon' => '🔒', 'label' => 'Keamanan', 'href' => route('settings.security')],
                 ['icon' => '📱', 'label' => 'Pasang di Layar Utama', 'href' => route('settings.install')],
             ] as $item)
@@ -24,22 +26,6 @@
                         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
                     </svg>
                 </a>
-            @endforeach
-
-            @foreach([
-                ['icon' => '💱', 'label' => 'Mata Uang'],
-                ['icon' => '🌐', 'label' => 'Bahasa'],
-            ] as $item)
-                <div class="flex min-h-14 items-center justify-between gap-3 px-4 py-3.5 opacity-70" aria-disabled="true">
-                    <div class="flex items-center gap-3">
-                        <span class="text-lg">{{ $item['icon'] }}</span>
-                        <div>
-                            <span class="text-sm font-medium text-slate-700">{{ $item['label'] }}</span>
-                            <p class="mt-0.5 text-[11px] font-medium text-slate-400">Belum tersedia di versi ini</p>
-                        </div>
-                    </div>
-                    <span class="rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-400">Nonaktif</span>
-                </div>
             @endforeach
         </div>
 

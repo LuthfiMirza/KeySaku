@@ -321,6 +321,14 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Keep currency and language settings disabled without schema changes
 - [x] Add focused settings feature tests
 
+## Phase 9D — Currency And Language Preferences
+- [x] Add user preference columns for currency and language
+- [x] Activate currency and language settings links
+- [x] Add currency preference form with strict validation
+- [x] Add language preference form with strict validation
+- [x] Store preferences without changing formatting, translation, or calculations
+- [x] Add focused preference settings tests
+
 ---
 
 ## Milestone 5 — Voice & Insights
