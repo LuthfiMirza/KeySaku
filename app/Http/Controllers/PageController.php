@@ -22,6 +22,21 @@ class PageController extends Controller
         return view('pages.settings');
     }
 
+    public function notificationSettings(): View
+    {
+        return view('pages.settings.notifications');
+    }
+
+    public function securitySettings(): View
+    {
+        return view('pages.settings.security');
+    }
+
+    public function installSettings(): View
+    {
+        return view('pages.settings.install');
+    }
+
     public function categories(): View
     {
         return view('pages.categories');

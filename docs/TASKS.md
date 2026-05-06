@@ -313,6 +313,14 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Include current and previous month demo data
 - [x] Document explicit demo seeding command
 
+## Phase 9C — Settings Menu Activation
+- [x] Activate profile and category settings links
+- [x] Add informational notification settings page
+- [x] Add security settings page linking to profile
+- [x] Add install-to-home-screen instruction page
+- [x] Keep currency and language settings disabled without schema changes
+- [x] Add focused settings feature tests
+
 ---
 
 ## Milestone 5 — Voice & Insights

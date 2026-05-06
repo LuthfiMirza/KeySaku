@@ -13,6 +13,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/anggaran', [PageController::class, 'budgets'])->name('budgets.index');
     Route::get('/tabungan', [PageController::class, 'goals'])->name('savings.index');
     Route::get('/pengaturan', [PageController::class, 'settings'])->name('settings');
+    Route::get('/pengaturan/notifikasi', [PageController::class, 'notificationSettings'])->name('settings.notifications');
+    Route::get('/pengaturan/keamanan', [PageController::class, 'securitySettings'])->name('settings.security');
+    Route::get('/pengaturan/pasang', [PageController::class, 'installSettings'])->name('settings.install');
     Route::get('/kategori', [PageController::class, 'categories'])->name('categories');
     Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/transaksi', [PageController::class, 'transactions'])->name('transactions.index');
