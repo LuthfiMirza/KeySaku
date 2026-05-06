@@ -11,8 +11,8 @@
 </head>
 <body class="h-full bg-slate-100 antialiased" x-data="{}">
     <div class="min-h-screen relative">
-        <div class="fixed inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 -z-10"></div>
-        <div class="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.15)_0%,_transparent_60%)] -z-10"></div>
+        <div class="fixed inset-0 -z-10" style="background: linear-gradient(160deg, #0a0f2e 0%, #0f1756 25%, #1a1060 50%, #2d0f6e 75%, #3b0f7a 100%);"></div>
+        <div class="fixed inset-0 pointer-events-none -z-10" style="background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99,102,241,0.25), transparent 70%);"></div>
 
         <div class="max-w-md mx-auto min-h-screen flex flex-col relative">
             @include('layouts.partials.mobile-header')
