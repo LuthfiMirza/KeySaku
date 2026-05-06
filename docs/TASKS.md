@@ -140,7 +140,7 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Detect and match category phrase
 - [x] Parsed transaction preview on voice page
 - [x] Parser unit tests
-- [ ] Save parsed voice transaction after confirmation
+- [x] Save parsed voice transaction after confirmation
 
 ---
 
@@ -150,6 +150,103 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Preserve editable transcript as raw_voice_text
 - [x] Guard incomplete parsed drafts
 - [x] Voice save feature tests
+
+---
+
+## Phase 5F — Voice Input QA Polish
+- [x] Show voice save success flash on transaction list
+- [x] Improve parser warning copy
+- [x] Add clearer supported voice examples
+- [x] Document supported voice input patterns
+
+---
+
+## Phase 6A — Basic Monthly Reports
+- [x] Authenticated reports page route
+- [x] Selected month filter with safe fallback
+- [x] Monthly income, expense, and balance totals
+- [x] Expense by category summary
+- [x] Latest selected-month transactions
+- [x] Basic reports feature tests
+
+---
+
+## Phase 6B — Reports Polish
+- [x] Keep bottom navigation unchanged
+- [x] Improve dashboard report shortcut copy
+- [x] Improve empty report states
+- [x] Add manual and voice input CTAs for empty reports
+
+---
+
+## Phase 7A — Budgeting Foundation
+- [x] Create budgets migration
+- [x] Create Budget model
+- [x] Add user and category budget relationships
+- [x] Rename budget route to budgets.index
+- [x] Add mobile-first budget page skeleton
+- [x] Budget foundation feature tests
+
+---
+
+## Phase 7B — Create Budget MVP
+- [x] Create Livewire budget management component
+- [x] Add monthly budget create form
+- [x] Limit budget categories to expense categories
+- [x] Block duplicate category budget per month
+- [x] Show selected-month budget list
+- [x] Budget create feature tests
+
+---
+
+## Phase 7C — Budget Progress Read-Only
+- [x] Calculate selected-month expense usage per budget category
+- [x] Show budget, used, remaining, and percentage values
+- [x] Add simple budget progress bars
+- [x] Show Aman, Mendekati Batas, and Lewat Batas statuses
+- [x] Budget progress feature tests
+
+## Phase 7D — Budget UX Polish
+- [x] Calculate selected-month budget summary totals
+- [x] Show Ringkasan Anggaran on budget page
+- [x] Add compact current-month dashboard budget insight
+- [x] Show dashboard empty state when current month has no budgets
+- [x] Budget summary and dashboard insight feature tests
+
+## Phase 7E — Budget Empty-State UX Polish
+- [x] Improve selected-month no-budget empty state
+- [x] Add month/year selector guidance copy
+- [x] Add no-expense helper for budgeted categories
+- [x] Add compact dashboard no-budget CTA
+- [x] Update focused budget and dashboard tests
+
+## Phase 7F — Budget Mobile & Accessibility Micro-Polish
+- [x] Improve budget form spacing and tap targets
+- [x] Add helper text associations for month/year controls
+- [x] Improve progress card visual hierarchy on mobile
+- [x] Add basic ARIA labels and progressbar semantics
+- [x] Keep budget behavior and calculations unchanged
+
+## Phase 7G — Edit Budget Amount
+- [x] Add Livewire edit amount state and actions
+- [x] Add inline budget amount edit UI
+- [x] Validate edited amount before update
+- [x] Scope budget updates to authenticated user
+- [x] Add focused edit budget feature tests
+
+## Phase 7H — Delete Budget
+- [x] Add scoped budget delete action
+- [x] Add confirmation before deleting budgets
+- [x] Ensure budget delete does not delete transactions
+- [x] Refresh budget list, progress, and summary after delete
+- [x] Add focused delete budget feature tests
+
+## Phase 7I — Copy Previous Month Budgets
+- [x] Add action to copy budgets from previous calendar month
+- [x] Skip categories that already have target-month budgets
+- [x] Keep existing target budgets unchanged
+- [x] Add copy helper UI and status messages
+- [x] Add focused copy budget feature tests
 
 ---
 

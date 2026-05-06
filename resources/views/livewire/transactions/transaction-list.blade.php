@@ -1,4 +1,10 @@
 <div class="space-y-5">
+    @if (session('transaction_status'))
+        <div class="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700 shadow-sm">
+            {{ session('transaction_status') }}
+        </div>
+    @endif
+
     <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-4 shadow-sm border border-white/60">
         <div class="grid gap-3">
             <div>

@@ -7,7 +7,7 @@ KeySaku adalah aplikasi web pengelolaan keuangan keluarga berbasis mobile-first 
 - Stack: Laravel 12 + PHP 8.4, Blade, Livewire, Tailwind CSS 4, Alpine.js
 - DB: MySQL (Hostinger-managed)
 - No Node.js in production — Vite is dev-only
-- UI language: Indonesian (Bahasa Indonesia)
+- UI language: Indonesian (Bahasa Indonesia) Dan English (Bahasa Inggris)
 - Code language: English
 
 ## Key directories

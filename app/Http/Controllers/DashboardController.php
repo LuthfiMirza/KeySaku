@@ -48,12 +48,42 @@ class DashboardController extends Controller
                     : 0,
             ]);
 
+        $currentMonthBudgets = $user->budgets()
+            ->where('month', now()->month)
+            ->where('year', now()->year)
+            ->get(['category_id', 'amount']);
+
+        $budgetCategoryIds = $currentMonthBudgets->pluck('category_id')->unique()->values();
+        $budgetExpenseTotals = $budgetCategoryIds->isEmpty()
+            ? collect()
+            : $user->transactions()
+                ->selectRaw('category_id, SUM(amount) as total')
+                ->where('type', Transaction::TYPE_EXPENSE)
+                ->whereIn('category_id', $budgetCategoryIds)
+                ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
+                ->groupBy('category_id')
+                ->pluck('total', 'category_id');
+
+        $currentMonthBudgetTotal = (float) $currentMonthBudgets->sum('amount');
+        $currentMonthBudgetUsed = (float) $currentMonthBudgets->sum(
+            fn ($budget) => (float) ($budgetExpenseTotals[$budget->category_id] ?? 0)
+        );
+
         return view('pages.dashboard', [
             'thisMonthIncome' => $thisMonthIncome,
             'thisMonthExpense' => $thisMonthExpense,
             'thisMonthBalance' => $thisMonthIncome - $thisMonthExpense,
             'netBalance' => $allTimeIncome - $allTimeExpense,
             'monthlyExpenseByCategory' => $monthlyExpenseByCategory,
+            'currentMonthBudgetInsight' => [
+                'hasBudgets' => $currentMonthBudgets->isNotEmpty(),
+                'totalBudget' => $currentMonthBudgetTotal,
+                'totalUsed' => $currentMonthBudgetUsed,
+                'totalRemaining' => $currentMonthBudgetTotal - $currentMonthBudgetUsed,
+                'overLimitCount' => $currentMonthBudgets
+                    ->filter(fn ($budget) => (float) ($budgetExpenseTotals[$budget->category_id] ?? 0) > (float) $budget->amount)
+                    ->count(),
+            ],
             'latestTransactions' => $user->transactions()
                 ->with('category')
                 ->latest('transaction_date')

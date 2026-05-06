@@ -36,7 +36,10 @@
 
         {{-- Ringkasan Bulan Ini --}}
         <section>
-            <h2 class="text-sm font-bold text-slate-700 mb-3">Ringkasan Bulan Ini</h2>
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-sm font-bold text-slate-700">Ringkasan Bulan Ini</h2>
+                <a href="{{ route('reports.index') }}" class="text-xs text-indigo-500 font-medium">Buka laporan bulanan →</a>
+            </div>
             <div class="grid grid-cols-2 gap-3">
                 <x-dashboard-card
                     label="Pemasukan"
@@ -48,6 +51,47 @@
                     value="{{ $formatRupiah($thisMonthExpense) }}"
                     color="rose"
                 />
+            </div>
+        </section>
+
+        {{-- Insight Anggaran --}}
+        <section>
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-sm font-bold text-slate-700">Ringkasan Anggaran</h2>
+                <a href="{{ route('budgets.index') }}" aria-label="Lihat halaman anggaran" class="inline-flex min-h-9 items-center text-xs text-indigo-500 font-medium">Lihat anggaran →</a>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
+                @if (! $currentMonthBudgetInsight['hasBudgets'])
+                    <p class="text-sm font-medium text-slate-500">Belum ada anggaran bulan ini.</p>
+                    <p class="mt-1 text-xs text-slate-400">Buat anggaran bulan ini untuk mulai memantau batas pengeluaran.</p>
+                    <a href="{{ route('budgets.index') }}" aria-label="Buat anggaran bulan ini" class="mt-3 inline-flex min-h-11 items-center rounded-2xl bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-600">Buat Anggaran</a>
+                @else
+                    @php
+                        $budgetRemainingLabel = $currentMonthBudgetInsight['totalRemaining'] >= 0
+                            ? $formatRupiah($currentMonthBudgetInsight['totalRemaining'])
+                            : 'Lewat '.$formatRupiah(abs($currentMonthBudgetInsight['totalRemaining']));
+                    @endphp
+
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <p class="text-slate-400">Total Anggaran</p>
+                            <p class="mt-1 text-sm font-extrabold text-slate-800 tabular-nums">{{ $formatRupiah($currentMonthBudgetInsight['totalBudget']) }}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400">Terpakai</p>
+                            <p class="mt-1 text-sm font-extrabold text-rose-600 tabular-nums">{{ $formatRupiah($currentMonthBudgetInsight['totalUsed']) }}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400">Sisa</p>
+                            <p class="mt-1 text-sm font-extrabold tabular-nums {{ $currentMonthBudgetInsight['totalRemaining'] >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">{{ $budgetRemainingLabel }}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400">Lewat Batas</p>
+                            <p class="mt-1 text-sm font-extrabold text-slate-800">{{ $currentMonthBudgetInsight['overLimitCount'] }} kategori</p>
+                        </div>
+                    </div>
+                @endif
             </div>
         </section>
 
@@ -97,7 +141,7 @@
             <div class="grid grid-cols-4 gap-2">
                 <x-quick-action label="Tambah Manual" icon="✏️" color="indigo" href="{{ route('transactions.create') }}" />
                 <x-quick-action label="Input Suara" icon="🎙️" color="purple" href="{{ route('transactions.voice') }}" />
-                <x-quick-action label="Anggaran" icon="📊" color="emerald" href="{{ route('budgets') }}" />
+                <x-quick-action label="Anggaran" icon="📊" color="emerald" href="{{ route('budgets.index') }}" />
                 <x-quick-action label="Tabungan" icon="🎯" color="amber" href="{{ route('goals') }}" />
             </div>
         </section>

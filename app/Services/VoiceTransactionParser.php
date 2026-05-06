@@ -25,15 +25,15 @@ class VoiceTransactionParser
         $note = $this->cleanNote($workingText);
 
         if ($amount === null) {
-            $warnings[] = 'Nominal belum bisa dikenali.';
+            $warnings[] = 'Nominal belum terbaca. Tambahkan nominal seperti ‘dua puluh lima ribu’ atau ‘25.000’.';
         }
 
         if ($category === null) {
-            $warnings[] = 'Kategori belum ditemukan.';
+            $warnings[] = 'Kategori belum cocok. Sebutkan seperti ‘kategori makanan’.';
         }
 
         if ($note === '') {
-            $warnings[] = 'Catatan transaksi masih kosong.';
+            $warnings[] = 'Catatan belum terbaca. Tambahkan keterangan pengeluaran.';
         }
 
         return [

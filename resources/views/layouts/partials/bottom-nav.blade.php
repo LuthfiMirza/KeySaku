@@ -11,8 +11,8 @@
             </a>
 
             {{-- Anggaran --}}
-            <a href="{{ route('budgets') }}"
-               class="flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 {{ request()->routeIs('budgets') ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:text-indigo-500' }}">
+            <a href="{{ route('budgets.index') }}"
+               class="flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 {{ request()->routeIs('budgets.index') ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:text-indigo-500' }}">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
                     <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>

@@ -134,8 +134,14 @@
 
     <section class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
         <p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Contoh ucapan</p>
-        <p class="mt-2 text-sm font-semibold leading-relaxed text-slate-700">“Beli nasi goreng dua puluh lima ribu kategori makanan.”</p>
-        <p class="mt-2 text-xs text-slate-400">KeySaku akan menampilkan hasil suara untuk dicek sebelum disimpan.</p>
+        <p class="mt-2 text-xs text-slate-400">Format saat ini: keterangan pengeluaran + nominal + kategori.</p>
+        <div class="mt-3 space-y-2 text-sm font-semibold leading-relaxed text-slate-700">
+            <p>“Beli nasi goreng dua puluh lima ribu kategori makanan”</p>
+            <p>“Bayar parkir lima ribu kategori transportasi”</p>
+            <p>“Belanja dapur 150.000 kategori belanja dapur”</p>
+            <p>“Beli obat tiga puluh ribu kategori kesehatan”</p>
+        </div>
+        <p class="mt-3 text-xs text-slate-400">KeySaku akan menampilkan hasil suara untuk dicek sebelum disimpan.</p>
     </section>
 
     <section class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">

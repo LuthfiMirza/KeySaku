@@ -54,8 +54,8 @@ class VoiceTransactionParserTest extends TestCase
 
         $this->assertNull($result['amount']);
         $this->assertNull($result['category_id']);
-        $this->assertContains('Nominal belum bisa dikenali.', $result['warnings']);
-        $this->assertContains('Kategori belum ditemukan.', $result['warnings']);
+        $this->assertContains('Nominal belum terbaca. Tambahkan nominal seperti ‘dua puluh lima ribu’ atau ‘25.000’.', $result['warnings']);
+        $this->assertContains('Kategori belum cocok. Sebutkan seperti ‘kategori makanan’.', $result['warnings']);
     }
 
     private function parser(): VoiceTransactionParser

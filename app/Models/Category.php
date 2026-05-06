@@ -32,6 +32,11 @@ class Category extends Model
         return $this->hasMany(Transaction::class);
     }
 
+    public function budgets(): HasMany
+    {
+        return $this->hasMany(Budget::class);
+    }
+
     public static function types(): array
     {
         return [self::TYPE_INCOME, self::TYPE_EXPENSE];
