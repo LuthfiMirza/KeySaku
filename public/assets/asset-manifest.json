@@ -1,0 +1,2006 @@
+{
+  "project": "KeySaku",
+  "scope": "Public browser-ready asset inventory",
+  "publicRoot": "public/assets/",
+  "namingConvention": "lowercase-kebab-case",
+  "statusLegend": {
+    "ready": "Asset dari user/final atau token yang aman dipakai.",
+    "placeholder-ready": "Placeholder SVG valid, aman render, tapi perlu diganti final sebelum polish production.",
+    "placeholder": "Placeholder desain, jangan dipakai production jika tidak ada fallback.",
+    "needs-production": "File valid tetapi masih perlu export final/optimasi/review."
+  },
+  "assets": [
+    {
+      "path": "public/assets/animations/coin-drop/coin-drop.json",
+      "priority": "P2",
+      "type": "animation",
+      "formatTarget": "Lottie JSON",
+      "currentFormat": "JSON",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/animations/confetti/confetti-burst.json",
+      "priority": "P2",
+      "type": "animation",
+      "formatTarget": "Lottie JSON",
+      "currentFormat": "JSON",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/animations/level-up/level-up.json",
+      "priority": "P2",
+      "type": "animation",
+      "formatTarget": "Lottie JSON",
+      "currentFormat": "JSON",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/animations/loading/loading-coins.json",
+      "priority": "P2",
+      "type": "animation",
+      "formatTarget": "Lottie JSON",
+      "currentFormat": "JSON",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/app-mockups/budget/budget-mockup.png",
+      "priority": "P2",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/app-mockups/dashboard/dashboard-mockup.png",
+      "priority": "P2",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/app-mockups/onboarding/onboarding-screen-1.png",
+      "priority": "P2",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/app-mockups/onboarding/onboarding-screen-2.png",
+      "priority": "P2",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/app-mockups/onboarding/onboarding-screen-3.png",
+      "priority": "P2",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/app-mockups/report/report-mockup.png",
+      "priority": "P2",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/app-mockups/rewards/rewards-mockup.png",
+      "priority": "P2",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/app-mockups/transaction/add-transaction-mockup.png",
+      "priority": "P2",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/app-mockups/transaction/transaction-list-mockup.png",
+      "priority": "P2",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/brand/app-icon-512.png",
+      "priority": "P1",
+      "type": "brand",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "ready",
+      "usageLocation": [
+        "PWA install",
+        "mobile icon"
+      ]
+    },
+    {
+      "path": "public/assets/brand/app-icon-keysaku.png",
+      "priority": "P2",
+      "type": "brand",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "PWA install",
+        "mobile icon"
+      ]
+    },
+    {
+      "path": "public/assets/brand/brand-guideline.pdf",
+      "priority": "P2",
+      "type": "brand",
+      "formatTarget": "SVG",
+      "currentFormat": "PDF",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/brand/brand-pattern-coins.png",
+      "priority": "P1",
+      "type": "pattern",
+      "formatTarget": "SVG",
+      "currentFormat": "PNG",
+      "status": "ready",
+      "usageLocation": [
+        "landing background",
+        "brand decoration"
+      ]
+    },
+    {
+      "path": "public/assets/brand/brand-pattern-keysaku.svg",
+      "priority": "P2",
+      "type": "pattern",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background",
+        "brand decoration"
+      ]
+    },
+    {
+      "path": "public/assets/brand/favicon-keysaku.png",
+      "priority": "P2",
+      "type": "brand",
+      "formatTarget": "SVG",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/brand/logo-keysaku-dark.svg",
+      "priority": "P2",
+      "type": "brand",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navbar",
+        "hero",
+        "CTA"
+      ]
+    },
+    {
+      "path": "public/assets/brand/logo-keysaku-horizontal.svg",
+      "priority": "P0",
+      "type": "brand",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "ready",
+      "usageLocation": [
+        "navbar",
+        "hero",
+        "CTA"
+      ]
+    },
+    {
+      "path": "public/assets/brand/logo-keysaku-icon.svg",
+      "priority": "P2",
+      "type": "brand",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navbar",
+        "hero",
+        "CTA"
+      ]
+    },
+    {
+      "path": "public/assets/brand/logo-keysaku-main.svg",
+      "priority": "P2",
+      "type": "brand",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navbar",
+        "hero",
+        "CTA"
+      ]
+    },
+    {
+      "path": "public/assets/brand/logo-keysaku-mark.svg",
+      "priority": "P0",
+      "type": "brand",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "ready",
+      "usageLocation": [
+        "navbar",
+        "hero",
+        "CTA"
+      ]
+    },
+    {
+      "path": "public/assets/brand/logo-keysaku-white.svg",
+      "priority": "P0",
+      "type": "brand",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "ready",
+      "usageLocation": [
+        "navbar",
+        "hero",
+        "CTA"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/blobs/blob-lime.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/blobs/blob-pink.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/blobs/blob-purple.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/blobs/blob-teal.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/blobs/blob-yellow.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/doodles/doodle-arrow.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/doodles/doodle-swirl.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/doodles/doodle-underline.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/doodles/doodle-zigzag.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/sparkles/sparkle-large.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/sparkles/sparkle-small.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/sparkles/star-burst.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/stickers/sticker-level-up.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/stickers/sticker-reward-coin.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/stickers/sticker-saving-star.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/decorations/stickers/sticker-streak-fire.svg",
+      "priority": "P2",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-bills.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-education.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-entertainment.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-food.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-gift.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-health.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-other.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-salary.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-saving.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-shopping.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/categories/icon-category-transport.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/features/icon-feature-budget-tracker.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/features/icon-feature-challenge.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/features/icon-feature-report.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/features/icon-feature-reward.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/features/icon-feature-saving-goal.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/features/icon-feature-security.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/features/icon-feature-streak.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/features/icon-feature-wallet.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/finance/icon-coin.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "feature cards",
+        "finance UI"
+      ]
+    },
+    {
+      "path": "public/assets/icons/finance/icon-piggy-bank.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "feature cards",
+        "finance UI"
+      ]
+    },
+    {
+      "path": "public/assets/icons/finance/icon-receipt.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "feature cards",
+        "finance UI"
+      ]
+    },
+    {
+      "path": "public/assets/icons/finance/icon-wallet.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "feature cards",
+        "finance UI"
+      ]
+    },
+    {
+      "path": "public/assets/icons/gamification/icon-badge.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "gamification preview"
+      ]
+    },
+    {
+      "path": "public/assets/icons/gamification/icon-target.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "gamification preview"
+      ]
+    },
+    {
+      "path": "public/assets/icons/gamification/icon-trophy.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "gamification preview"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-home.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-nav-add.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-nav-budget.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-nav-home.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-nav-profile.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-nav-reports.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-nav-rewards.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-nav-settings.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-nav-transactions.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-report.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-savings.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/navigation/icon-transaction.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navigation preview",
+        "phone mockup"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-calendar.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-check.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-chevron-left.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-chevron-right.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-close.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-delete.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-download.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-edit.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-filter.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-minus.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-notification.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-plus.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-search.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/icons/utility/icon-utility-upload.svg",
+      "priority": "P2",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/characters/mascot-keysaku-happy.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "ready",
+      "usageLocation": [
+        "CTA",
+        "friendly brand moment"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/characters/mascot-keysaku.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "CTA",
+        "friendly brand moment"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/empty-states/empty-transactions.svg",
+      "priority": "P0",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder-ready",
+      "usageLocation": [
+        "empty states"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/finance/illustration-chart-up.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/finance/illustration-coins.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/finance/illustration-money-stack.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/finance/illustration-piggy-bank.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/finance/illustration-wallet.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/gamification/illustration-badge.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/gamification/illustration-challenge.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/gamification/illustration-level-up.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/gamification/illustration-reward.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/gamification/illustration-rocket.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/gamification/illustration-stars.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/gamification/illustration-streak.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/gamification/illustration-target.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/gamification/illustration-trophy.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/hands/hand-money.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/landing/illustration-expense-tracking.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "ready",
+      "usageLocation": [
+        "landing sections"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/landing/illustration-phone-budgeting.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "ready",
+      "usageLocation": [
+        "landing sections"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/landing/illustration-reward-badge.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "ready",
+      "usageLocation": [
+        "landing sections"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/landing/illustration-savings-goal.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "ready",
+      "usageLocation": [
+        "landing sections"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/landing/illustration-weekly-challenge.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "ready",
+      "usageLocation": [
+        "landing sections"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/landing/illustration-youth-saving-money.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "ready",
+      "usageLocation": [
+        "landing sections"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/objects/illustration-calendar.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/objects/illustration-coin-jar.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/objects/illustration-safe-box.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/illustrations/objects/illustration-wallet-card.svg",
+      "priority": "P2",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/landing/cta/cta-mockup.png",
+      "priority": "P2",
+      "type": "asset",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/landing/features/feature-icons.svg",
+      "priority": "P2",
+      "type": "asset",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/landing/features/piggy-bank.svg",
+      "priority": "P2",
+      "type": "asset",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/landing/features/rocket-saving.svg",
+      "priority": "P2",
+      "type": "asset",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/landing/features/wallet-cartoon.svg",
+      "priority": "P2",
+      "type": "asset",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/landing/gamification/challenge-progress-card.svg",
+      "priority": "P2",
+      "type": "asset",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/landing/gamification/gamification-cards.svg",
+      "priority": "P2",
+      "type": "asset",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/landing/hero/brand-blob-gradient.png",
+      "priority": "P1",
+      "type": "hero",
+      "formatTarget": "SVG",
+      "currentFormat": "PNG",
+      "status": "ready",
+      "usageLocation": [
+        "landing hero background"
+      ]
+    },
+    {
+      "path": "public/assets/landing/hero/coins-floating.svg",
+      "priority": "P2",
+      "type": "hero",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing hero"
+      ]
+    },
+    {
+      "path": "public/assets/landing/hero/doodle-lines.svg",
+      "priority": "P2",
+      "type": "hero",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing hero"
+      ]
+    },
+    {
+      "path": "public/assets/landing/hero/hero-bg-blob.svg",
+      "priority": "P0",
+      "type": "hero",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder-ready",
+      "usageLocation": [
+        "landing hero"
+      ]
+    },
+    {
+      "path": "public/assets/landing/hero/hero-floating-badges.svg",
+      "priority": "P0",
+      "type": "hero",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder-ready",
+      "usageLocation": [
+        "landing hero"
+      ]
+    },
+    {
+      "path": "public/assets/landing/hero/hero-floating-coins.svg",
+      "priority": "P0",
+      "type": "hero",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder-ready",
+      "usageLocation": [
+        "landing hero"
+      ]
+    },
+    {
+      "path": "public/assets/landing/hero/hero-phone-mockup.png",
+      "priority": "P2",
+      "type": "hero",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing hero"
+      ]
+    },
+    {
+      "path": "public/assets/landing/saving-goal/saving-goal-progress.svg",
+      "priority": "P2",
+      "type": "asset",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/landing/trust/secure-finance-badge.svg",
+      "priority": "P2",
+      "type": "asset",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/marketing/app-preview/app-preview.png",
+      "priority": "P2",
+      "type": "marketing",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/marketing/banners/launch-banner.png",
+      "priority": "P2",
+      "type": "marketing",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/marketing/og-image/og-image-keysaku.png",
+      "priority": "P2",
+      "type": "marketing",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/marketing/social/social-post-launch.png",
+      "priority": "P2",
+      "type": "marketing",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/marketing/story/story-launch.png",
+      "priority": "P2",
+      "type": "marketing",
+      "formatTarget": "PNG/WebP",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/states/empty/empty-challenge.svg",
+      "priority": "P2",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/states/empty/empty-report.svg",
+      "priority": "P2",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/states/empty/empty-reward.svg",
+      "priority": "P2",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/states/empty/empty-saving-goal.svg",
+      "priority": "P2",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/states/empty/empty-transaction.svg",
+      "priority": "P2",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/states/error/error-general.svg",
+      "priority": "P2",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/states/loading/loading-spinner.json",
+      "priority": "P2",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "JSON",
+      "status": "ready",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/states/no-internet/no-internet.svg",
+      "priority": "P2",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/states/success/success-reward.svg",
+      "priority": "P2",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/tokens/colors.css",
+      "priority": "P2",
+      "type": "token",
+      "formatTarget": "CSS",
+      "currentFormat": "CSS",
+      "status": "ready",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/tokens/colors.json",
+      "priority": "P2",
+      "type": "token",
+      "formatTarget": "JSON",
+      "currentFormat": "JSON",
+      "status": "ready",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/tokens/font-scale.json",
+      "priority": "P2",
+      "type": "token",
+      "formatTarget": "JSON",
+      "currentFormat": "JSON",
+      "status": "ready",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/tokens/typography-spec.txt",
+      "priority": "P2",
+      "type": "token",
+      "formatTarget": "TXT",
+      "currentFormat": "TXT",
+      "status": "ready",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/badges/badge-level.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/badges/badge-reward.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/badges/badge-streak.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/badges/badge-success.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/badges/badge-warning.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/buttons/button-danger.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/buttons/button-ghost.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/buttons/button-primary.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/buttons/button-secondary.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/cards/card-balance.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/cards/card-challenge.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/cards/card-reward.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/cards/card-summary.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/cards/card-transaction.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/inputs/input-amount.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/inputs/input-date.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/inputs/input-search.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/inputs/input-select.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/inputs/input-text.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/modals/modal-default.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/progress/progress-bar-level.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/tabs/tabs-default.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    },
+    {
+      "path": "public/assets/ui/toast/toast-success.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design inventory"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+:root {
+  --ks-lime-400: #a3e635;
+  --ks-lime-500: #84cc16;
+  --ks-purple-500: #8b5cf6;
+  --ks-purple-600: #7c3aed;
+  --ks-teal-400: #2dd4bf;
+  --ks-teal-500: #14b8a6;
+  --ks-yellow-400: #facc15;
+  --ks-pink-400: #f472b6;
+  --ks-pink-500: #ec4899;
+  --ks-dark-900: #201a2e;
+  --ks-neutral-0: #ffffff;
+  --ks-surface-card: rgba(255, 255, 255, 0.8);
+  --ks-gradient-brand: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+}

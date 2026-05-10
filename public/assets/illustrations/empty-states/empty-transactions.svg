@@ -1,0 +1,9 @@
+<svg width="320" height="260" viewBox="0 0 320 260" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Belum ada transaksi</title><desc id="desc">Ilustrasi dompet kosong yang ramah untuk empty state transaksi.</desc>
+  <rect x="28" y="34" width="264" height="190" rx="38" fill="#F8FAFC" stroke="#201A2E" stroke-width="6"/>
+  <circle cx="76" cy="72" r="24" fill="#A3E635"/><circle cx="248" cy="62" r="20" fill="#FDE047"/>
+  <path d="M86 122c0-18 14-32 32-32h80c18 0 32 14 32 32v52c0 14-11 25-25 25h-94c-14 0-25-11-25-25v-52Z" fill="#8B5CF6"/>
+  <path d="M90 128h140v42H90z" fill="#2DD4BF"/><circle cx="196" cy="149" r="10" fill="#FDE047"/>
+  <path d="M132 90c12-16 40-16 52 0" stroke="#F472B6" stroke-width="9" stroke-linecap="round"/>
+  <text x="160" y="236" text-anchor="middle" font-family="ui-sans-serif, system-ui" font-size="16" font-weight="800" fill="#201A2E">Belum ada transaksi</text>
+</svg>

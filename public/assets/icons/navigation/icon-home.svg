@@ -1,0 +1,8 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Ikon beranda</title><desc id="desc">Placeholder SVG valid bergaya playful fintech untuk Ikon beranda.</desc>
+  <rect width="160" height="160" rx="42" fill="#F8FAFC"/>
+  <circle cx="122" cy="32" r="18" fill="#FDE047"/><circle cx="35" cy="126" r="16" fill="#F472B6" fill-opacity=".8"/>
+  <path d="M32 104c22-38 48 14 70-24 9-15 20-18 30-15" stroke="#2DD4BF" stroke-width="9" stroke-linecap="round"/>
+  <text x="80" y="88" text-anchor="middle" dominant-baseline="middle" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif" font-size="58">🏠</text>
+  <path d="M38 28h40" stroke="#201A2E" stroke-width="8" stroke-linecap="round" opacity=".28"/>
+</svg>

@@ -1,0 +1,33 @@
+:root {
+    --ks-lime: #a3e635;
+    --ks-lime-soft: #ecfccb;
+    --ks-purple: #8b5cf6;
+    --ks-purple-dark: #6d28d9;
+    --ks-teal: #2dd4bf;
+    --ks-teal-dark: #0f766e;
+    --ks-yellow: #fde047;
+    --ks-pink: #f472b6;
+    --ks-dark: #201a2e;
+    --ks-muted: #64748b;
+    --ks-cream: #fff8e7;
+    --ks-surface: rgba(255, 255, 255, 0.84);
+    --ks-border: rgba(255, 255, 255, 0.72);
+    --ks-shadow-soft: 0 24px 70px rgba(32, 26, 46, 0.16);
+    --ks-radius-card: 1.5rem;
+    --ks-radius-panel: 2rem;
+    --ks-gradient-brand: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 52%, #f472b6 100%);
+    --ks-gradient-playful: radial-gradient(circle at 18% 10%, rgba(163, 230, 53, 0.38), transparent 28%), radial-gradient(circle at 82% 14%, rgba(244, 114, 182, 0.3), transparent 30%), linear-gradient(135deg, #fff8e7 0%, #ecfeff 48%, #fdf2f8 100%);
+}
+
+.keysaku-card {
+    border: 1px solid var(--ks-border);
+    border-radius: var(--ks-radius-card);
+    background: var(--ks-surface);
+    box-shadow: var(--ks-shadow-soft);
+    backdrop-filter: blur(14px);
+}
+
+.keysaku-focus:focus-visible {
+    outline: 3px solid var(--ks-yellow);
+    outline-offset: 4px;
+}

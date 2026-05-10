@@ -1,0 +1,16 @@
+KeySaku Typography Spec
+
+Style: friendly, rounded, readable, playful but clean.
+Recommended font stack: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif.
+Optional brand/display fonts for design exports only: Nunito, Baloo 2, Plus Jakarta Sans.
+
+Usage:
+- Display: onboarding, landing hero, reward and level-up moments.
+- Heading: page titles, dashboard summary, card titles.
+- Body: transaction details, helper text, descriptions.
+- Label: buttons, badges, tabs, chips.
+
+Tone:
+- Indonesian UI copy.
+- Short, encouraging, and action-oriented.
+- Avoid childish finance wording; keep trust and clarity.

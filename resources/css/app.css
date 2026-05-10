@@ -1,4 +1,24 @@
 @import 'tailwindcss';
+@import './keysaku-tokens.css';
+
+
+:root {
+  --ks-navy:        #0f0f5e;
+  --ks-blue:        #1a1aff;
+  --ks-blue-light:  #4d4dff;
+  --ks-gold:        #f5a623;
+  --ks-gold-light:  #ffc857;
+  --ks-gold-dark:   #7a4f00;
+  --ks-pink:        #ff3d8b;
+  --ks-pink-light:  #ff79b0;
+  --ks-green:       #1d9e75;
+  --ks-red:         #e24b4a;
+  --ks-bg:          #f0f2f8;
+  --ks-surface:     #f7f8ff;
+  --ks-border:      #dde3f5;
+  --ks-text:        #0f0f5e;
+  --ks-muted:       #8890b0;
+}
 
 @layer base {
     html {
@@ -18,7 +38,7 @@
 
 @layer utilities {
     .glass {
-        @apply bg-white/80 backdrop-blur-sm border border-white/60;
+        @apply bg-white border border-[#dde3f5];
     }
 
     .safe-bottom {

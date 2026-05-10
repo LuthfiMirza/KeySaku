@@ -1,0 +1,1953 @@
+{
+  "project": "KeySaku",
+  "style": "playful-gamified-fintech",
+  "sourceInventoryRoot": "assets/",
+  "publicAssetRoot": "public/assets/",
+  "namingConvention": "lowercase-kebab-case",
+  "productionRule": "Do not use placeholder or needs-production assets in production landing pages without a safe CSS/HTML fallback.",
+  "priorityLegend": {
+    "P0": "Required before landing-v2 is promoted to production.",
+    "P1": "Important after MVP visual is stable.",
+    "P2": "Polish, campaign, and additional states.",
+    "P3": "Optional future experiments or expansion."
+  },
+  "formatGuidance": {
+    "svg": "Logo, icon, simple decoration, pattern, badge.",
+    "pngWebp": "Phone mockup, complex illustration, mascot, hero visual.",
+    "json": "Lottie animation and design-token data.",
+    "css": "Design-token variables for browser usage."
+  },
+  "assets": [
+    {
+      "sourcePath": "assets/animations/coin-drop/coin-drop.json",
+      "publicPath": "public/assets/animations/coin-drop/coin-drop.json",
+      "priority": "P1",
+      "type": "animation",
+      "formatTarget": "Lottie JSON",
+      "currentFormat": "JSON",
+      "status": "needs-production",
+      "usageLocation": [
+        "micro interaction",
+        "loading",
+        "reward moments"
+      ]
+    },
+    {
+      "sourcePath": "assets/animations/confetti/confetti-burst.json",
+      "publicPath": "public/assets/animations/confetti/confetti-burst.json",
+      "priority": "P1",
+      "type": "animation",
+      "formatTarget": "Lottie JSON",
+      "currentFormat": "JSON",
+      "status": "needs-production",
+      "usageLocation": [
+        "micro interaction",
+        "loading",
+        "reward moments"
+      ]
+    },
+    {
+      "sourcePath": "assets/animations/level-up/level-up.json",
+      "publicPath": "public/assets/animations/level-up/level-up.json",
+      "priority": "P1",
+      "type": "animation",
+      "formatTarget": "Lottie JSON",
+      "currentFormat": "JSON",
+      "status": "needs-production",
+      "usageLocation": [
+        "micro interaction",
+        "loading",
+        "reward moments"
+      ]
+    },
+    {
+      "sourcePath": "assets/animations/loading/loading-coins.json",
+      "publicPath": "public/assets/animations/loading/loading-coins.json",
+      "priority": "P2",
+      "type": "animation",
+      "formatTarget": "Lottie JSON",
+      "currentFormat": "JSON",
+      "status": "needs-production",
+      "usageLocation": [
+        "micro interaction",
+        "loading",
+        "reward moments"
+      ]
+    },
+    {
+      "sourcePath": "assets/app-mockups/budget/budget-mockup.png",
+      "publicPath": "public/assets/app-mockups/budget/budget-mockup.png",
+      "priority": "P1",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing feature cards",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/app-mockups/dashboard/dashboard-mockup.png",
+      "publicPath": "public/assets/app-mockups/dashboard/dashboard-mockup.png",
+      "priority": "P0",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing hero",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/app-mockups/onboarding/onboarding-screen-1.png",
+      "publicPath": "public/assets/app-mockups/onboarding/onboarding-screen-1.png",
+      "priority": "P0",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing hero",
+        "onboarding preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/app-mockups/onboarding/onboarding-screen-2.png",
+      "publicPath": "public/assets/app-mockups/onboarding/onboarding-screen-2.png",
+      "priority": "P0",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing hero",
+        "onboarding preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/app-mockups/onboarding/onboarding-screen-3.png",
+      "publicPath": "public/assets/app-mockups/onboarding/onboarding-screen-3.png",
+      "priority": "P0",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing hero",
+        "onboarding preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/app-mockups/report/report-mockup.png",
+      "publicPath": "public/assets/app-mockups/report/report-mockup.png",
+      "priority": "P2",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing feature cards later"
+      ]
+    },
+    {
+      "sourcePath": "assets/app-mockups/rewards/rewards-mockup.png",
+      "publicPath": "public/assets/app-mockups/rewards/rewards-mockup.png",
+      "priority": "P1",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing gamification section"
+      ]
+    },
+    {
+      "sourcePath": "assets/app-mockups/transaction/add-transaction-mockup.png",
+      "publicPath": "public/assets/app-mockups/transaction/add-transaction-mockup.png",
+      "priority": "P0",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing feature cards",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/app-mockups/transaction/transaction-list-mockup.png",
+      "publicPath": "public/assets/app-mockups/transaction/transaction-list-mockup.png",
+      "priority": "P0",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing feature cards",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/brand/app-icon-keysaku.png",
+      "publicPath": "public/assets/brand/app-icon-keysaku.png",
+      "priority": "P0",
+      "type": "logo",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "browser chrome",
+        "PWA install"
+      ]
+    },
+    {
+      "sourcePath": "assets/brand/brand-guideline.pdf",
+      "publicPath": "public/assets/brand/brand-guideline.pdf",
+      "priority": "P2",
+      "type": "logo",
+      "formatTarget": "SVG",
+      "currentFormat": "PDF",
+      "status": "needs-production",
+      "usageLocation": [
+        "navbar",
+        "footer",
+        "brand moments"
+      ]
+    },
+    {
+      "sourcePath": "assets/brand/brand-pattern-keysaku.svg",
+      "publicPath": "public/assets/brand/brand-pattern-keysaku.svg",
+      "priority": "P2",
+      "type": "logo",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navbar",
+        "footer",
+        "brand moments"
+      ]
+    },
+    {
+      "sourcePath": "assets/brand/favicon-keysaku.png",
+      "publicPath": "public/assets/brand/favicon-keysaku.png",
+      "priority": "P0",
+      "type": "logo",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "browser chrome",
+        "PWA install"
+      ]
+    },
+    {
+      "sourcePath": "assets/brand/logo-keysaku-dark.svg",
+      "publicPath": "public/assets/brand/logo-keysaku-dark.svg",
+      "priority": "P1",
+      "type": "logo",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navbar",
+        "footer",
+        "brand moments"
+      ]
+    },
+    {
+      "sourcePath": "assets/brand/logo-keysaku-icon.svg",
+      "publicPath": "public/assets/brand/logo-keysaku-icon.svg",
+      "priority": "P0",
+      "type": "logo",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navbar",
+        "footer",
+        "brand moments"
+      ]
+    },
+    {
+      "sourcePath": "assets/brand/logo-keysaku-main.svg",
+      "publicPath": "public/assets/brand/logo-keysaku-main.svg",
+      "priority": "P0",
+      "type": "logo",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navbar",
+        "footer",
+        "brand moments"
+      ]
+    },
+    {
+      "sourcePath": "assets/brand/logo-keysaku-white.svg",
+      "publicPath": "public/assets/brand/logo-keysaku-white.svg",
+      "priority": "P0",
+      "type": "logo",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "navbar",
+        "footer",
+        "brand moments"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/blobs/blob-lime.svg",
+      "publicPath": "public/assets/decorations/blobs/blob-lime.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/blobs/blob-pink.svg",
+      "publicPath": "public/assets/decorations/blobs/blob-pink.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/blobs/blob-purple.svg",
+      "publicPath": "public/assets/decorations/blobs/blob-purple.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/blobs/blob-teal.svg",
+      "publicPath": "public/assets/decorations/blobs/blob-teal.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/blobs/blob-yellow.svg",
+      "publicPath": "public/assets/decorations/blobs/blob-yellow.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/doodles/doodle-arrow.svg",
+      "publicPath": "public/assets/decorations/doodles/doodle-arrow.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/doodles/doodle-swirl.svg",
+      "publicPath": "public/assets/decorations/doodles/doodle-swirl.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/doodles/doodle-underline.svg",
+      "publicPath": "public/assets/decorations/doodles/doodle-underline.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/doodles/doodle-zigzag.svg",
+      "publicPath": "public/assets/decorations/doodles/doodle-zigzag.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/sparkles/sparkle-large.svg",
+      "publicPath": "public/assets/decorations/sparkles/sparkle-large.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/sparkles/sparkle-small.svg",
+      "publicPath": "public/assets/decorations/sparkles/sparkle-small.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/sparkles/star-burst.svg",
+      "publicPath": "public/assets/decorations/sparkles/star-burst.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/stickers/sticker-level-up.svg",
+      "publicPath": "public/assets/decorations/stickers/sticker-level-up.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/stickers/sticker-reward-coin.svg",
+      "publicPath": "public/assets/decorations/stickers/sticker-reward-coin.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/stickers/sticker-saving-star.svg",
+      "publicPath": "public/assets/decorations/stickers/sticker-saving-star.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/decorations/stickers/sticker-streak-fire.svg",
+      "publicPath": "public/assets/decorations/stickers/sticker-streak-fire.svg",
+      "priority": "P1",
+      "type": "decoration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing background polish"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-bills.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-bills.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-education.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-education.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-entertainment.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-entertainment.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-food.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-food.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-gift.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-gift.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-health.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-health.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-other.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-other.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-salary.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-salary.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-saving.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-saving.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-shopping.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-shopping.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/categories/icon-category-transport.svg",
+      "publicPath": "public/assets/icons/categories/icon-category-transport.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "transaction category picker",
+        "feature preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/features/icon-feature-budget-tracker.svg",
+      "publicPath": "public/assets/icons/features/icon-feature-budget-tracker.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/features/icon-feature-challenge.svg",
+      "publicPath": "public/assets/icons/features/icon-feature-challenge.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/features/icon-feature-report.svg",
+      "publicPath": "public/assets/icons/features/icon-feature-report.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/features/icon-feature-reward.svg",
+      "publicPath": "public/assets/icons/features/icon-feature-reward.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/features/icon-feature-saving-goal.svg",
+      "publicPath": "public/assets/icons/features/icon-feature-saving-goal.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/features/icon-feature-security.svg",
+      "publicPath": "public/assets/icons/features/icon-feature-security.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/features/icon-feature-streak.svg",
+      "publicPath": "public/assets/icons/features/icon-feature-streak.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/features/icon-feature-wallet.svg",
+      "publicPath": "public/assets/icons/features/icon-feature-wallet.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/navigation/icon-nav-add.svg",
+      "publicPath": "public/assets/icons/navigation/icon-nav-add.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "bottom navigation",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/navigation/icon-nav-budget.svg",
+      "publicPath": "public/assets/icons/navigation/icon-nav-budget.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "bottom navigation",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/navigation/icon-nav-home.svg",
+      "publicPath": "public/assets/icons/navigation/icon-nav-home.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "bottom navigation",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/navigation/icon-nav-profile.svg",
+      "publicPath": "public/assets/icons/navigation/icon-nav-profile.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "bottom navigation",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/navigation/icon-nav-reports.svg",
+      "publicPath": "public/assets/icons/navigation/icon-nav-reports.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "bottom navigation",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/navigation/icon-nav-rewards.svg",
+      "publicPath": "public/assets/icons/navigation/icon-nav-rewards.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "bottom navigation",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/navigation/icon-nav-settings.svg",
+      "publicPath": "public/assets/icons/navigation/icon-nav-settings.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "bottom navigation",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/navigation/icon-nav-transactions.svg",
+      "publicPath": "public/assets/icons/navigation/icon-nav-transactions.svg",
+      "priority": "P0",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "bottom navigation",
+        "app preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-calendar.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-calendar.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-check.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-check.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-chevron-left.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-chevron-left.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-chevron-right.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-chevron-right.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-close.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-close.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-delete.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-delete.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-download.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-download.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-edit.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-edit.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-filter.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-filter.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-minus.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-minus.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-notification.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-notification.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-plus.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-plus.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-search.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-search.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/icons/utility/icon-utility-upload.svg",
+      "publicPath": "public/assets/icons/utility/icon-utility-upload.svg",
+      "priority": "P1",
+      "type": "icon",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "app UI controls"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/characters/mascot-keysaku.svg",
+      "publicPath": "public/assets/illustrations/characters/mascot-keysaku.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "PNG/WebP or SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/finance/illustration-chart-up.svg",
+      "publicPath": "public/assets/illustrations/finance/illustration-chart-up.svg",
+      "priority": "P0",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/finance/illustration-coins.svg",
+      "publicPath": "public/assets/illustrations/finance/illustration-coins.svg",
+      "priority": "P0",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/finance/illustration-money-stack.svg",
+      "publicPath": "public/assets/illustrations/finance/illustration-money-stack.svg",
+      "priority": "P0",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/finance/illustration-piggy-bank.svg",
+      "publicPath": "public/assets/illustrations/finance/illustration-piggy-bank.svg",
+      "priority": "P0",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/finance/illustration-wallet.svg",
+      "publicPath": "public/assets/illustrations/finance/illustration-wallet.svg",
+      "priority": "P0",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/gamification/illustration-badge.svg",
+      "publicPath": "public/assets/illustrations/gamification/illustration-badge.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/gamification/illustration-challenge.svg",
+      "publicPath": "public/assets/illustrations/gamification/illustration-challenge.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/gamification/illustration-level-up.svg",
+      "publicPath": "public/assets/illustrations/gamification/illustration-level-up.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/gamification/illustration-reward.svg",
+      "publicPath": "public/assets/illustrations/gamification/illustration-reward.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/gamification/illustration-rocket.svg",
+      "publicPath": "public/assets/illustrations/gamification/illustration-rocket.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/gamification/illustration-stars.svg",
+      "publicPath": "public/assets/illustrations/gamification/illustration-stars.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/gamification/illustration-streak.svg",
+      "publicPath": "public/assets/illustrations/gamification/illustration-streak.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/gamification/illustration-target.svg",
+      "publicPath": "public/assets/illustrations/gamification/illustration-target.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/gamification/illustration-trophy.svg",
+      "publicPath": "public/assets/illustrations/gamification/illustration-trophy.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/hands/hand-money.svg",
+      "publicPath": "public/assets/illustrations/hands/hand-money.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/objects/illustration-calendar.svg",
+      "publicPath": "public/assets/illustrations/objects/illustration-calendar.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/objects/illustration-coin-jar.svg",
+      "publicPath": "public/assets/illustrations/objects/illustration-coin-jar.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/objects/illustration-safe-box.svg",
+      "publicPath": "public/assets/illustrations/objects/illustration-safe-box.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/illustrations/objects/illustration-wallet-card.svg",
+      "publicPath": "public/assets/illustrations/objects/illustration-wallet-card.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing sections",
+        "empty states",
+        "feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/cta/cta-mockup.png",
+      "publicPath": "public/assets/landing/cta/cta-mockup.png",
+      "priority": "P1",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing CTA"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/features/feature-icons.svg",
+      "publicPath": "public/assets/landing/features/feature-icons.svg",
+      "priority": "P0",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/features/piggy-bank.svg",
+      "publicPath": "public/assets/landing/features/piggy-bank.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/features/rocket-saving.svg",
+      "publicPath": "public/assets/landing/features/rocket-saving.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/features/wallet-cartoon.svg",
+      "publicPath": "public/assets/landing/features/wallet-cartoon.svg",
+      "priority": "P0",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing feature cards"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/gamification/challenge-progress-card.svg",
+      "publicPath": "public/assets/landing/gamification/challenge-progress-card.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing gamification section"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/gamification/gamification-cards.svg",
+      "publicPath": "public/assets/landing/gamification/gamification-cards.svg",
+      "priority": "P0",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing gamification section"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/hero/coins-floating.svg",
+      "publicPath": "public/assets/landing/hero/coins-floating.svg",
+      "priority": "P1",
+      "type": "asset",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing hero"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/hero/doodle-lines.svg",
+      "publicPath": "public/assets/landing/hero/doodle-lines.svg",
+      "priority": "P1",
+      "type": "asset",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing hero"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/hero/hero-phone-mockup.png",
+      "publicPath": "public/assets/landing/hero/hero-phone-mockup.png",
+      "priority": "P0",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "landing hero"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/saving-goal/saving-goal-progress.svg",
+      "publicPath": "public/assets/landing/saving-goal/saving-goal-progress.svg",
+      "priority": "P1",
+      "type": "illustration",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing saving goal section"
+      ]
+    },
+    {
+      "sourcePath": "assets/landing/trust/secure-finance-badge.svg",
+      "publicPath": "public/assets/landing/trust/secure-finance-badge.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "landing trust section"
+      ]
+    },
+    {
+      "sourcePath": "assets/marketing/app-preview/app-preview.png",
+      "publicPath": "public/assets/marketing/app-preview/app-preview.png",
+      "priority": "P1",
+      "type": "mockup",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "launch marketing"
+      ]
+    },
+    {
+      "sourcePath": "assets/marketing/banners/launch-banner.png",
+      "publicPath": "public/assets/marketing/banners/launch-banner.png",
+      "priority": "P1",
+      "type": "marketing",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "launch marketing"
+      ]
+    },
+    {
+      "sourcePath": "assets/marketing/og-image/og-image-keysaku.png",
+      "publicPath": "public/assets/marketing/og-image/og-image-keysaku.png",
+      "priority": "P1",
+      "type": "marketing",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "social sharing meta"
+      ]
+    },
+    {
+      "sourcePath": "assets/marketing/social/social-post-launch.png",
+      "publicPath": "public/assets/marketing/social/social-post-launch.png",
+      "priority": "P1",
+      "type": "marketing",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "launch marketing"
+      ]
+    },
+    {
+      "sourcePath": "assets/marketing/story/story-launch.png",
+      "publicPath": "public/assets/marketing/story/story-launch.png",
+      "priority": "P1",
+      "type": "marketing",
+      "formatTarget": "PNG/WebP final export",
+      "currentFormat": "PNG",
+      "status": "needs-production",
+      "usageLocation": [
+        "launch marketing"
+      ]
+    },
+    {
+      "sourcePath": "assets/states/empty/empty-challenge.svg",
+      "publicPath": "public/assets/states/empty/empty-challenge.svg",
+      "priority": "P1",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "empty state fallback"
+      ]
+    },
+    {
+      "sourcePath": "assets/states/empty/empty-report.svg",
+      "publicPath": "public/assets/states/empty/empty-report.svg",
+      "priority": "P1",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "empty state fallback"
+      ]
+    },
+    {
+      "sourcePath": "assets/states/empty/empty-reward.svg",
+      "publicPath": "public/assets/states/empty/empty-reward.svg",
+      "priority": "P1",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "empty state fallback"
+      ]
+    },
+    {
+      "sourcePath": "assets/states/empty/empty-saving-goal.svg",
+      "publicPath": "public/assets/states/empty/empty-saving-goal.svg",
+      "priority": "P1",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "empty state fallback"
+      ]
+    },
+    {
+      "sourcePath": "assets/states/empty/empty-transaction.svg",
+      "publicPath": "public/assets/states/empty/empty-transaction.svg",
+      "priority": "P1",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "empty state fallback"
+      ]
+    },
+    {
+      "sourcePath": "assets/states/error/error-general.svg",
+      "publicPath": "public/assets/states/error/error-general.svg",
+      "priority": "P1",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "empty state fallback"
+      ]
+    },
+    {
+      "sourcePath": "assets/states/loading/loading-spinner.json",
+      "publicPath": "public/assets/states/loading/loading-spinner.json",
+      "priority": "P2",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "JSON",
+      "status": "placeholder",
+      "usageLocation": [
+        "empty state fallback"
+      ]
+    },
+    {
+      "sourcePath": "assets/states/no-internet/no-internet.svg",
+      "publicPath": "public/assets/states/no-internet/no-internet.svg",
+      "priority": "P0",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "offline fallback"
+      ]
+    },
+    {
+      "sourcePath": "assets/states/success/success-reward.svg",
+      "publicPath": "public/assets/states/success/success-reward.svg",
+      "priority": "P1",
+      "type": "state",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "empty state fallback"
+      ]
+    },
+    {
+      "sourcePath": "assets/tokens/colors.css",
+      "publicPath": "public/assets/tokens/colors.css",
+      "priority": "P0",
+      "type": "token",
+      "formatTarget": "CSS",
+      "currentFormat": "CSS",
+      "status": "ready",
+      "usageLocation": [
+        "design system",
+        "landing page",
+        "app UI"
+      ]
+    },
+    {
+      "sourcePath": "assets/tokens/colors.json",
+      "publicPath": "public/assets/tokens/colors.json",
+      "priority": "P0",
+      "type": "token",
+      "formatTarget": "JSON",
+      "currentFormat": "JSON",
+      "status": "ready",
+      "usageLocation": [
+        "design system",
+        "landing page",
+        "app UI"
+      ]
+    },
+    {
+      "sourcePath": "assets/tokens/font-scale.json",
+      "publicPath": "public/assets/tokens/font-scale.json",
+      "priority": "P0",
+      "type": "token",
+      "formatTarget": "JSON",
+      "currentFormat": "JSON",
+      "status": "ready",
+      "usageLocation": [
+        "design system",
+        "landing page",
+        "app UI"
+      ]
+    },
+    {
+      "sourcePath": "assets/tokens/typography-spec.txt",
+      "publicPath": "public/assets/tokens/typography-spec.txt",
+      "priority": "P0",
+      "type": "token",
+      "formatTarget": "TXT",
+      "currentFormat": "TXT",
+      "status": "ready",
+      "usageLocation": [
+        "design system",
+        "landing page",
+        "app UI"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/badges/badge-level.svg",
+      "publicPath": "public/assets/ui/badges/badge-level.svg",
+      "priority": "P0",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/badges/badge-reward.svg",
+      "publicPath": "public/assets/ui/badges/badge-reward.svg",
+      "priority": "P0",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/badges/badge-streak.svg",
+      "publicPath": "public/assets/ui/badges/badge-streak.svg",
+      "priority": "P0",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/badges/badge-success.svg",
+      "publicPath": "public/assets/ui/badges/badge-success.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/badges/badge-warning.svg",
+      "publicPath": "public/assets/ui/badges/badge-warning.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/buttons/button-danger.svg",
+      "publicPath": "public/assets/ui/buttons/button-danger.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/buttons/button-ghost.svg",
+      "publicPath": "public/assets/ui/buttons/button-ghost.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/buttons/button-primary.svg",
+      "publicPath": "public/assets/ui/buttons/button-primary.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/buttons/button-secondary.svg",
+      "publicPath": "public/assets/ui/buttons/button-secondary.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/cards/card-balance.svg",
+      "publicPath": "public/assets/ui/cards/card-balance.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/cards/card-challenge.svg",
+      "publicPath": "public/assets/ui/cards/card-challenge.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/cards/card-reward.svg",
+      "publicPath": "public/assets/ui/cards/card-reward.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/cards/card-summary.svg",
+      "publicPath": "public/assets/ui/cards/card-summary.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/cards/card-transaction.svg",
+      "publicPath": "public/assets/ui/cards/card-transaction.svg",
+      "priority": "P1",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/inputs/input-amount.svg",
+      "publicPath": "public/assets/ui/inputs/input-amount.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/inputs/input-date.svg",
+      "publicPath": "public/assets/ui/inputs/input-date.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/inputs/input-search.svg",
+      "publicPath": "public/assets/ui/inputs/input-search.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/inputs/input-select.svg",
+      "publicPath": "public/assets/ui/inputs/input-select.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/inputs/input-text.svg",
+      "publicPath": "public/assets/ui/inputs/input-text.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/modals/modal-default.svg",
+      "publicPath": "public/assets/ui/modals/modal-default.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/progress/progress-bar-level.svg",
+      "publicPath": "public/assets/ui/progress/progress-bar-level.svg",
+      "priority": "P0",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/tabs/tabs-default.svg",
+      "publicPath": "public/assets/ui/tabs/tabs-default.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    },
+    {
+      "sourcePath": "assets/ui/toast/toast-success.svg",
+      "publicPath": "public/assets/ui/toast/toast-success.svg",
+      "priority": "P2",
+      "type": "ui-component",
+      "formatTarget": "SVG",
+      "currentFormat": "SVG",
+      "status": "placeholder",
+      "usageLocation": [
+        "design reference",
+        "component preview"
+      ]
+    }
+  ]
+}

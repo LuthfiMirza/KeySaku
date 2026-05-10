@@ -4,9 +4,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/welcome', '/login')->name('welcome');
+Route::view('/landing-v2', 'pages.landing-playful')->name('landing.playful');
+Route::view('/auth/onboarding', 'auth.onboarding')->middleware('guest')->name('auth.onboarding');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -24,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/transaksi', [PageController::class, 'transactions'])->name('transactions.index');
     Route::get('/transaksi/tambah', [PageController::class, 'createTransaction'])->name('transactions.create');
+    Route::post('/transaksi', [TransactionController::class, 'store'])->name('transactions.store');
     Route::get('/transaksi/suara', [PageController::class, 'voiceTransaction'])->name('transactions.voice');
     Route::get('/transaksi/{transaction}/edit', [PageController::class, 'editTransaction'])->name('transactions.edit');
 
