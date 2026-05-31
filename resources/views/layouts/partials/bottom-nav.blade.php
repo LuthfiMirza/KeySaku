@@ -1,59 +1,53 @@
-<nav class="fixed bottom-0 left-0 right-0 z-40 lg:hidden max-w-md mx-auto">
-    <div class="mx-4 mb-4 bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl shadow-black/30 border border-white/60 px-2 py-1.5">
+<nav class="fixed bottom-0 left-0 right-0 z-40 mx-auto max-w-md lg:hidden">
+    <div class="mx-3 mb-3 rounded-[24px] px-2 py-2 shadow-[0_12px_34px_rgba(0,0,0,0.28)]" style="background:rgba(19,32,68,0.95) !important;backdrop-filter:blur(12px) !important;box-shadow:0 4px 16px rgba(163,230,53,0.35) !important;border-top:1px solid rgba(255,255,255,0.08) !important;border-left:1px solid rgba(255,255,255,0.08) !important;border-right:1px solid rgba(255,255,255,0.08) !important;border-bottom:1px solid rgba(255,255,255,0.08) !important;">
         <div class="flex items-center justify-around">
-            {{-- Beranda --}}
-            <a href="{{ route('dashboard') }}"
-               class="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all duration-200 {{ request()->routeIs('dashboard') ? 'text-indigo-600' : 'text-slate-400 hover:text-slate-600' }}">
-                <span class="flex h-8 w-8 items-center justify-center rounded-xl {{ request()->routeIs('dashboard') ? 'bg-indigo-100' : '' }}">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+            <a href="{{ route('dashboard') }}" class="flex flex-col items-center gap-1 rounded-2xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('dashboard') ? 'text-[var(--bento-purple)]' : 'text-[var(--bento-text-muted)]' }}">
+                <span class="flex h-8 w-8 items-center justify-center rounded-xl {{ request()->routeIs('dashboard') ? 'bg-[var(--bento-card-2)]' : '' }}">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 10.8 12 3l9 7.8" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 10v10h5v-6h4v6h5V10" />
                     </svg>
                 </span>
-                <span class="text-[10px] font-semibold">Beranda</span>
+                <span class="text-[10px] font-medium">Beranda</span>
             </a>
 
-            {{-- Anggaran --}}
-            <a href="{{ route('budgets.index') }}"
-               class="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all duration-200 {{ request()->routeIs('budgets.index') ? 'text-indigo-600' : 'text-slate-400 hover:text-slate-600' }}">
-                <span class="flex h-8 w-8 items-center justify-center rounded-xl {{ request()->routeIs('budgets.index') ? 'bg-indigo-100' : '' }}">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
-                        <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
+            <a href="{{ route('budgets.index') }}" class="flex flex-col items-center gap-1 rounded-2xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('budgets.index') ? 'text-[var(--bento-purple)]' : 'text-[var(--bento-text-muted)]' }}">
+                <span class="flex h-8 w-8 items-center justify-center rounded-xl {{ request()->routeIs('budgets.index') ? 'bg-[var(--bento-card-2)]' : '' }}">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 19V5" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 17v-6m4 6V7m4 10v-4m4 6H4" />
                     </svg>
                 </span>
-                <span class="text-[10px] font-semibold">Anggaran</span>
+                <span class="text-[10px] font-medium">Anggaran</span>
             </a>
 
-            {{-- Tambah (FAB) --}}
             <div class="flex flex-col items-center -mt-5">
-                <a href="{{ route('transactions.create') }}" aria-label="Tambah transaksi" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/40 flex items-center justify-center text-white border-4 border-white/80 transition-transform active:scale-95">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                <a href="{{ route('transactions.create') }}" aria-label="Tambah transaksi" class="flex h-14 w-14 items-center justify-center rounded-full border-4 border-[var(--bento-bg)] bg-[var(--bento-teal)] text-black shadow-[0_8px_24px_rgba(74,222,128,0.22)] transition-transform active:scale-95" style="box-shadow:0 4px 16px rgba(163,230,53,0.35) !important;">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
                     </svg>
                 </a>
-                <span class="text-[10px] font-semibold text-indigo-600 mt-1">Tambah</span>
+                <span class="mt-1 text-[10px] font-medium text-[var(--bento-purple)]">Tambah</span>
             </div>
 
-            {{-- Tabungan --}}
-            <a href="{{ route('savings.index') }}"
-               class="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all duration-200 {{ request()->routeIs('savings.index') ? 'text-indigo-600' : 'text-slate-400 hover:text-slate-600' }}">
-                <span class="flex h-8 w-8 items-center justify-center rounded-xl {{ request()->routeIs('savings.index') ? 'bg-indigo-100' : '' }}">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            <a href="{{ route('savings.index') }}" class="flex flex-col items-center gap-1 rounded-2xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('savings.index') ? 'text-[var(--bento-purple)]' : 'text-[var(--bento-text-muted)]' }}">
+                <span class="flex h-8 w-8 items-center justify-center rounded-xl {{ request()->routeIs('savings.index') ? 'bg-[var(--bento-card-2)]' : '' }}">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 11.5c0-3 2.3-5.5 5.2-5.5H16a3 3 0 0 1 3 3v5.5a4.5 4.5 0 0 1-4.5 4.5H9.5A4.5 4.5 0 0 1 5 14.5v-3Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h5m5 1h2m-7 8v2m-4-2v2" />
                     </svg>
                 </span>
-                <span class="text-[10px] font-semibold">Tabungan</span>
+                <span class="text-[10px] font-medium">Tabungan</span>
             </a>
 
-            {{-- Pengaturan --}}
-            <a href="{{ route('settings') }}"
-               class="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all duration-200 {{ request()->routeIs('settings') ? 'text-indigo-600' : 'text-slate-400 hover:text-slate-600' }}">
-                <span class="flex h-8 w-8 items-center justify-center rounded-xl {{ request()->routeIs('settings') ? 'bg-indigo-100' : '' }}">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+            <a href="{{ route('settings') }}" class="flex flex-col items-center gap-1 rounded-2xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('settings') ? 'text-[var(--bento-purple)]' : 'text-[var(--bento-text-muted)]' }}">
+                <span class="flex h-8 w-8 items-center justify-center rounded-xl {{ request()->routeIs('settings') ? 'bg-[var(--bento-card-2)]' : '' }}">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.05.05a2 2 0 0 1-2.83 2.83l-.05-.05A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.05A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.88.34l-.05.05a2 2 0 0 1-2.83-2.83l.05-.05A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.05A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88l-.05-.05a2 2 0 0 1 2.83-2.83l.05.05A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.05A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.88-.34l.05-.05a2 2 0 0 1 2.83 2.83l-.05.05A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.05A1.7 1.7 0 0 0 19.4 15Z" />
                     </svg>
                 </span>
-                <span class="text-[10px] font-semibold">Setelan</span>
+                <span class="text-[10px] font-medium">Setelan</span>
             </a>
         </div>
     </div>
