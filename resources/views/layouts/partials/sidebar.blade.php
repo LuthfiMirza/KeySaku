@@ -1,23 +1,40 @@
-<div class="flex h-full flex-col bg-white/8 backdrop-blur-xl border-r border-white/10 text-white">
-    <div class="flex h-16 items-center justify-between border-b border-white/10 px-4">
-        <div class="flex items-center gap-3 min-w-0">
-            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 font-extrabold shadow-lg shadow-indigo-900/30">K</div>
-            <span x-show="sidebarOpen" x-transition class="truncate text-lg font-extrabold">KeySaku</span>
+<div class="flex h-full flex-col border-r border-[var(--bento-border)] bg-[var(--bento-card)] text-[var(--bento-text)]">
+    @php
+        $hour = now()->hour;
+        if ($hour >= 5 && $hour < 12) {
+            $greeting = 'Selamat pagi';
+            $greetingEmoji = '☀️';
+        } elseif ($hour >= 12 && $hour < 15) {
+            $greeting = 'Selamat siang';
+            $greetingEmoji = '🌤️';
+        } elseif ($hour >= 15 && $hour < 19) {
+            $greeting = 'Selamat sore';
+            $greetingEmoji = '🌅';
+        } else {
+            $greeting = 'Selamat malam';
+            $greetingEmoji = '🌙';
+        }
+    @endphp
+
+    <div class="flex h-16 items-center justify-between border-b border-[var(--bento-border)] px-4">
+        <div class="flex min-w-0 items-center gap-3">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-[var(--bento-purple)] font-extrabold text-white">K</div>
+            <span x-show="sidebarOpen" x-transition class="truncate text-xl font-black text-[var(--bento-purple)]">KeySaku</span>
         </div>
-        <button type="button" @click="sidebarOpen = ! sidebarOpen" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white/60 transition hover:bg-white/15 hover:text-white" aria-label="Toggle sidebar">
+        <button type="button" @click="sidebarOpen = ! sidebarOpen" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[var(--bento-text-muted)] transition hover:bg-indigo-50 hover:text-[var(--bento-text)]" aria-label="Toggle sidebar">
             <svg x-show="sidebarOpen" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
             <svg x-show="! sidebarOpen" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
         </button>
     </div>
 
-    <div class="border-b border-white/10 px-3 py-4">
-        <div class="flex items-center gap-3" :class="sidebarOpen ? '' : 'justify-center'">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 text-sm font-semibold text-white shadow-lg shadow-indigo-900/30">
+    <div class="border-b border-[var(--bento-border)] px-3 py-4">
+        <div class="flex items-center gap-3 rounded-2xl bg-slate-50 p-2" :class="sidebarOpen ? '' : 'justify-center'">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--bento-purple)] text-sm font-semibold text-white">
                 {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
             </div>
             <div x-show="sidebarOpen" x-transition class="min-w-0">
-                <p class="truncate text-sm font-bold text-white">{{ auth()->user()->name }}</p>
-                <p class="truncate text-xs text-white/40">{{ auth()->user()->email }}</p>
+                <p class="text-xs leading-none text-[var(--bento-text-muted)]">{{ $greeting }} {{ $greetingEmoji }}</p>
+                <p class="mt-1 truncate text-sm font-semibold leading-none text-[var(--bento-text)]">{{ auth()->user()->name }}</p>
             </div>
         </div>
     </div>
@@ -34,24 +51,24 @@
         ];
     @endphp
 
-    <nav class="flex-1 space-y-1 px-3 py-4">
+    <nav class="flex-1 space-y-1.5 px-3 py-4">
         @foreach ($items as $item)
             @php $active = request()->routeIs($item['active']); @endphp
-            <a href="{{ route($item['route']) }}" class="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all {{ $active ? 'bg-white/15 text-white before:absolute before:left-0 before:inset-y-1 before:w-0.5 before:rounded-full before:bg-indigo-400' : 'text-white/50 hover:bg-white/8 hover:text-white/80' }}" :class="sidebarOpen ? '' : 'justify-center'">
+            <a href="{{ route($item['route']) }}" class="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all {{ $active ? 'bg-[var(--bento-purple)] font-semibold text-white' : 'text-[var(--bento-text-muted)] hover:bg-indigo-50 hover:text-[var(--bento-text)]' }}" :class="sidebarOpen ? '' : 'justify-center'">
                 <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}"/></svg>
-                <span x-show="sidebarOpen" x-transition class="truncate text-sm font-medium">{{ $item['label'] }}</span>
+                <span x-show="sidebarOpen" x-transition class="truncate">{{ $item['label'] }}</span>
             </a>
         @endforeach
     </nav>
 
-    <div class="border-t border-white/10 px-3 py-4">
-        <a href="{{ route('transactions.create') }}" class="mb-3 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 py-2.5 text-sm font-medium text-white shadow-lg shadow-indigo-900/30" :class="sidebarOpen ? 'w-full px-3' : 'mx-auto h-10 w-10 px-0'">
+    <div class="border-t border-[var(--bento-border)] px-3 py-4">
+        <a href="{{ route('transactions.create') }}" class="mb-3 flex items-center justify-center gap-2 rounded-xl bg-[var(--bento-purple)] py-2.5 text-sm font-bold text-white shadow-[0_10px_28px_rgba(99,102,241,0.22)] transition hover:brightness-105" :class="sidebarOpen ? 'w-full px-3' : 'mx-auto h-10 w-10 px-0'">
             <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
             <span x-show="sidebarOpen" x-transition>Tambah Transaksi</span>
         </a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-            <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-white/40 transition hover:bg-white/8 hover:text-white/60" :class="sidebarOpen ? '' : 'mx-auto h-10 w-10 px-0'">
+            <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-[var(--bento-text-muted)] transition hover:bg-indigo-50 hover:text-[var(--bento-text)]" :class="sidebarOpen ? '' : 'mx-auto h-10 w-10 px-0'">
                 <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/></svg>
                 <span x-show="sidebarOpen" x-transition>Keluar</span>
             </button>

@@ -14,6 +14,19 @@
         $savingProgress = $primarySaving['progressPercentage'] ?? ($savingsGoalInsight['savingsProgressPercentage'] ?? 0);
         $savingOffset = 125.6 - (125.6 * min(100, max(0, (float) $savingProgress)) / 100);
         $sevenDayExpenseTotal = 0;
+        $categoryIcons = [
+            'makanan' => ['icon' => 'utensils', 'color' => '#F87171'],
+            'transportasi' => ['icon' => 'car', 'color' => '#60A5FA'],
+            'belanja' => ['icon' => 'shopping-cart', 'color' => '#FCD34D'],
+            'belanja dapur' => ['icon' => 'shopping-cart', 'color' => '#FCD34D'],
+            'tagihan' => ['icon' => 'receipt', 'color' => '#FB923C'],
+            'kesehatan' => ['icon' => 'heart-pulse', 'color' => '#F472B6'],
+            'pendidikan' => ['icon' => 'graduation-cap', 'color' => '#A3E635'],
+            'hiburan' => ['icon' => 'gamepad-2', 'color' => '#C084FC'],
+            'gaji' => ['icon' => 'banknote', 'color' => '#A3E635'],
+            'bonus' => ['icon' => 'gift', 'color' => '#FCD34D'],
+            'lainnya' => ['icon' => 'circle-dot', 'color' => '#94A3B8'],
+        ];
     @endphp
     <x-slot:title>Beranda</x-slot:title>
 
@@ -35,15 +48,15 @@
             </div>
         </section>
 
-        <section style="padding:16px 20px 20px 20px;">
+        <section style="padding:20px 20px 24px 20px;">
             <p style="color:#64748B;font-size:0.85rem;margin:0 0 4px 0;font-weight:400;">Siap kelola keuangan</p>
             <h2 style="color:#FFFFFF;font-size:1.5rem;font-weight:800;margin:0;line-height:1.3;letter-spacing:-0.01em;">
                 Hari ini, <span style="color:#A3E635;">{{ auth()->user()->name }}</span>?
             </h2>
         </section>
 
-        <section class="relative overflow-hidden shadow-[0_24px_54px_rgba(79,70,229,0.28)]" style="background:linear-gradient(135deg,#1A2B52,#132044) !important;border:1px solid rgba(163,230,53,0.15) !important;box-shadow:0 0 0 1px rgba(163,230,53,0.05),0 8px 32px rgba(0,0,0,0.4) !important;border-radius:28px !important;padding:20px 20px !important;margin-bottom:20px !important;color:#FFFFFF !important;">
-            <div class="pointer-events-none absolute -right-16 -top-20 h-40 w-40 rounded-full bg-[var(--bento-card)]/10 blur-3xl"></div>
+        <section class="relative overflow-hidden shadow-[0_24px_54px_rgba(79,70,229,0.28)]" style="background:linear-gradient(135deg,#1A2B52,#132044) !important;border:1px solid rgba(163,230,53,0.18) !important;box-shadow:0 0 0 1px rgba(163,230,53,0.06),0 12px 36px rgba(0,0,0,0.45) !important;border-radius:24px !important;padding:20px !important;position:relative;overflow:hidden;margin-bottom:20px !important;color:#FFFFFF !important;">
+            <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(163,230,53,0.07);border-radius:50%;pointer-events:none;"></div>
             <div class="pointer-events-none absolute -left-20 bottom-0 h-36 w-36 rounded-full bg-[var(--bento-card)]/10 blur-3xl"></div>
 
             <div class="relative">
@@ -58,10 +71,16 @@
                     <div style="background:#A3E635;border-radius:16px;padding:14px;">
                         <p style="color:#0A1628;font-size:10px;font-weight:600;margin:0 0 4px 0;opacity:0.7;letter-spacing:0.06em;">PEMASUKAN</p>
                         <p style="color:#0A1628;font-size:1rem;font-weight:800;margin:0;">{{ $formatRupiah($thisMonthIncome) }}</p>
+                        @if ((float) $thisMonthIncome == 0)
+                            <p style="color:rgba(10,22,40,0.55);font-size:10px;margin:4px 0 0 0;">Belum ada pemasukan</p>
+                        @endif
                     </div>
                     <div style="background:#1E3060 !important;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:14px;">
                         <p style="color:#94A3B8;font-size:10px;font-weight:600;margin:0 0 4px 0;letter-spacing:0.06em;">PENGELUARAN</p>
                         <p style="color:#F87171;font-size:1rem;font-weight:800;margin:0;">{{ $formatRupiah($thisMonthExpense) }}</p>
+                        @if ((float) $thisMonthExpense == 0)
+                            <p style="color:rgba(248,113,113,0.6);font-size:10px;margin:4px 0 0 0;">Belum ada pengeluaran</p>
+                        @endif
                     </div>
                 </div>
 
@@ -192,11 +211,15 @@
                         @php
                             $isIncome = $transaction->type === \App\Models\Transaction::TYPE_INCOME;
                             $amountPrefix = $isIncome ? '+' : '-';
+                            $categoryName = strtolower($transaction->category?->name ?? 'lainnya');
+                            $iconData = $categoryIcons[$categoryName] ?? ['icon' => 'circle-dot', 'color' => '#94A3B8'];
                         @endphp
                         <a href="{{ route('transactions.edit', $transaction) }}" class="block rounded-[24px] border border-[var(--bento-border)] bg-[var(--bento-card)] px-4 py-3.5 transition active:scale-[0.99]">
                             <div class="flex items-center gap-3">
                                 <span class="h-2.5 w-2.5 shrink-0 rounded-full {{ $isIncome ? 'bg-[var(--bento-teal)]' : 'bg-[var(--bento-rose)]' }}"></span>
-                                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg {{ $isIncome ? 'bg-[var(--bento-card-2)] text-[var(--bento-teal)]' : 'bg-[var(--bento-card-2)] text-[var(--bento-rose)]' }}">{{ $transaction->category?->icon ?: '💸' }}</span>
+                                <div style="width:36px;height:36px;background:#1A2B52;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.08);flex-shrink:0;">
+                                    <i data-lucide="{{ $iconData['icon'] }}" style="width:16px;height:16px;color:{{ $iconData['color'] }};"></i>
+                                </div>
                                 <div class="min-w-0 flex-1">
                                     <p class="truncate text-sm font-semibold text-[var(--bento-text)]">{{ $transaction->note ?: $transaction->category?->name ?? 'Tanpa catatan' }}</p>
                                     <p class="mt-0.5 truncate text-xs text-[var(--bento-text-muted)]">{{ $transaction->category?->name ?? 'Tanpa kategori' }} · {{ $transaction->transaction_date->format('d M Y') }}</p>
@@ -480,9 +503,14 @@
                             @php
                                 $isIncome = $transaction->type === \App\Models\Transaction::TYPE_INCOME;
                                 $amountPrefix = $isIncome ? '+' : '-';
+                                $categoryName = strtolower($transaction->category?->name ?? 'lainnya');
+                                $iconData = $categoryIcons[$categoryName] ?? ['icon' => 'circle-dot', 'color' => '#94A3B8'];
                             @endphp
                             <a href="{{ route('transactions.edit', $transaction) }}" class="grid gap-3 border-b border-[var(--bento-border)] px-4 py-3 transition hover:bg-[var(--bento-card)]/70 last:border-b-0 lg:grid-cols-[44px_minmax(0,1.5fr)_minmax(120px,0.8fr)_120px_150px] lg:items-center lg:gap-4">
-                                <span class="relative flex h-10 w-10 items-center justify-center rounded-xl text-lg {{ $isIncome ? 'bg-[var(--bento-card-2)] text-[var(--bento-teal)]' : 'bg-[var(--bento-card-2)] text-[var(--bento-rose)]' }}"><span class="absolute -left-1 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full {{ $isIncome ? 'bg-[var(--bento-teal)]' : 'bg-[var(--bento-rose)]' }}"></span>{{ $transaction->category?->icon ?: '💸' }}</span>
+                                <div style="width:36px;height:36px;background:#1A2B52;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.08);flex-shrink:0;position:relative;">
+                                    <span class="absolute -left-1 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full {{ $isIncome ? 'bg-[var(--bento-teal)]' : 'bg-[var(--bento-rose)]' }}"></span>
+                                    <i data-lucide="{{ $iconData['icon'] }}" style="width:16px;height:16px;color:{{ $iconData['color'] }};"></i>
+                                </div>
                                 <div class="min-w-0">
                                     <p class="truncate text-sm font-semibold text-[var(--bento-text)]">{{ $transaction->note ?: $transaction->category?->name ?? 'Tanpa catatan' }}</p>
                                     <p class="mt-0.5 text-xs text-[var(--bento-text-muted)] lg:hidden">{{ $transaction->category?->name ?? 'Tanpa kategori' }} · {{ $transaction->transaction_date->format('d M Y') }}</p>

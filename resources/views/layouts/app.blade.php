@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <title>{{ $title ?? 'KeySaku' }} — Kelola Keuangan Keluarga</title>
     @include('layouts.partials.pwa-meta')
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css'])
     @livewireStyles
     <style>
         :root {
@@ -75,10 +75,19 @@
     @include('layouts.partials.bottom-nav')
 
     @livewireScripts
+    @vite(['resources/js/app.js'])
     <script>
         if ('serviceWorker' in navigator) {
             // Service worker registration will go here in a later milestone.
         }
+    </script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
     </script>
 </body>
 </html>
