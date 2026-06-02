@@ -329,15 +329,37 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Store preferences without changing formatting, translation, or calculations
 - [x] Add focused preference settings tests
 
+## Phase 10A — UI Quick Wins Polish
+- [x] Load Plus Jakarta Sans for display numbers
+- [x] Add time-based greeting in mobile header and desktop sidebar
+- [x] Add animated balance counter on dashboard hero card
+- [x] Add semantic income/expense visual hierarchy
+- [x] Fix abbreviated hero amount prefixes to `+Rp` / `-Rp`
+- [x] Unify mobile FAB color to indigo-purple
+- [x] Integrate points, streak, and level into dashboard hero card
+- [x] Run view, test, and build validation
+
+## Phase 10B — Bento Dark Dashboard Redesign
+- [x] Add bento dark design tokens and global background
+- [x] Update desktop sidebar to dark charcoal and lime accent theme
+- [x] Update mobile bottom navigation to dark bento theme
+- [x] Redesign dashboard hero into dark bento balance card
+- [x] Add bento widgets for income, expense, budget, savings, and activity
+- [x] Add Chart.js donut widget for expense by category
+- [x] Add Chart.js bar widget for 7-day expense trend
+- [x] Redesign latest transactions list for dark bento UI
+- [x] Preserve existing routes, variables, controllers, models, migrations, and tests
+- [x] Run `php artisan view:clear`, `php artisan test`, and `npm run build`
+
 ---
 
 ## Milestone 5 — Voice & Insights
 - [x] SpeechRecognition JS module
 - [ ] Voice input modal
 - [x] Text parser for voice → transaction
-- [ ] Chart.js integration
-- [ ] Monthly summary chart
-- [ ] Category breakdown chart
+- [x] Chart.js integration on dashboard
+- [ ] Monthly summary chart on reports page
+- [x] Category breakdown chart on dashboard
 
 ---
 
