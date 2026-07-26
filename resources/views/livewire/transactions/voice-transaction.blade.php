@@ -345,25 +345,26 @@
     </div>
 
     <section class="rounded-2xl p-4" style="background:#132044 !important;border:1px solid rgba(255,255,255,0.08) !important;border-radius:20px !important;box-shadow:0 8px 32px rgba(0,0,0,0.3) !important;">
-        <div class="flex items-start gap-3">
-            <div style="width:34px;height:34px;background:#1A2B52;border-radius:9px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(163,230,53,0.15);flex-shrink:0;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A3E635" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 11 12 14 22 4"/>
-                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                </svg>
-            </div>
-            <div class="min-w-0 flex-1">
-                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
-                    <div>
-                        <p class="text-sm font-bold text-white" style="margin:0;">Preview transaksi</p>
-                        <p style="color:#64748B;font-size:12px;margin:4px 0 0 0;">Hasil parsing otomatis</p>
-                    </div>
-                    @if ($parsedDraft)
-                        <span style="background:rgba(163,230,53,0.12);border:1px solid rgba(163,230,53,0.18);border-radius:999px;color:#A3E635;font-size:11px;font-weight:700;padding:6px 10px;white-space:nowrap;">Siap simpan</span>
-                    @endif
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;width:100%;">
+            <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+                <div style="width:34px;height:34px;background:#1A2B52;border-radius:9px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(163,230,53,0.15);flex-shrink:0;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A3E635" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 11 12 14 22 4"/>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
                 </div>
-                <div style="height:1px;background:rgba(255,255,255,0.08);margin:14px 0;"></div>
+                <div style="min-width:0;">
+                    <p class="text-sm font-bold text-white" style="margin:0;">Preview transaksi</p>
+                    <p style="color:#64748B;font-size:12px;margin:4px 0 0 0;">Hasil parsing otomatis</p>
+                </div>
+            </div>
+            @if ($parsedDraft)
+                <span style="background:rgba(163,230,53,0.12);border:1px solid rgba(163,230,53,0.18);border-radius:999px;color:#A3E635;font-size:11px;font-weight:700;padding:6px 10px;white-space:nowrap;">Siap simpan</span>
+            @endif
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,0.08);margin:14px 0;"></div>
 
+        <div style="width:100%;">
                 @if (! $parsedDraft)
                     <p class="mt-1 text-xs text-[#64748B]">Transkrip siap diproses.</p>
                 @else
@@ -378,30 +379,40 @@
                         </div>
                     @endif
 
-                    <div class="mt-3 grid gap-2 text-sm">
-                        <div class="flex items-center justify-between gap-3 rounded-2xl px-4 py-3" style="background:#1A2B52 !important;border:1px solid rgba(255,255,255,0.06) !important;margin-bottom:6px;">
-                            <span class="text-[#64748B]">Jenis</span>
-                            <span class="font-bold {{ $parsedDraft['type'] === \App\Models\Transaction::TYPE_INCOME ? 'text-[#1d9e75]' : 'text-[#F87171]' }}">
+                    <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;background:#1A2B52;border-radius:10px;padding:12px 14px;border:0.5px solid rgba(255,255,255,0.07);">
+                            <span style="font-size:12px;color:#64748B;">Jenis</span>
+                            <span style="font-size:13px;font-weight:700;color:{{ $parsedDraft['type'] === \App\Models\Transaction::TYPE_INCOME ? '#1d9e75' : '#F87171' }};">
                                 {{ $parsedDraft['type'] === \App\Models\Transaction::TYPE_INCOME ? 'Pemasukan' : 'Pengeluaran' }}
                             </span>
                         </div>
-                        <div class="flex items-center justify-between gap-3 rounded-2xl px-4 py-3" style="background:#1A2B52 !important;border:1px solid rgba(255,255,255,0.06) !important;margin-bottom:6px;">
-                            <span class="text-[#64748B]">Nominal</span>
-                            <span class="font-bold text-white">{{ $parsedDraft['amount'] ? 'Rp '.number_format($parsedDraft['amount'], 0, ',', '.') : 'Belum dikenali' }}</span>
+
+                        <div style="display:flex;align-items:center;justify-content:space-between;background:#1A2B52;border-radius:10px;padding:12px 14px;border:0.5px solid rgba(255,255,255,0.07);">
+                            <span style="font-size:12px;color:#64748B;">Nominal</span>
+                            <span style="font-size:13px;font-weight:700;color:#e8edf2;">
+                                {{ $parsedDraft['amount'] ? 'Rp '.number_format($parsedDraft['amount'], 0, ',', '.') : 'Belum dikenali' }}
+                            </span>
                         </div>
-                        <div class="flex items-center justify-between gap-3 rounded-2xl px-4 py-3" style="background:#1A2B52 !important;border:1px solid rgba(255,255,255,0.06) !important;margin-bottom:6px;">
-                            <span class="text-[#64748B]">Kategori</span>
-                            <span class="font-bold text-white">{{ $parsedDraft['category_name'] ?? 'Belum ditemukan' }}</span>
+
+                        <div style="display:flex;align-items:center;justify-content:space-between;background:#1A2B52;border-radius:10px;padding:12px 14px;border:0.5px solid rgba(255,255,255,0.07);">
+                            <span style="font-size:12px;color:#64748B;">Kategori</span>
+                            <span style="font-size:13px;font-weight:700;color:#e8edf2;">
+                                {{ $parsedDraft['category_name'] ?? 'Belum ditemukan' }}
+                            </span>
                         </div>
-                        <div class="flex items-center justify-between gap-3 rounded-2xl px-4 py-3" style="background:#1A2B52 !important;border:1px solid rgba(255,255,255,0.06) !important;margin-bottom:6px;">
-                            <span class="text-[#64748B]">Tanggal</span>
-                            <span class="font-bold text-white">{{ \Carbon\Carbon::parse($parsedDraft['transaction_date'])->translatedFormat('j M Y') }}</span>
+
+                        <div style="display:flex;align-items:center;justify-content:space-between;background:#1A2B52;border-radius:10px;padding:12px 14px;border:0.5px solid rgba(255,255,255,0.07);">
+                            <span style="font-size:12px;color:#64748B;">Tanggal</span>
+                            <span style="font-size:13px;font-weight:700;color:#e8edf2;">
+                                {{ \Carbon\Carbon::parse($parsedDraft['transaction_date'])->translatedFormat('j M Y') }}
+                            </span>
                         </div>
-                        <div class="rounded-2xl px-4 py-3" style="background:#1A2B52 !important;border:1px solid rgba(255,255,255,0.06) !important;margin-bottom:6px;">
-                            <span class="text-[#64748B]">Catatan</span>
-                            <div style="margin-top:8px;background:#132044;border:1px solid rgba(255,255,255,0.08);border-radius:14px;color:#FFFFFF;font-size:13px;font-weight:700;line-height:1.5;padding:12px 14px;">
+
+                        <div style="background:#1A2B52;border-radius:10px;padding:12px 14px;border:0.5px solid rgba(255,255,255,0.07);">
+                            <span style="font-size:12px;color:#64748B;display:block;margin-bottom:6px;">Catatan</span>
+                            <p style="font-size:13px;font-weight:600;color:#e8edf2;margin:0;">
                                 {{ $parsedDraft['note'] ?: 'Belum dikenali' }}
-                            </div>
+                            </p>
                         </div>
                     </div>
 
@@ -418,7 +429,6 @@
                     @endif
                 @endif
             </div>
-        </div>
     </section>
 
     <section class="rounded-2xl p-4" style="background:#132044 !important;border:1px solid rgba(255,255,255,0.08) !important;border-radius:20px !important;box-shadow:0 8px 32px rgba(0,0,0,0.3) !important;">
