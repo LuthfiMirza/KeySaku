@@ -25,6 +25,7 @@
 
     @include('layouts.partials.bottom-nav')
 
+    <script>window.appCurrency = @json(\App\Support\Money::config());</script>
     @livewireScripts
     <script>
         if ('serviceWorker' in navigator) {
