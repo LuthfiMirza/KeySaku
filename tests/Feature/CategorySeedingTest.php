@@ -45,4 +45,18 @@ class CategorySeedingTest extends TestCase
         $this->assertSame(0, Category::where('user_id', $userA->id)->where('name', 'Makanan')->count() - 1);
         $this->assertFalse($userA->categories()->whereIn('id', $userB->categories()->pluck('id'))->exists());
     }
+    public function test_deleting_all_categories_stays_empty_when_reopening_page(): void
+    {
+        $user = \App\Models\User::factory()->create();
+        $this->assertSame(13, $user->categories()->count());
+
+        $user->categories()->delete();
+        $this->assertSame(0, $user->fresh()->categories()->count());
+
+        \Livewire\Livewire::actingAs($user)
+            ->test(\App\Livewire\CategoryManager::class)
+            ->assertOk();
+
+        $this->assertSame(0, $user->fresh()->categories()->count());
+    }
 }
