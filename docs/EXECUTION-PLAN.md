@@ -11,7 +11,7 @@ Status: BELUM / JALAN / SELESAI
 | # | Task | Status | Branch |
 |---|------|--------|--------|
 | 1 | Money formatter backend | SELESAI | refactor/money-formatting |
-| 2 | Salvage parser + normalizeAmount | BELUM | feat/voice-income-support |
+| 2 | Salvage parser + normalizeAmount | SELESAI | feat/voice-income-support |
 | 3 | Observer kategori + test otorisasi | BELUM | fix/category-seeding |
 | 4 | Trait scoping + Policy | BELUM | refactor/tenant-scoping |
 | 5 | Saldo awal + semantik earmarking | BELUM | feat/initial-balance |
