@@ -58,14 +58,16 @@ class VoiceTransaction extends Component
             return null;
         }
 
+        $type = $this->parsedDraft['type'] ?? Transaction::TYPE_EXPENSE;
+
         $category = auth()->user()
             ->categories()
             ->whereKey($this->parsedDraft['category_id'])
-            ->where('type', Category::TYPE_EXPENSE)
+            ->where('type', $type)
             ->first();
 
         if (! $category) {
-            $this->addError('parsedDraft', 'Kategori tidak valid untuk transaksi pengeluaran.');
+            $this->addError('parsedDraft', 'Kategori tidak valid untuk jenis transaksi ini.');
             return null;
         }
 
@@ -80,7 +82,7 @@ class VoiceTransaction extends Component
         Transaction::create([
             'user_id' => auth()->id(),
             'category_id' => $category->id,
-            'type' => Transaction::TYPE_EXPENSE,
+            'type' => $type,
             'amount' => $amount,
             'transaction_date' => $this->parsedDraft['transaction_date'],
             'note' => $note,

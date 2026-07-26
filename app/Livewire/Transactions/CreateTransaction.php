@@ -33,6 +33,8 @@ class CreateTransaction extends Component
 
     public function save(): void
     {
+        $this->amount = $this->normalizeAmount($this->amount);
+
         $validated = $this->validate([
             'type' => ['required', Rule::in(Transaction::types())],
             'category_id' => ['required', 'integer'],
@@ -87,5 +89,10 @@ class CreateTransaction extends Component
             ->categories()
             ->where('type', $this->type)
             ->orderBy('name');
+    }
+
+    private function normalizeAmount(string $amount): string
+    {
+        return preg_replace('/\D+/', '', $amount) ?: '';
     }
 }

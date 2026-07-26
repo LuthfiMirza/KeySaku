@@ -11,7 +11,7 @@ Status: BELUM / JALAN / SELESAI
 | # | Task | Status | Branch |
 |---|------|--------|--------|
 | 1 | Money formatter backend | SELESAI | refactor/money-formatting |
-| 2 | Salvage parser + normalizeAmount | BELUM | feat/voice-income-support |
+| 2 | Salvage parser + normalizeAmount | SELESAI | feat/voice-income-support |
 | 3 | Observer kategori + test otorisasi | BELUM | fix/category-seeding |
 | 4 | Trait scoping + Policy | BELUM | refactor/tenant-scoping |
 | 5 | Saldo awal + semantik earmarking | BELUM | feat/initial-balance |
@@ -263,7 +263,6 @@ Definition of done:
 
 - Ambang Levenshtein ≤2 terlalu longgar untuk kata pendek — ganti jadi
   relatif panjang kata, jangan fuzzy-match di bawah 5 huruf
-- Perilaku "kategori mengalahkan tipe" di parser perlu dikonfirmasi
 - resources/views/dashboard.blade.php tidak dirujuk route mana pun —
   kandidat penghapusan
 - Timezone Asia/Jakarta fixed di config, tidak per-user

@@ -56,4 +56,33 @@ class VoiceTransactionTest extends TestCase
 
         $this->assertDatabaseCount('transactions', 0);
     }
+
+    public function test_user_can_save_parsed_voice_income_transaction(): void
+    {
+        $user = User::factory()->create();
+        $category = Category::create([
+            'user_id' => $user->id,
+            'name' => 'Gaji',
+            'type' => Category::TYPE_INCOME,
+            'color' => '#10b981',
+            'icon' => '💼',
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(VoiceTransaction::class)
+            ->set('transcript', 'Terima gaji satu juta kategori gaji')
+            ->call('parse')
+            ->call('save')
+            ->assertRedirect(route('transactions.index'));
+
+        $this->assertDatabaseHas('transactions', [
+            'user_id' => $user->id,
+            'category_id' => $category->id,
+            'type' => Transaction::TYPE_INCOME,
+            'amount' => 1000000.00,
+            'note' => 'terima gaji',
+            'source' => Transaction::SOURCE_VOICE,
+            'raw_voice_text' => 'Terima gaji satu juta kategori gaji',
+        ]);
+    }
 }
