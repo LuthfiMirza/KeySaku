@@ -19,7 +19,10 @@ class VoiceTransactionParser
         $workingText = $this->normalizeText($rawTranscript);
         $warnings = [];
 
+        [$transactionDate, $workingText] = $this->extractDate($workingText);
+        [$type, $workingText] = $this->extractType($workingText);
         [$category, $workingText] = $this->extractCategory($workingText, $categories);
+        $type = $category?->type ?? $type;
         [$amount, $workingText] = $this->extractAmount($workingText);
 
         $note = $this->cleanNote($workingText);
@@ -37,15 +40,83 @@ class VoiceTransactionParser
         }
 
         return [
-            'type' => Transaction::TYPE_EXPENSE,
+            'type' => $type,
             'amount' => $amount,
             'category_id' => $category?->id,
             'category_name' => $category?->name,
-            'transaction_date' => now()->toDateString(),
+            'transaction_date' => $transactionDate,
             'note' => $note,
             'raw_voice_text' => $rawTranscript,
             'warnings' => $warnings,
         ];
+    }
+
+    /**
+     * @return array{0: string, 1: string}
+     */
+    private function extractDate(string $text): array
+    {
+        $date = now();
+
+        $phrases = [
+            'hari ini' => now(),
+            'kemarin' => now()->subDay(),
+            'kemaren' => now()->subDay(),
+        ];
+
+        foreach ($phrases as $phrase => $resolvedDate) {
+            if (preg_match('/\b'.preg_quote($phrase, '/').'\b/u', $text)) {
+                return [
+                    $resolvedDate->toDateString(),
+                    trim(preg_replace('/\b'.preg_quote($phrase, '/').'\b/u', '', $text) ?? $text),
+                ];
+            }
+        }
+
+        return [$date->toDateString(), $text];
+    }
+
+    /**
+     * @return array{0: string, 1: string}
+     */
+    private function extractType(string $text): array
+    {
+        $incomeKeywords = [
+            'pemasukan',
+            'pendapatan',
+            'masuk',
+            'terima',
+            'menerima',
+            'dapat',
+            'gaji',
+            'bonus',
+            'usaha',
+            'hadiah',
+        ];
+
+        $expenseKeywords = [
+            'pengeluaran',
+            'keluar',
+            'beli',
+            'belanja',
+            'bayar',
+            'makan',
+            'parkir',
+        ];
+
+        foreach ($incomeKeywords as $keyword) {
+            if (preg_match('/\b'.preg_quote($keyword, '/').'\b/u', $text)) {
+                return [Transaction::TYPE_INCOME, $text];
+            }
+        }
+
+        foreach ($expenseKeywords as $keyword) {
+            if (preg_match('/\b'.preg_quote($keyword, '/').'\b/u', $text)) {
+                return [Transaction::TYPE_EXPENSE, $text];
+            }
+        }
+
+        return [Transaction::TYPE_EXPENSE, $text];
     }
 
     /**
@@ -59,9 +130,25 @@ class VoiceTransactionParser
         }
 
         $candidate = trim($matches[1]);
+        $normalizedCandidate = $this->normalizeCategoryText($candidate);
         $matchedCategory = $categories->first(function (Category $category) use ($candidate) {
-            return Str::lower($category->name) === Str::lower($candidate);
+            $categoryName = Str::lower($category->name);
+            $candidateText = Str::lower($candidate);
+
+            return $categoryName === $candidateText
+                || Str::contains($candidateText, $categoryName);
         });
+
+        if (! $matchedCategory) {
+            $matchedCategory = $categories->first(function (Category $category) use ($normalizedCandidate) {
+                $categoryName = $this->normalizeCategoryText($category->name);
+
+                return $categoryName === $normalizedCandidate
+                    || Str::contains($normalizedCandidate, $categoryName)
+                    || Str::contains($categoryName, $normalizedCandidate)
+                    || levenshtein($categoryName, $normalizedCandidate) <= 2;
+            });
+        }
 
         if (! $matchedCategory) {
             return [null, preg_replace('/\bkategori\s+.+$/u', '', $text) ?? $text];
@@ -75,9 +162,18 @@ class VoiceTransactionParser
      */
     private function extractAmount(string $text): array
     {
+        if (preg_match('/\b([0-9]+)\s*(?:juta|jt)\s+([0-9]{1,3})(?:\s*(?:ribu|rb))?\b/u', $text, $matches)) {
+            $millions = (int) $matches[1] * 1000000;
+            $thousands = (int) $matches[2] * 1000;
+            $amountText = $matches[0];
+
+            return [(float) ($millions + $thousands), trim(str_replace($amountText, '', $text))];
+        }
+
         $patterns = [
             '/\brp\s*([0-9]+(?:\.[0-9]{3})+|[0-9]+)\b/u',
             '/\b([0-9]+(?:\.[0-9]{3})+)\b/u',
+            '/\b([0-9]+)\s*(?:juta|jt)\b/u',
             '/\b([0-9]+)\s*(?:ribu|rb)\b/u',
             '/\b([0-9]+)\b/u',
         ];
@@ -85,6 +181,10 @@ class VoiceTransactionParser
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $text, $matches)) {
                 $amount = str_replace('.', '', $matches[1]);
+
+                if (str_contains($matches[0], 'juta') || str_contains($matches[0], 'jt')) {
+                    $amount = (string) ((int) $amount * 1000000);
+                }
 
                 if (str_contains($matches[0], 'ribu') || str_contains($matches[0], 'rb')) {
                     $amount = (string) ((int) $amount * 1000);
@@ -118,6 +218,14 @@ class VoiceTransactionParser
         $text = Str::lower($text);
         $text = str_replace(['“', '”', '"', ','], ' ', $text);
         $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
+
+        return trim($text);
+    }
+
+    private function normalizeCategoryText(string $text): string
+    {
+        $text = $this->normalizeText($text);
+        $text = preg_replace('/\b(dan|untuk|sebesar|senilai)\b.*$/u', '', $text) ?? $text;
 
         return trim($text);
     }
