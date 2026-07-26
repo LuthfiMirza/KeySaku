@@ -118,6 +118,17 @@ class VoiceTransactionParserTest extends TestCase
         $this->assertSame('beli nasi', $result['note']);
     }
 
+    public function test_explicit_expense_keyword_wins_over_fuzzy_matched_income_category(): void
+    {
+        $result = $this->parser()->parse(
+            'beli gajih 20 ribu kategori gajih',
+            $this->categories()
+        );
+
+        $this->assertSame('expense', $result['type']);
+        $this->assertSame('Gaji', $result['category_name']);
+    }
+
     public function test_it_returns_warnings_when_amount_and_category_are_missing(): void
     {
         $result = $this->parser()->parse('Beli sesuatu', $this->categories());

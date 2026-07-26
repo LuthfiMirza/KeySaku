@@ -263,7 +263,6 @@ Definition of done:
 
 - Ambang Levenshtein ≤2 terlalu longgar untuk kata pendek — ganti jadi
   relatif panjang kata, jangan fuzzy-match di bawah 5 huruf
-- Perilaku "kategori mengalahkan tipe" di parser perlu dikonfirmasi
 - resources/views/dashboard.blade.php tidak dirujuk route mana pun —
   kandidat penghapusan
 - Timezone Asia/Jakarta fixed di config, tidak per-user

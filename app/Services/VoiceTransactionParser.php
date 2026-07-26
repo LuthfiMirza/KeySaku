@@ -22,7 +22,7 @@ class VoiceTransactionParser
         [$transactionDate, $workingText] = $this->extractDate($workingText);
         [$type, $workingText] = $this->extractType($workingText);
         [$category, $workingText] = $this->extractCategory($workingText, $categories);
-        $type = $category?->type ?? $type;
+        $type = $type ?? $category?->type ?? Transaction::TYPE_EXPENSE;
         [$amount, $workingText] = $this->extractAmount($workingText);
 
         $note = $this->cleanNote($workingText);
@@ -77,7 +77,7 @@ class VoiceTransactionParser
     }
 
     /**
-     * @return array{0: string, 1: string}
+     * @return array{0: string|null, 1: string}
      */
     private function extractType(string $text): array
     {
@@ -116,7 +116,7 @@ class VoiceTransactionParser
             }
         }
 
-        return [Transaction::TYPE_EXPENSE, $text];
+        return [null, $text];
     }
 
     /**
