@@ -1,4 +1,6 @@
 import './bootstrap';
+import { formatMoney } from './money';
+window.formatMoney = formatMoney;
 
 import Alpine from 'alpinejs';
 
