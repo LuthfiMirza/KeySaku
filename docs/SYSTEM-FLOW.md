@@ -1,5 +1,11 @@
 # System Flow & Architecture — KeySaku
 
+> **Basis dokumen: branch `main` (per 26 Juli 2026).**
+> Versi awal dokumen ini dibuat di branch `ui/bento-dark-dashboard` dan
+> memuat detail UI (Alpine counter, Chart.js, landing pages) yang tidak
+> ada di `main`. Dokumen sudah dikoreksi agar sesuai `main`.
+> Rangkuman perbedaan ada di section terakhir.
+
 Dokumen ini memetakan alur sistem, model data, otorisasi, dan logika perhitungan uang di KeySaku.
 Dibuat melalui analisis read-only kode.
 
@@ -252,9 +258,9 @@ return Carbon::createFromFormat('Y-m', $month, config('app.timezone'))->startOfM
 
 ### 14. Alur Lengkap Membuat Transaksi Manual
 
-**Route entry**: `POST /transaksi` → `app/Http/Controllers/TransactionController.php:store()` atau `GET /transaksi/tambah` → Livewire page
+**Route entry**: `GET /transaksi/tambah` → Livewire full-page. Di `main` tidak ada `POST /transaksi` maupun `TransactionController` — form fallback controller-based hanya ada di branch `ui/bento-dark-dashboard`.
 
-**Via Livewire** (pilihan utama):
+**Via Livewire** (satu-satunya jalur di `main`):
 1. User buka `GET /transaksi/tambah` → `resources/views/pages/transactions/create.blade.php`
 2. Mount component `<livewire:transactions.create-transaction />` → `app/Livewire/Transactions/CreateTransaction.php`
 3. Component `mount()` → `app/Livewire/Transactions/CreateTransaction.php:22-26`:
@@ -269,12 +275,7 @@ return Carbon::createFromFormat('Y-m', $month, config('app.timezone'))->startOfM
    - `Transaction::create([...])`
    - Redirect ke `transactions.index` dengan success message
 
-**Via Form POST** (fallback):
-1. Form submit ke `POST /transaksi` → `app/Http/Controllers/TransactionController.php:store()`
-2. Validate via `$request->validate()`
-3. Seed kategori default jika perlu
-4. Create Transaction
-5. Redirect dengan success message
+**Via Form POST** (fallback): TIDAK ADA di `main`. Rute dan controller-nya (`TransactionController::store`, route `transactions.store`) hanya diperkenalkan di branch `ui/bento-dark-dashboard`.
 
 **Events/Observers/Jobs**: TIDAK ADA. Tidak ada event listener atau job yang ke-trigger saat transaksi dibuat.
 
@@ -491,12 +492,14 @@ $formatRupiah = fn ($amount) => 'Rp '.number_format((float) $amount, 0, ',', '.'
 
 - `resources/views/layouts/app.blade.php` — layout halaman ter-autentikasi, dipakai via `<x-app-layout>` (Blade component `app/View/Components/AppLayout.php`).
 - `resources/views/layouts/guest.blade.php` — layout auth Breeze (login, register, reset password, dll), dipakai via `<x-guest-layout>`.
-- `resources/views/pages/landing.blade.php`, `resources/views/pages/landing-playful.blade.php`, `resources/views/auth/onboarding.blade.php` — **standalone HTML** dengan `<!DOCTYPE html>` sendiri, tidak memakai layout mana pun.
-- `resources/views/dashboard.blade.php` — **tidak dirujuk route mana pun** (dashboard aktif = `resources/views/pages/dashboard.blade.php`). Kandidat penghapusan; jangan dihapus di luar scope tugas terkait.
+- `resources/views/dashboard.blade.php` — **tidak dirujuk route mana pun** (dashboard aktif = `resources/views/pages/dashboard.blade.php`). Kandidat penghapusan; di luar scope tugas terkait.
+
+**Tidak ada di `main`** (hanya di `ui/bento-dark-dashboard`):
+- `resources/views/pages/landing.blade.php`, `resources/views/pages/landing-playful.blade.php`, `resources/views/auth/onboarding.blade.php` — standalone HTML dengan `<!DOCTYPE html>` sendiri.
 
 ### 21. Testing Framework & Coverage
 
-**Framework**: Pest (berbasis PHPUnit)
+**Framework**: PHPUnit (`^11.0`, `tests/TestCase.php` extends `Illuminate\Foundation\Testing\TestCase`). Dokumen sebelumnya keliru menyebut Pest.
 
 **File test**: 18 files
 ```
@@ -534,7 +537,7 @@ tests/
 - ⚠️ **Transactions/Manual**: TIDAK DITEMUKAN test file khusus `Transactions/CreateTransaction` atau `TransactionList`
 - ⚠️ **Categories**: TIDAK DITEMUKAN test file khusus `CategoryManager`
 
-**Total assertions**: 99 tests passing per README
+**Total test di `main`**: 99 tests passing (bukan 105 seperti di branch `ui/bento-dark-dashboard`, yang menambah 6 test case di `VoiceTransactionParserTest` & `VoiceTransactionTest`).
 
 ---
 
@@ -595,3 +598,41 @@ tests/
 
 **Dokumen ini dibuat**: 26 Juli 2026
 **Status**: Read-only analysis, no code changes
+
+
+---
+
+## Perbedaan dengan branch arsip `ui/bento-dark-dashboard`
+
+Branch UI adalah arsip perombakan tampilan dark navy. **Tidak akan di-merge**. Ringkasan hal yang ada di UI tapi TIDAK di `main`:
+
+### Kode
+- `app/Http/Controllers/TransactionController.php` — form fallback `POST /transaksi`. Di `main` semua create transaksi lewat Livewire `CreateTransaction`.
+- Modifikasi berat: `app/Livewire/Transactions/*`, `app/Services/VoiceTransactionParser.php` (parser diperkaya keyword & word amounts). Model & migration **identik** dengan `main`.
+
+### Routes
+- `POST /transaksi` (`transactions.store`).
+- `GET /landing-v2` → `pages.landing-playful`.
+- `GET /auth/onboarding` (guest middleware).
+
+### Views
+- Perombakan masif: `pages/dashboard.blade.php` (+chart doughnut, Alpine animated counter, tabs mobile/desktop), `pages/reports/index.blade.php`, semua `livewire/*.blade.php`, `layouts/app.blade.php` (sidebar desktop + dark theme), semua `layouts/partials/*`, semua `pages/settings/*`.
+- File baru: `pages/landing.blade.php`, `pages/landing-playful.blade.php`, `auth/onboarding.blade.php` (standalone HTML), `layouts/partials/sidebar.blade.php`, `components/landing/*`, `components/dashboard-card.blade.php`, `components/insight-card.blade.php`, `components/quick-action.blade.php`.
+
+### Frontend
+- `resources/js/app.js` diganti (lucide icons, bukan Alpine).
+- `package.json` menambah dependency (lucide).
+- `resources/css/keysaku-tokens.css` baru.
+
+### Assets
+- Puluhan file di `assets/` dan `public/assets/` (brand, illustrations, landing mockups).
+
+### Tests
+- Daftar file test **identik** dengan `main` (18 file). Perbedaan 6 test = penambahan test case di dalam `tests/Unit/VoiceTransactionParserTest.php` dan `tests/Feature/Transactions/VoiceTransactionTest.php` (commit `de5fdbc`).
+
+### Konsekuensi bagi Section C (Alur Perhitungan Uang) — TETAP AKURAT
+Query saldo, progress anggaran, kalkulasi savings, soft-delete behavior, dan penggunaan timezone **sama persis** di `main` maupun UI. Yang berubah di UI hanyalah lapisan presentasi.
+
+### Konsekuensi bagi rendering
+- **Chart.js**: tidak ada di `main`. Baik dashboard maupun laporan bulanan di `main` merender category breakdown sebagai daftar `<p>/<div>` tabular biasa, bukan chart. UI adds doughnut chart di dashboard dengan tooltip `toLocaleString('id-ID')`.
+- **Alpine animated counter** untuk saldo: tidak ada di `main`. UI adds counter di dashboard baris 66 & 266 dengan `x-text="displayed.toLocaleString('id-ID')"`.
