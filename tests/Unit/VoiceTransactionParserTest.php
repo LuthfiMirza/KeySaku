@@ -118,7 +118,7 @@ class VoiceTransactionParserTest extends TestCase
         $this->assertSame('beli nasi', $result['note']);
     }
 
-    public function test_explicit_expense_keyword_wins_over_fuzzy_matched_income_category(): void
+    public function test_explicit_expense_keyword_wins_and_partial_category_is_rejected(): void
     {
         $result = $this->parser()->parse(
             'beli gajih 20 ribu kategori gajih',
@@ -126,7 +126,41 @@ class VoiceTransactionParserTest extends TestCase
         );
 
         $this->assertSame('expense', $result['type']);
-        $this->assertSame('Gaji', $result['category_name']);
+        $this->assertNull($result['category_id']);
+        $this->assertNull($result['category_name']);
+    }
+
+    public function test_category_containing_needle_still_matches_when_needle_is_whole_word(): void
+    {
+        $result = $this->parser()->parse(
+            'catat kategori makanan siang',
+            $this->categories()
+        );
+
+        $this->assertSame(1, $result['category_id']);
+        $this->assertSame('Makanan', $result['category_name']);
+    }
+
+    public function test_typo_within_levenshtein_threshold_still_matches(): void
+    {
+        $result = $this->parser()->parse(
+            'catat 10 ribu kategori transportsi',
+            $this->categories()
+        );
+
+        $this->assertSame(2, $result['category_id']);
+        $this->assertSame('Transportasi', $result['category_name']);
+    }
+
+    public function test_exact_category_name_still_matches(): void
+    {
+        $result = $this->parser()->parse(
+            'beli 5 ribu kategori makanan',
+            $this->categories()
+        );
+
+        $this->assertSame(1, $result['category_id']);
+        $this->assertSame('Makanan', $result['category_name']);
     }
 
     public function test_it_returns_warnings_when_amount_and_category_are_missing(): void

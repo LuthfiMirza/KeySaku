@@ -12,6 +12,7 @@ Status: BELUM / JALAN / SELESAI
 |---|------|--------|--------|
 | 1 | Money formatter backend | SELESAI | refactor/money-formatting |
 | 2 | Salvage parser + normalizeAmount | SELESAI | feat/voice-income-support |
+| 2.5 | Word-boundary category match + fuzzy threshold | SELESAI | fix/fuzzy-category-threshold |
 | 3 | Observer kategori + test otorisasi | BELUM | fix/category-seeding |
 | 4 | Trait scoping + Policy | BELUM | refactor/tenant-scoping |
 | 5 | Saldo awal + semantik earmarking | BELUM | feat/initial-balance |
@@ -73,6 +74,18 @@ Definition of done:
 
 Risiko diterima: type bisa flip ke income; Levenshtein ≤2 bisa
 false-positive; tanggal bisa jadi kemarin.
+
+---
+
+## Task 2.5 — Word-boundary category match + fuzzy threshold  [SELESAI]
+
+Substring match sebelumnya menerima kecocokan di tengah kata, sehingga
+"gajih" cocok ke "Gaji" — user melihat kategori salah di preview dan
+gate save menolak dengan pesan ambigu. Substring sekarang wajib cocok di
+batas kata (\b), dan fuzzy Levenshtein dimatikan untuk kata < 5 huruf
+(ambang floor(len/4), maks 2 untuk kata lebih panjang).
+
+Presedensi tipe dari commit 500e171 tidak disentuh.
 
 ---
 
@@ -261,8 +274,6 @@ Definition of done:
 
 ## Utang perbaikan (belum dijadwalkan)
 
-- Ambang Levenshtein ≤2 terlalu longgar untuk kata pendek — ganti jadi
-  relatif panjang kata, jangan fuzzy-match di bawah 5 huruf
 - resources/views/dashboard.blade.php tidak dirujuk route mana pun —
   kandidat penghapusan
 - Timezone Asia/Jakarta fixed di config, tidak per-user

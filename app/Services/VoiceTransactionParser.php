@@ -136,7 +136,7 @@ class VoiceTransactionParser
             $candidateText = Str::lower($candidate);
 
             return $categoryName === $candidateText
-                || Str::contains($candidateText, $categoryName);
+                || $this->wordBoundaryContains($candidateText, $categoryName);
         });
 
         if (! $matchedCategory) {
@@ -144,9 +144,9 @@ class VoiceTransactionParser
                 $categoryName = $this->normalizeCategoryText($category->name);
 
                 return $categoryName === $normalizedCandidate
-                    || Str::contains($normalizedCandidate, $categoryName)
-                    || Str::contains($categoryName, $normalizedCandidate)
-                    || levenshtein($categoryName, $normalizedCandidate) <= 2;
+                    || $this->wordBoundaryContains($normalizedCandidate, $categoryName)
+                    || $this->wordBoundaryContains($categoryName, $normalizedCandidate)
+                    || $this->fuzzyMatches($categoryName, $normalizedCandidate);
             });
         }
 
@@ -228,6 +228,30 @@ class VoiceTransactionParser
         $text = preg_replace('/\b(dan|untuk|sebesar|senilai)\b.*$/u', '', $text) ?? $text;
 
         return trim($text);
+    }
+
+    private function wordBoundaryContains(string $haystack, string $needle): bool
+    {
+        if ($needle === '') {
+            return false;
+        }
+
+        $pattern = '/\b'.preg_quote($needle, '/').'\b/u';
+
+        return preg_match($pattern, $haystack) === 1;
+    }
+
+    private function fuzzyMatches(string $categoryName, string $candidate): bool
+    {
+        $minLength = min(strlen($categoryName), strlen($candidate));
+
+        if ($minLength < 5) {
+            return false;
+        }
+
+        $threshold = min(2, (int) floor($minLength / 4));
+
+        return levenshtein($categoryName, $candidate) <= $threshold;
     }
 
     private function cleanNote(string $text): string
