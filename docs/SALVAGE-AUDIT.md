@@ -109,3 +109,28 @@ Bundle yang direkomendasikan (satu commit atau satu PR terpisah):
 
 Semua di luar itu (`TransactionController`, route `POST /transaksi`, landing, onboarding) **tidak layak** karena terikat markup UI atau bertentangan dengan arsitektur single-write-path di `main`.
 
+
+---
+
+## Utang perbaikan (untuk task terpisah)
+
+### Observer `User::created` untuk seeding kategori default
+Saat ini `CategoryManager::mount()` di `app/Livewire/CategoryManager.php:22-25` memanggil `seedDefaultsIfEmpty()`. Ini bukan sekadar tidak rapi — ada bug perilaku:
+
+- User yang **sengaja menghapus semua kategori** akan melihat 13 default muncul lagi begitu halaman `/kategori` dibuka.
+- Sebuah request `GET /kategori` melakukan mutasi data (13 INSERT) sebagai efek samping render.
+
+Solusi: pindah seeding ke `Observer` yang listen `User::created` (atau ke `RegisteredUserController::store()` setelah `event(new Registered($user))`). Efeknya:
+- Onboarding lebih baik: user baru langsung punya kategori sebelum sempat buka halaman apa pun.
+- Bug "kategori zombie" hilang: menghapus semua kategori benar-benar mengosongkan daftar.
+- `CategoryManager::mount()` cukup panggil `resetForm()` tanpa mutasi data.
+
+### Empty state di halaman suara
+`resources/views/livewire/transactions/voice-transaction.blade.php` tidak memiliki blok `@if ($categories->isEmpty())` seperti versi manual di `resources/views/livewire/transactions/create-transaction.blade.php:42-52`. Alur user tanpa kategori:
+
+1. Rekam/ketik transkrip, klik "Proses".
+2. Parser return `category_id = null`.
+3. `save()` menolak dengan pesan generik "Lengkapi nominal, kategori, dan catatan sebelum menyimpan." (`app/Livewire/Transactions/VoiceTransaction.php:56-59`) — user tidak tahu penyebab sebenarnya adalah kategori-nya belum pernah dibuat.
+
+Kolom `transactions.category_id` NOT NULL dengan FK constraint (`database/migrations/2026_05_05_000003_create_transactions_table.php:14`), jadi ini benar-benar tidak bisa tersimpan tanpa kategori. Empty state di view + link ke `/kategori` (atau langsung ke seeding lewat observer di atas) akan menghilangkan alur buntu ini.
+
