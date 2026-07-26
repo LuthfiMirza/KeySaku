@@ -17,13 +17,7 @@ class CreateTransactionTest extends TestCase
     public function test_amount_with_thousand_separator_is_accepted(): void
     {
         $user = User::factory()->create();
-        $category = Category::create([
-            'user_id' => $user->id,
-            'name' => 'Makanan',
-            'type' => Category::TYPE_EXPENSE,
-            'color' => '#f97316',
-            'icon' => '🍜',
-        ]);
+        $category = $user->categories()->where('name', 'Makanan')->where('type', Category::TYPE_EXPENSE)->firstOrFail();
 
         Livewire::actingAs($user)
             ->test(CreateTransaction::class)
@@ -44,13 +38,7 @@ class CreateTransactionTest extends TestCase
     public function test_large_amount_with_multiple_separators_is_accepted(): void
     {
         $user = User::factory()->create();
-        $category = Category::create([
-            'user_id' => $user->id,
-            'name' => 'Gaji',
-            'type' => Category::TYPE_INCOME,
-            'color' => '#10b981',
-            'icon' => '💼',
-        ]);
+        $category = $user->categories()->where('name', 'Gaji')->where('type', Category::TYPE_INCOME)->firstOrFail();
 
         Livewire::actingAs($user)
             ->test(CreateTransaction::class)
