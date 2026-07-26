@@ -50,7 +50,19 @@ class CategoryManager extends Component
 
     public function delete(int $categoryId): void
     {
-        $this->currentUserCategories()->findOrFail($categoryId)->delete();
+        $category = $this->currentUserCategories()->findOrFail($categoryId);
+
+        $transactionCount = $category->transactions()->count();
+
+        if ($transactionCount > 0) {
+            session()->flash(
+                'category_error',
+                "Kategori ini masih dipakai oleh {$transactionCount} transaksi. Hapus atau pindahkan transaksi tersebut lebih dulu."
+            );
+            return;
+        }
+
+        $category->delete();
 
         if ($this->editingCategory?->id === $categoryId) {
             $this->resetForm();
