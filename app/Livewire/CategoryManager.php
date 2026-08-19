@@ -39,7 +39,9 @@ class CategoryManager extends Component
 
     public function edit(int $categoryId): void
     {
-        $category = $this->currentUserCategories()->findOrFail($categoryId);
+        $category = $this->currentUserCategories()->whereKey($categoryId)->first();
+
+        abort_if(! $category, 404);
 
         $this->editingCategory = $category;
         $this->name = $category->name;
@@ -50,7 +52,9 @@ class CategoryManager extends Component
 
     public function delete(int $categoryId): void
     {
-        $category = $this->currentUserCategories()->findOrFail($categoryId);
+        $category = $this->currentUserCategories()->whereKey($categoryId)->first();
+
+        abort_if(! $category, 404);
 
         $transactionCount = $category->transactions()->count();
 
