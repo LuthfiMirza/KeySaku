@@ -21,7 +21,7 @@ class RegistrationInitialBalanceTest extends TestCase
 
         $user = User::where('email', 'tanpa-saldo@example.com')->firstOrFail();
 
-        $this->assertSame('0.00', $user->initial_balance);
+        $this->assertSame('0.00', $user->household->initial_balance);
     }
 
     public function test_registration_accepts_thousand_separated_initial_balance(): void
@@ -36,6 +36,6 @@ class RegistrationInitialBalanceTest extends TestCase
 
         $user = User::where('email', 'punya-saldo@example.com')->firstOrFail();
 
-        $this->assertSame('12000000.00', $user->initial_balance);
+        $this->assertSame('12000000.00', $user->household->initial_balance);
     }
 }

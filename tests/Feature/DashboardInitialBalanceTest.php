@@ -15,7 +15,8 @@ class DashboardInitialBalanceTest extends TestCase
 
     public function test_net_balance_includes_initial_balance(): void
     {
-        $user = User::factory()->create(['initial_balance' => 12000000]);
+        $user = User::factory()->create();
+        $user->household->update(['initial_balance' => 12000000]);
         $category = $user->categories()->where('type', Category::TYPE_EXPENSE)->firstOrFail();
 
         Transaction::create([
@@ -35,7 +36,8 @@ class DashboardInitialBalanceTest extends TestCase
 
     public function test_available_balance_excludes_earmarked_savings(): void
     {
-        $user = User::factory()->create(['initial_balance' => 1000000]);
+        $user = User::factory()->create();
+        $user->household->update(['initial_balance' => 1000000]);
 
         SavingsGoal::create([
             'user_id' => $user->id,

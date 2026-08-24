@@ -37,17 +37,10 @@ class HouseholdFoundationTest extends TestCase
     public function test_household_relationships_are_available(): void
     {
         $user = User::factory()->create();
-        $household = Household::create([
-            'name' => 'Keluarga Test',
-            'invite_code' => Household::generateInviteCode(),
-        ]);
+        $household = $user->household;
+        $membership = $user->householdMembership;
 
-        $membership = HouseholdMember::create([
-            'household_id' => $household->id,
-            'user_id' => $user->id,
-            'role' => HouseholdMember::ROLE_OWNER,
-        ]);
-
+        $this->assertNotNull($household);
         $this->assertTrue($household->members->contains($membership));
         $this->assertTrue($membership->household->is($household));
         $this->assertTrue($membership->user->is($user));
@@ -67,15 +60,9 @@ class HouseholdFoundationTest extends TestCase
 
     public function test_a_user_cannot_belong_to_two_households(): void
     {
+        // Already provisioned into a household via UserFactory::configure().
         $user = User::factory()->create();
-        $householdA = Household::create(['invite_code' => Household::generateInviteCode()]);
         $householdB = Household::create(['invite_code' => Household::generateInviteCode()]);
-
-        HouseholdMember::create([
-            'household_id' => $householdA->id,
-            'user_id' => $user->id,
-            'role' => HouseholdMember::ROLE_OWNER,
-        ]);
 
         $this->expectException(QueryException::class);
 
