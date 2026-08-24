@@ -14,7 +14,15 @@ class Household extends Model
     protected $fillable = [
         'name',
         'invite_code',
+        'initial_balance',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'initial_balance' => 'decimal:2',
+        ];
+    }
 
     public function members(): HasMany
     {
