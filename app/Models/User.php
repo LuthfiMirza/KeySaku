@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password',
         'preferred_currency',
         'language',
+        'initial_balance',
     ];
 
     protected $hidden = [
@@ -56,6 +57,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'initial_balance' => 'decimal:2',
         ];
     }
 }
