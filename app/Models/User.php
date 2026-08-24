@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -50,6 +52,18 @@ class User extends Authenticatable
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function householdMembership(): HasOne
+    {
+        return $this->hasOne(HouseholdMember::class);
+    }
+
+    protected function household(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->householdMembership?->household,
+        );
     }
 
     protected function casts(): array
