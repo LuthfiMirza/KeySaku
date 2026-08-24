@@ -23,7 +23,7 @@ class EditTransaction extends Component
 
     public function mount(Transaction $transaction): void
     {
-        abort_unless($transaction->user_id === auth()->id(), 404);
+        abort_unless(auth()->user()->can('view', $transaction), 404);
 
         $this->transaction = $transaction;
         $this->type = $transaction->type;
@@ -40,7 +40,7 @@ class EditTransaction extends Component
 
     public function save(): void
     {
-        abort_unless($this->transaction->user_id === auth()->id(), 404);
+        abort_unless(auth()->user()->can('update', $this->transaction), 404);
 
         $validated = $this->validate([
             'type' => ['required', Rule::in(Transaction::types())],
@@ -78,7 +78,7 @@ class EditTransaction extends Component
 
     public function delete()
     {
-        abort_unless($this->transaction->user_id === auth()->id(), 404);
+        abort_unless(auth()->user()->can('delete', $this->transaction), 404);
 
         $this->transaction->delete();
 
