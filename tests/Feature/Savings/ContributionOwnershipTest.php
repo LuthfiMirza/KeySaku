@@ -18,6 +18,7 @@ class ContributionOwnershipTest extends TestCase
         $user = User::factory()->create();
         $goal = SavingsGoal::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => 'Dana Darurat',
             'target_amount' => 1000000,
             'current_amount' => 0,

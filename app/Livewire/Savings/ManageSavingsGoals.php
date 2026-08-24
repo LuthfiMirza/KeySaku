@@ -34,7 +34,7 @@ class ManageSavingsGoals extends Component
 
     public function startEditGoal(int $goalId): void
     {
-        $goal = auth()->user()
+        $goal = auth()->user()->household
             ->savingsGoals()
             ->whereKey($goalId)
             ->first();
@@ -75,7 +75,7 @@ class ManageSavingsGoals extends Component
             'editDeadline.after_or_equal' => 'Deadline tidak boleh sebelum hari ini.',
         ]);
 
-        $goal = auth()->user()
+        $goal = auth()->user()->household
             ->savingsGoals()
             ->whereKey($validated['editingGoalId'])
             ->first();
@@ -95,7 +95,7 @@ class ManageSavingsGoals extends Component
 
     public function archiveGoal(int $goalId): void
     {
-        $goal = auth()->user()
+        $goal = auth()->user()->household
             ->savingsGoals()
             ->whereKey($goalId)
             ->first();
@@ -119,7 +119,7 @@ class ManageSavingsGoals extends Component
 
     public function startContribution(int $goalId): void
     {
-        $goal = auth()->user()
+        $goal = auth()->user()->household
             ->savingsGoals()
             ->whereKey($goalId)
             ->first();
@@ -159,7 +159,7 @@ class ManageSavingsGoals extends Component
             'contributionNote.max' => 'Catatan maksimal 1000 karakter.',
         ]);
 
-        $goal = auth()->user()
+        $goal = auth()->user()->household
             ->savingsGoals()
             ->whereKey($validated['contributingGoalId'])
             ->first();
@@ -169,7 +169,8 @@ class ManageSavingsGoals extends Component
         DB::transaction(function () use ($goal, $validated) {
             SavingsContribution::create([
                 'savings_goal_id' => $goal->id,
-                'user_id' => $goal->user_id,
+                'user_id' => auth()->id(),
+                'household_id' => $goal->household_id,
                 'amount' => $validated['contributionAmount'],
                 'contribution_date' => $validated['contributionDate'],
                 'note' => $validated['contributionNote'] ?: null,
@@ -203,6 +204,7 @@ class ManageSavingsGoals extends Component
 
         SavingsGoal::create([
             'user_id' => auth()->id(),
+            'household_id' => auth()->user()->household->id,
             'name' => $validated['name'],
             'target_amount' => $validated['target_amount'],
             'current_amount' => 0,
@@ -219,7 +221,7 @@ class ManageSavingsGoals extends Component
     public function render(): View
     {
         return view('livewire.savings.manage-savings-goals', [
-            'goals' => auth()->user()
+            'goals' => auth()->user()->household
                 ->savingsGoals()
                 ->with(['contributions' => fn ($query) => $query
                     ->latest('contribution_date')

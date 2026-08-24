@@ -38,6 +38,7 @@ class ManageSavingsGoalsTest extends TestCase
 
         $this->assertDatabaseHas('savings_goals', [
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => 'Dana Darurat',
             'target_amount' => 10000000.00,
             'current_amount' => 0.00,
@@ -68,6 +69,7 @@ class ManageSavingsGoalsTest extends TestCase
 
         SavingsGoal::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => 'Dana Darurat',
             'target_amount' => 10000000,
             'current_amount' => 0,
@@ -77,6 +79,7 @@ class ManageSavingsGoalsTest extends TestCase
 
         SavingsGoal::create([
             'user_id' => $otherUser->id,
+            'household_id' => $otherUser->household->id,
             'name' => 'Liburan User Lain',
             'target_amount' => 5000000,
             'current_amount' => 0,
@@ -518,6 +521,7 @@ class ManageSavingsGoalsTest extends TestCase
     {
         return SavingsGoal::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => $name,
             'target_amount' => $targetAmount,
             'current_amount' => 0,
