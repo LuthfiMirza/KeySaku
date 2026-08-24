@@ -33,6 +33,16 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <div>
+            <label for="initial_balance" class="block text-sm font-semibold text-slate-700">Saldo awal <span class="font-normal text-slate-400">(opsional)</span></label>
+            <div class="mt-2 flex rounded-2xl border border-slate-200 bg-white/80 shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
+                <span class="flex items-center px-4 text-sm font-bold text-slate-400">Rp</span>
+                <input id="initial_balance" class="block w-full rounded-r-2xl border-0 bg-transparent px-2 py-3 text-sm focus:ring-0" type="text" inputmode="numeric" name="initial_balance" value="{{ old('initial_balance') }}" placeholder="0">
+            </div>
+            <p class="mt-2 text-xs text-slate-400">Uang yang sudah kamu punya sebelum mulai mencatat di KeySaku. Bisa diisi nanti lewat Pengaturan.</p>
+            <x-input-error :messages="$errors->get('initial_balance')" class="mt-2" />
+        </div>
+
         <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition active:scale-[0.99]">
             Daftar
         </button>

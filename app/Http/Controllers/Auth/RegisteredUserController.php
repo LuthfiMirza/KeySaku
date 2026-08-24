@@ -34,12 +34,16 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'initial_balance' => ['nullable', 'string', 'max:20'],
         ]);
+
+        $normalizedBalance = preg_replace('/\D+/', '', (string) $request->input('initial_balance', ''));
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'initial_balance' => $normalizedBalance !== '' ? (float) $normalizedBalance : 0,
         ]);
 
         event(new Registered($user));
