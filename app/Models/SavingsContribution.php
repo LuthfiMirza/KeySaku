@@ -14,6 +14,7 @@ class SavingsContribution extends Model
     protected $fillable = [
         'savings_goal_id',
         'user_id',
+        'household_id',
         'amount',
         'contribution_date',
         'note',

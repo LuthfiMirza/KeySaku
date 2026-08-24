@@ -42,7 +42,7 @@ class ManageBudgets extends Component
 
     public function startEdit(int $budgetId): void
     {
-        $budget = auth()->user()
+        $budget = auth()->user()->household
             ->budgets()
             ->whereKey($budgetId)
             ->first();
@@ -72,7 +72,7 @@ class ManageBudgets extends Component
             'editAmount.gt' => 'Nominal anggaran harus lebih dari 0.',
         ]);
 
-        $budget = auth()->user()
+        $budget = auth()->user()->household
             ->budgets()
             ->whereKey($validated['editingBudgetId'])
             ->first();
@@ -90,7 +90,7 @@ class ManageBudgets extends Component
 
     public function deleteBudget(int $budgetId): void
     {
-        $budget = auth()->user()
+        $budget = auth()->user()->household
             ->budgets()
             ->whereKey($budgetId)
             ->first();
@@ -111,7 +111,9 @@ class ManageBudgets extends Component
         $targetDate = Carbon::create($this->year, $this->month, 1);
         $sourceDate = $targetDate->copy()->subMonthNoOverflow();
 
-        $sourceBudgets = auth()->user()
+        $household = auth()->user()->household;
+
+        $sourceBudgets = $household
             ->budgets()
             ->where('month', $sourceDate->month)
             ->where('year', $sourceDate->year)
@@ -123,7 +125,7 @@ class ManageBudgets extends Component
             return;
         }
 
-        $targetCategoryIds = auth()->user()
+        $targetCategoryIds = $household
             ->budgets()
             ->where('month', $this->month)
             ->where('year', $this->year)
@@ -139,6 +141,7 @@ class ManageBudgets extends Component
 
             Budget::create([
                 'user_id' => auth()->id(),
+                'household_id' => $household->id,
                 'category_id' => $sourceBudget->category_id,
                 'month' => $this->month,
                 'year' => $this->year,
@@ -177,7 +180,9 @@ class ManageBudgets extends Component
             'amount.gt' => 'Nominal anggaran harus lebih dari 0.',
         ]);
 
-        $category = auth()->user()
+        $household = auth()->user()->household;
+
+        $category = $household
             ->categories()
             ->whereKey($validated['category_id'])
             ->first();
@@ -187,7 +192,7 @@ class ManageBudgets extends Component
             return;
         }
 
-        $exists = auth()->user()
+        $exists = $household
             ->budgets()
             ->where('category_id', $category->id)
             ->where('month', $validated['month'])
@@ -201,6 +206,7 @@ class ManageBudgets extends Component
 
         Budget::create([
             'user_id' => auth()->id(),
+            'household_id' => $household->id,
             'category_id' => $category->id,
             'month' => $validated['month'],
             'year' => $validated['year'],
@@ -228,7 +234,7 @@ class ManageBudgets extends Component
 
     private function expenseCategories()
     {
-        return auth()->user()
+        return auth()->user()->household
             ->categories()
             ->where('type', Category::TYPE_EXPENSE)
             ->orderBy('name');
@@ -236,7 +242,7 @@ class ManageBudgets extends Component
 
     private function budgets()
     {
-        return auth()->user()
+        return auth()->user()->household
             ->budgets()
             ->with('category')
             ->where('month', $this->month)
@@ -297,7 +303,7 @@ class ManageBudgets extends Component
             return collect();
         }
 
-        return auth()->user()
+        return auth()->user()->household
             ->transactions()
             ->selectRaw('category_id, SUM(amount) as total')
             ->where('type', Transaction::TYPE_EXPENSE)

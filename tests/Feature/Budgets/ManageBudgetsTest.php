@@ -34,6 +34,7 @@ class ManageBudgetsTest extends TestCase
 
         $this->assertDatabaseHas('budgets', [
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 5,
             'year' => 2026,
@@ -48,6 +49,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 5,
             'year' => 2026,
@@ -137,6 +139,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 5,
             'year' => 2026,
@@ -173,6 +176,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 5,
             'year' => 2026,
@@ -197,6 +201,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $transportCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -205,6 +210,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $healthCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -237,6 +243,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $foodCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -245,6 +252,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $transportCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -253,6 +261,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $unbudgetedCategory->id,
             'month' => 4,
             'year' => 2026,
@@ -292,6 +301,7 @@ class ManageBudgetsTest extends TestCase
 
         $budget = Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 5,
             'year' => 2026,
@@ -317,6 +327,7 @@ class ManageBudgetsTest extends TestCase
 
         $budget = Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 5,
             'year' => 2026,
@@ -344,6 +355,7 @@ class ManageBudgetsTest extends TestCase
         $this->assertDatabaseHas('budgets', [
             'id' => $budget->id,
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'amount' => 150000.00,
         ]);
     }
@@ -355,6 +367,7 @@ class ManageBudgetsTest extends TestCase
 
         $budget = Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 5,
             'year' => 2026,
@@ -382,6 +395,7 @@ class ManageBudgetsTest extends TestCase
 
         $otherBudget = Budget::create([
             'user_id' => $otherUser->id,
+            'household_id' => $otherUser->household->id,
             'category_id' => $otherCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -398,6 +412,7 @@ class ManageBudgetsTest extends TestCase
         $this->assertDatabaseHas('budgets', [
             'id' => $otherBudget->id,
             'user_id' => $otherUser->id,
+            'household_id' => $otherUser->household->id,
             'amount' => 100000.00,
         ]);
     }
@@ -410,6 +425,7 @@ class ManageBudgetsTest extends TestCase
 
         $foodBudget = Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $foodCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -418,6 +434,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $transportCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -445,6 +462,7 @@ class ManageBudgetsTest extends TestCase
         $this->assertDatabaseHas('transactions', [
             'id' => $transaction->id,
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $foodCategory->id,
             'amount' => 75000.00,
         ]);
@@ -457,6 +475,7 @@ class ManageBudgetsTest extends TestCase
 
         $budget = Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 5,
             'year' => 2026,
@@ -484,6 +503,7 @@ class ManageBudgetsTest extends TestCase
 
         $otherBudget = Budget::create([
             'user_id' => $otherUser->id,
+            'household_id' => $otherUser->household->id,
             'category_id' => $otherCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -498,6 +518,7 @@ class ManageBudgetsTest extends TestCase
         $this->assertDatabaseHas('budgets', [
             'id' => $otherBudget->id,
             'user_id' => $otherUser->id,
+            'household_id' => $otherUser->household->id,
             'amount' => 100000.00,
         ]);
     }
@@ -510,6 +531,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $foodCategory->id,
             'month' => 4,
             'year' => 2026,
@@ -518,6 +540,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $transportCategory->id,
             'month' => 4,
             'year' => 2026,
@@ -538,6 +561,7 @@ class ManageBudgetsTest extends TestCase
 
         $this->assertDatabaseHas('budgets', [
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $foodCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -546,6 +570,7 @@ class ManageBudgetsTest extends TestCase
 
         $this->assertDatabaseHas('budgets', [
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $transportCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -560,6 +585,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 12,
             'year' => 2025,
@@ -577,6 +603,7 @@ class ManageBudgetsTest extends TestCase
 
         $this->assertDatabaseHas('budgets', [
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 1,
             'year' => 2026,
@@ -592,6 +619,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $foodCategory->id,
             'month' => 4,
             'year' => 2026,
@@ -600,6 +628,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $transportCategory->id,
             'month' => 4,
             'year' => 2026,
@@ -608,6 +637,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $foodCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -627,6 +657,7 @@ class ManageBudgetsTest extends TestCase
 
         $this->assertDatabaseHas('budgets', [
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $foodCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -635,6 +666,7 @@ class ManageBudgetsTest extends TestCase
 
         $this->assertDatabaseHas('budgets', [
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $transportCategory->id,
             'month' => 5,
             'year' => 2026,
@@ -652,6 +684,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $otherUser->id,
+            'household_id' => $otherUser->household->id,
             'category_id' => $otherCategory->id,
             'month' => 4,
             'year' => 2026,
@@ -668,6 +701,7 @@ class ManageBudgetsTest extends TestCase
         $this->assertDatabaseCount('budgets', 1);
         $this->assertDatabaseMissing('budgets', [
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'month' => 5,
             'year' => 2026,
         ]);
@@ -694,6 +728,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 4,
             'year' => 2026,
@@ -702,6 +737,7 @@ class ManageBudgetsTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => 5,
             'year' => 2026,
@@ -735,6 +771,7 @@ class ManageBudgetsTest extends TestCase
     ): Transaction {
         return Transaction::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'type' => $type,
             'amount' => $amount,

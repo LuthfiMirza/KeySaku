@@ -18,6 +18,7 @@ class SavingsGoal extends Model
 
     protected $fillable = [
         'user_id',
+        'household_id',
         'name',
         'target_amount',
         'current_amount',
