@@ -19,11 +19,6 @@ class CategoryManager extends Component
 
     public string $icon = '💸';
 
-    public function mount(): void
-    {
-        $this->seedDefaultsIfEmpty();
-    }
-
     public function save(): void
     {
         $validated = $this->validate([
@@ -44,7 +39,9 @@ class CategoryManager extends Component
 
     public function edit(int $categoryId): void
     {
-        $category = $this->currentUserCategories()->findOrFail($categoryId);
+        $category = $this->currentUserCategories()->whereKey($categoryId)->first();
+
+        abort_if(! $category, 404);
 
         $this->editingCategory = $category;
         $this->name = $category->name;
@@ -55,7 +52,21 @@ class CategoryManager extends Component
 
     public function delete(int $categoryId): void
     {
-        $this->currentUserCategories()->findOrFail($categoryId)->delete();
+        $category = $this->currentUserCategories()->whereKey($categoryId)->first();
+
+        abort_if(! $category, 404);
+
+        $transactionCount = $category->transactions()->count();
+
+        if ($transactionCount > 0) {
+            session()->flash(
+                'category_error',
+                "Kategori ini masih dipakai oleh {$transactionCount} transaksi. Hapus atau pindahkan transaksi tersebut lebih dulu."
+            );
+            return;
+        }
+
+        $category->delete();
 
         if ($this->editingCategory?->id === $categoryId) {
             $this->resetForm();
@@ -92,30 +103,4 @@ class CategoryManager extends Component
         return auth()->user()->categories();
     }
 
-    private function seedDefaultsIfEmpty(): void
-    {
-        if ($this->currentUserCategories()->exists()) {
-            return;
-        }
-
-        $defaults = [
-            ['name' => 'Makanan', 'type' => Category::TYPE_EXPENSE, 'color' => '#f97316', 'icon' => '🍜'],
-            ['name' => 'Transportasi', 'type' => Category::TYPE_EXPENSE, 'color' => '#3b82f6', 'icon' => '🚗'],
-            ['name' => 'Belanja Dapur', 'type' => Category::TYPE_EXPENSE, 'color' => '#22c55e', 'icon' => '🛒'],
-            ['name' => 'Tagihan', 'type' => Category::TYPE_EXPENSE, 'color' => '#ef4444', 'icon' => '🧾'],
-            ['name' => 'Kesehatan', 'type' => Category::TYPE_EXPENSE, 'color' => '#14b8a6', 'icon' => '🏥'],
-            ['name' => 'Pendidikan', 'type' => Category::TYPE_EXPENSE, 'color' => '#8b5cf6', 'icon' => '🎓'],
-            ['name' => 'Hiburan', 'type' => Category::TYPE_EXPENSE, 'color' => '#ec4899', 'icon' => '🎮'],
-            ['name' => 'Lainnya', 'type' => Category::TYPE_EXPENSE, 'color' => '#64748b', 'icon' => '📦'],
-            ['name' => 'Gaji', 'type' => Category::TYPE_INCOME, 'color' => '#10b981', 'icon' => '💼'],
-            ['name' => 'Bonus', 'type' => Category::TYPE_INCOME, 'color' => '#f59e0b', 'icon' => '🎁'],
-            ['name' => 'Usaha', 'type' => Category::TYPE_INCOME, 'color' => '#06b6d4', 'icon' => '🏪'],
-            ['name' => 'Hadiah', 'type' => Category::TYPE_INCOME, 'color' => '#d946ef', 'icon' => '🎉'],
-            ['name' => 'Lainnya', 'type' => Category::TYPE_INCOME, 'color' => '#64748b', 'icon' => '💰'],
-        ];
-
-        foreach ($defaults as $category) {
-            $this->currentUserCategories()->create($category);
-        }
-    }
 }

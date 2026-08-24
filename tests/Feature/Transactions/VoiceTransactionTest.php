@@ -17,13 +17,7 @@ class VoiceTransactionTest extends TestCase
     public function test_user_can_save_parsed_voice_transaction(): void
     {
         $user = User::factory()->create();
-        $category = Category::create([
-            'user_id' => $user->id,
-            'name' => 'Makanan',
-            'type' => Category::TYPE_EXPENSE,
-            'color' => '#f97316',
-            'icon' => '🍜',
-        ]);
+        $category = $user->categories()->where('name', 'Makanan')->where('type', Category::TYPE_EXPENSE)->firstOrFail();
 
         Livewire::actingAs($user)
             ->test(VoiceTransaction::class)
@@ -60,13 +54,7 @@ class VoiceTransactionTest extends TestCase
     public function test_user_can_save_parsed_voice_income_transaction(): void
     {
         $user = User::factory()->create();
-        $category = Category::create([
-            'user_id' => $user->id,
-            'name' => 'Gaji',
-            'type' => Category::TYPE_INCOME,
-            'color' => '#10b981',
-            'icon' => '💼',
-        ]);
+        $category = $user->categories()->where('name', 'Gaji')->where('type', Category::TYPE_INCOME)->firstOrFail();
 
         Livewire::actingAs($user)
             ->test(VoiceTransaction::class)

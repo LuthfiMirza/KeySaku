@@ -71,13 +71,7 @@ class ReportPageTest extends TestCase
 
     private function category(User $user, string $name, string $type, string $icon): Category
     {
-        return Category::create([
-            'user_id' => $user->id,
-            'name' => $name,
-            'type' => $type,
-            'color' => '#6366f1',
-            'icon' => $icon,
-        ]);
+        return $user->categories()->where('name', $name)->where('type', $type)->firstOrFail();
     }
 
     private function transaction(

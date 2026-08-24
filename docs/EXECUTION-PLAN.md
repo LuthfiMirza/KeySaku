@@ -13,7 +13,7 @@ Status: BELUM / JALAN / SELESAI
 | 1 | Money formatter backend | SELESAI | refactor/money-formatting |
 | 2 | Salvage parser + normalizeAmount | SELESAI | feat/voice-income-support |
 | 2.5 | Word-boundary category match + fuzzy threshold | SELESAI | fix/fuzzy-category-threshold |
-| 3 | Observer kategori + test otorisasi | BELUM | fix/category-seeding |
+| 3 | Observer kategori + test otorisasi | SELESAI | fix/category-seeding |
 | 4 | Trait scoping + Policy | BELUM | refactor/tenant-scoping |
 | 5 | Saldo awal + semantik earmarking | BELUM | feat/initial-balance |
 | 6 | Household / family sharing | BELUM | feat/household |

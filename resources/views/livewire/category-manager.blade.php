@@ -5,6 +5,12 @@
         </div>
     @endif
 
+    @if (session('category_error'))
+        <div class="rounded-2xl bg-rose-50 border border-rose-100 px-4 py-3 text-sm font-medium text-rose-700">
+            {{ session('category_error') }}
+        </div>
+    @endif
+
     <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-4 shadow-sm border border-white/60">
         <div class="mb-4">
             <p class="text-xs font-semibold uppercase tracking-wide text-indigo-500">

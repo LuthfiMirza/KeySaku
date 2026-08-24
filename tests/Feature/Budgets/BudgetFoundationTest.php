@@ -30,13 +30,7 @@ class BudgetFoundationTest extends TestCase
     public function test_budget_relationships_are_available(): void
     {
         $user = User::factory()->create();
-        $category = Category::create([
-            'user_id' => $user->id,
-            'name' => 'Makanan',
-            'type' => Category::TYPE_EXPENSE,
-            'color' => '#f97316',
-            'icon' => '🍜',
-        ]);
+        $category = $user->categories()->where('name', 'Makanan')->where('type', Category::TYPE_EXPENSE)->firstOrFail();
 
         $budget = Budget::create([
             'user_id' => $user->id,
