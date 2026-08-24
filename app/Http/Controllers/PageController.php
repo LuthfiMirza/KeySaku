@@ -47,6 +47,26 @@ class PageController extends Controller
         return back()->with('settings_status', 'Mata uang berhasil diperbarui.');
     }
 
+    public function initialBalanceSettings(): View
+    {
+        return view('pages.settings.initial-balance');
+    }
+
+    public function updateInitialBalance(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'initial_balance' => ['required', 'string', 'max:20'],
+        ]);
+
+        $normalized = preg_replace('/\D+/', '', $request->input('initial_balance'));
+
+        $request->user()->update([
+            'initial_balance' => $normalized !== '' ? (float) $normalized : 0,
+        ]);
+
+        return back()->with('settings_status', 'Saldo awal berhasil diperbarui.');
+    }
+
     public function languageSettings(): View
     {
         return view('pages.settings.language');
