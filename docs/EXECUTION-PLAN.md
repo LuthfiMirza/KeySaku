@@ -15,7 +15,7 @@ Status: BELUM / JALAN / SELESAI
 | 2.5 | Word-boundary category match + fuzzy threshold | SELESAI | fix/fuzzy-category-threshold |
 | 3 | Observer kategori + test otorisasi | SELESAI | fix/category-seeding |
 | 4 | Trait scoping + Policy | SELESAI | refactor/tenant-scoping |
-| 5 | Saldo awal + semantik earmarking | BELUM | feat/initial-balance |
+| 5 | Saldo awal + semantik earmarking | SELESAI | feat/initial-balance |
 | 6 | Household / family sharing | BELUM | feat/household |
 | 7 | Export PDF/CSV | BELUM | feat/export |
 | 8 | CategorySuggester v1 | BELUM | feat/category-suggester |
