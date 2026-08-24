@@ -97,7 +97,7 @@ class PageController extends Controller
 
     public function editTransaction(Transaction $transaction): View
     {
-        abort_unless($transaction->user_id === auth()->id(), 404);
+        abort_unless(auth()->user()->can('view', $transaction), 404);
 
         return view('pages.transactions.edit', [
             'transaction' => $transaction,

@@ -14,7 +14,7 @@ Status: BELUM / JALAN / SELESAI
 | 2 | Salvage parser + normalizeAmount | SELESAI | feat/voice-income-support |
 | 2.5 | Word-boundary category match + fuzzy threshold | SELESAI | fix/fuzzy-category-threshold |
 | 3 | Observer kategori + test otorisasi | SELESAI | fix/category-seeding |
-| 4 | Trait scoping + Policy | BELUM | refactor/tenant-scoping |
+| 4 | Trait scoping + Policy | SELESAI | refactor/tenant-scoping |
 | 5 | Saldo awal + semantik earmarking | BELUM | feat/initial-balance |
 | 6 | Household / family sharing | BELUM | feat/household |
 | 7 | Export PDF/CSV | BELUM | feat/export |
@@ -149,6 +149,30 @@ Definition of done:
 - SELURUH test lama hijau TANPA dimodifikasi — ini ukuran keberhasilan
 - Test otorisasi dari Task 3 tetap hijau
 - Nol perubahan perilaku yang terlihat user
+
+Penyimpangan terkonfirmasi dari rencana (opsi a-revisi, disetujui saat
+eksekusi):
+- Global scope query-level TIDAK diaktifkan di mana pun. Dibuktikan
+  empiris dua kali: (1) dipasang di Budget saja langsung merusak
+  AuthorizationTest (assertion `Budget::find()` pasca cross-user delete
+  ikut ter-filter dan balik null padahal budget tidak terhapus); (2)
+  dipasang di SavingsContribution merusak 3 test ManageSavingsGoalsTest
+  karena fixture-nya create kontribusi sebelum actingAs, jadi user_id
+  masih null saat scope aktif. Trait BelongsToUser yang dipakai hanya
+  auto-fill user_id saat create, tanpa global scope.
+- Policy dipakai HANYA di titik yang polanya memang "bandingkan
+  user_id manual" (EditTransaction + PageController::editTransaction,
+  4 call site) — via `abort_unless(auth()->user()->can(...), 404)`
+  supaya status tetap 404, bukan 403 dari $this->authorize() yang
+  defaultnya melempar 403 dan akan merusak AuthorizationTest. Pola
+  whereKey()->first()+abort_if di CategoryManager/ManageBudgets/
+  ManageSavingsGoals TIDAK disentuh — sudah benar dan sudah teruji.
+- Index (user_id, type) dan (user_id, transaction_date) di transactions
+  ternyata SUDAH ada sejak migration awal — tidak ada migration baru
+  untuk ini.
+- Policy untuk Category/Budget/SavingsGoal/SavingsContribution dibuat
+  (siap dipakai Task 6) tapi belum di-wire ke component manapun — belum
+  ada call site yang butuh (semua sudah aman lewat whereKey scoping).
 
 ---
 

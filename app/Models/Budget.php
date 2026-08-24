@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Budget extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     protected $fillable = [
         'user_id',

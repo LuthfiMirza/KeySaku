@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SavingsGoal extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     public const STATUS_ACTIVE = 'active';
     public const STATUS_COMPLETED = 'completed';

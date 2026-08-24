@@ -169,6 +169,7 @@ class ManageSavingsGoals extends Component
         DB::transaction(function () use ($goal, $validated) {
             SavingsContribution::create([
                 'savings_goal_id' => $goal->id,
+                'user_id' => $goal->user_id,
                 'amount' => $validated['contributionAmount'],
                 'contribution_date' => $validated['contributionDate'],
                 'note' => $validated['contributionNote'] ?: null,
