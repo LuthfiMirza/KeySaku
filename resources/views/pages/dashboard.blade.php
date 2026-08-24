@@ -19,7 +19,14 @@
             <div class="relative">
                 <p class="text-sm font-medium text-white/70">Total Saldo</p>
                 <p class="text-4xl font-bold mt-1 tabular-nums">{{ $formatRupiah($netBalance) }}</p>
-                <p class="text-xs text-white/60 mt-2">Saldo bersih dari semua transaksi</p>
+                <p class="text-xs text-white/60 mt-2">Saldo awal + semua transaksi</p>
+
+                <div class="mt-3 flex items-center justify-between rounded-2xl bg-white/10 px-3 py-2.5">
+                    <span class="text-xs font-medium text-white/70">Saldo Tersedia</span>
+                    <span class="text-sm font-bold tabular-nums">{{ $formatRupiah($availableBalance) }}</span>
+                </div>
+                <p class="mt-1 text-[11px] text-white/50">Total saldo dikurangi dana yang sudah disisihkan untuk target tabungan.</p>
+
                 <div class="flex gap-4 mt-4 pt-4 border-t border-white/20">
                     <div>
                         <p class="text-xs text-white/60">Pemasukan</p>

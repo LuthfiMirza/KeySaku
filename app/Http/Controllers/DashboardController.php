@@ -97,11 +97,14 @@ class DashboardController extends Controller
             ->take(3)
             ->values();
 
+        $netBalance = (float) $user->initial_balance + $allTimeIncome - $allTimeExpense;
+
         return view('pages.dashboard', [
             'thisMonthIncome' => $thisMonthIncome,
             'thisMonthExpense' => $thisMonthExpense,
             'thisMonthBalance' => $thisMonthIncome - $thisMonthExpense,
-            'netBalance' => $allTimeIncome - $allTimeExpense,
+            'netBalance' => $netBalance,
+            'availableBalance' => $netBalance - $totalSavingsCurrent,
             'monthlyExpenseByCategory' => $monthlyExpenseByCategory,
             'currentMonthBudgetInsight' => [
                 'hasBudgets' => $currentMonthBudgets->isNotEmpty(),
