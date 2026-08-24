@@ -18,6 +18,7 @@ class DashboardSavingsInsightTest extends TestCase
 
         SavingsGoal::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => 'Dana Darurat',
             'target_amount' => 1000000,
             'current_amount' => 250000,
@@ -26,6 +27,7 @@ class DashboardSavingsInsightTest extends TestCase
 
         SavingsGoal::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => 'Liburan Keluarga',
             'target_amount' => 2000000,
             'current_amount' => 1000000,
@@ -34,6 +36,7 @@ class DashboardSavingsInsightTest extends TestCase
 
         SavingsGoal::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => 'Target Lama',
             'target_amount' => 5000000,
             'current_amount' => 5000000,
@@ -42,6 +45,7 @@ class DashboardSavingsInsightTest extends TestCase
 
         SavingsGoal::create([
             'user_id' => $otherUser->id,
+            'household_id' => $otherUser->household->id,
             'name' => 'Target User Lain',
             'target_amount' => 9000000,
             'current_amount' => 9000000,
@@ -72,6 +76,7 @@ class DashboardSavingsInsightTest extends TestCase
 
         SavingsGoal::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => 'Target Diarsipkan',
             'target_amount' => 1000000,
             'current_amount' => 500000,
@@ -93,6 +98,7 @@ class DashboardSavingsInsightTest extends TestCase
 
         SavingsGoal::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => 'Laptop Baru',
             'target_amount' => 1000000,
             'current_amount' => 1500000,

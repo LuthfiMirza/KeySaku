@@ -25,6 +25,7 @@ class DashboardBudgetInsightTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $foodCategory->id,
             'month' => now()->month,
             'year' => now()->year,
@@ -33,6 +34,7 @@ class DashboardBudgetInsightTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $transportCategory->id,
             'month' => now()->month,
             'year' => now()->year,
@@ -41,6 +43,7 @@ class DashboardBudgetInsightTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $unbudgetedCategory->id,
             'month' => now()->subMonth()->month,
             'year' => now()->subMonth()->year,
@@ -82,6 +85,7 @@ class DashboardBudgetInsightTest extends TestCase
 
         Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => now()->subMonth()->month,
             'year' => now()->subMonth()->year,
@@ -112,6 +116,7 @@ class DashboardBudgetInsightTest extends TestCase
     ): Transaction {
         return Transaction::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'type' => $type,
             'amount' => $amount,

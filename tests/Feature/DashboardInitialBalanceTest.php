@@ -21,6 +21,7 @@ class DashboardInitialBalanceTest extends TestCase
 
         Transaction::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'type' => Transaction::TYPE_EXPENSE,
             'amount' => 25000,
@@ -41,6 +42,7 @@ class DashboardInitialBalanceTest extends TestCase
 
         SavingsGoal::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => 'Dana Darurat',
             'target_amount' => 2000000,
             'current_amount' => 300000,
