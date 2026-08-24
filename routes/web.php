@@ -16,6 +16,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan/notifikasi', [PageController::class, 'notificationSettings'])->name('settings.notifications');
     Route::get('/pengaturan/mata-uang', [PageController::class, 'currencySettings'])->name('settings.currency');
     Route::patch('/pengaturan/mata-uang', [PageController::class, 'updateCurrency'])->name('settings.currency.update');
+    Route::get('/pengaturan/saldo-awal', [PageController::class, 'initialBalanceSettings'])->name('settings.initial-balance');
+    Route::patch('/pengaturan/saldo-awal', [PageController::class, 'updateInitialBalance'])->name('settings.initial-balance.update');
     Route::get('/pengaturan/bahasa', [PageController::class, 'languageSettings'])->name('settings.language');
     Route::patch('/pengaturan/bahasa', [PageController::class, 'updateLanguage'])->name('settings.language.update');
     Route::get('/pengaturan/keamanan', [PageController::class, 'securitySettings'])->name('settings.security');
