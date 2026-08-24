@@ -10,29 +10,29 @@ class DashboardController extends Controller
 {
     public function index(): View
     {
-        $user = auth()->user();
+        $household = auth()->user()->household;
         $startOfMonth = now()->startOfMonth()->toDateString();
         $endOfMonth = now()->endOfMonth()->toDateString();
 
-        $thisMonthIncome = $user->transactions()
+        $thisMonthIncome = $household->transactions()
             ->where('type', Transaction::TYPE_INCOME)
             ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
             ->sum('amount');
 
-        $thisMonthExpense = $user->transactions()
+        $thisMonthExpense = $household->transactions()
             ->where('type', Transaction::TYPE_EXPENSE)
             ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
             ->sum('amount');
 
-        $allTimeIncome = $user->transactions()
+        $allTimeIncome = $household->transactions()
             ->where('type', Transaction::TYPE_INCOME)
             ->sum('amount');
 
-        $allTimeExpense = $user->transactions()
+        $allTimeExpense = $household->transactions()
             ->where('type', Transaction::TYPE_EXPENSE)
             ->sum('amount');
 
-        $monthlyExpenseByCategory = $user->transactions()
+        $monthlyExpenseByCategory = $household->transactions()
             ->with('category')
             ->selectRaw('category_id, SUM(amount) as total')
             ->where('type', Transaction::TYPE_EXPENSE)
@@ -49,7 +49,7 @@ class DashboardController extends Controller
                     : 0,
             ]);
 
-        $currentMonthBudgets = $user->budgets()
+        $currentMonthBudgets = $household->budgets()
             ->where('month', now()->month)
             ->where('year', now()->year)
             ->get(['category_id', 'amount']);
@@ -57,7 +57,7 @@ class DashboardController extends Controller
         $budgetCategoryIds = $currentMonthBudgets->pluck('category_id')->unique()->values();
         $budgetExpenseTotals = $budgetCategoryIds->isEmpty()
             ? collect()
-            : $user->transactions()
+            : $household->transactions()
                 ->selectRaw('category_id, SUM(amount) as total')
                 ->where('type', Transaction::TYPE_EXPENSE)
                 ->whereIn('category_id', $budgetCategoryIds)
@@ -70,7 +70,7 @@ class DashboardController extends Controller
             fn ($budget) => (float) ($budgetExpenseTotals[$budget->category_id] ?? 0)
         );
 
-        $activeSavingsGoals = $user->savingsGoals()
+        $activeSavingsGoals = $household->savingsGoals()
             ->where('status', SavingsGoal::STATUS_ACTIVE)
             ->latest('id')
             ->get();
@@ -97,7 +97,7 @@ class DashboardController extends Controller
             ->take(3)
             ->values();
 
-        $netBalance = (float) $user->household->initial_balance + $allTimeIncome - $allTimeExpense;
+        $netBalance = (float) $household->initial_balance + $allTimeIncome - $allTimeExpense;
 
         return view('pages.dashboard', [
             'thisMonthIncome' => $thisMonthIncome,
@@ -124,7 +124,7 @@ class DashboardController extends Controller
                 'barPercentage' => min(100, max(0, $savingsProgressPercentage)),
                 'topSavingsGoals' => $topSavingsGoals,
             ],
-            'latestTransactions' => $user->transactions()
+            'latestTransactions' => $household->transactions()
                 ->with('category')
                 ->latest('transaction_date')
                 ->latest('id')

@@ -43,7 +43,9 @@ class CreateTransaction extends Component
             'note' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        $category = auth()->user()
+        $household = auth()->user()->household;
+
+        $category = $household
             ->categories()
             ->whereKey($validated['category_id'])
             ->first();
@@ -60,6 +62,7 @@ class CreateTransaction extends Component
 
         Transaction::create([
             'user_id' => auth()->id(),
+            'household_id' => $household->id,
             'category_id' => $category->id,
             'type' => $validated['type'],
             'amount' => $validated['amount'],
@@ -85,7 +88,7 @@ class CreateTransaction extends Component
 
     private function categories()
     {
-        return auth()->user()
+        return auth()->user()->household
             ->categories()
             ->where('type', $this->type)
             ->orderBy('name');

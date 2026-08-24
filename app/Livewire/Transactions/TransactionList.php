@@ -35,7 +35,7 @@ class TransactionList extends Component
 
     private function transactions()
     {
-        $query = auth()->user()
+        $query = auth()->user()->household
             ->transactions()
             ->with('category')
             ->latest('transaction_date')
@@ -62,7 +62,7 @@ class TransactionList extends Component
 
     private function categories()
     {
-        $query = auth()->user()->categories()->orderBy('name');
+        $query = auth()->user()->household->categories()->orderBy('name');
 
         if (in_array($this->type, Transaction::types(), true)) {
             $query->where('type', $this->type);

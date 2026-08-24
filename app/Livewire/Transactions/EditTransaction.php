@@ -50,7 +50,7 @@ class EditTransaction extends Component
             'note' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        $category = auth()->user()
+        $category = auth()->user()->household
             ->categories()
             ->whereKey($validated['category_id'])
             ->first();
@@ -96,7 +96,7 @@ class EditTransaction extends Component
 
     private function categories()
     {
-        return auth()->user()
+        return auth()->user()->household
             ->categories()
             ->where('type', $this->type)
             ->orderBy('name');
