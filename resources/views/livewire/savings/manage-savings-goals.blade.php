@@ -131,6 +131,7 @@
                         @if ($contributingGoalId === $goal->id)
                             <form wire:submit="addContribution" class="mt-4 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3">
                                 <h4 class="text-sm font-bold text-slate-800">Tambah Dana</h4>
+                                <p class="mt-1 text-xs leading-relaxed text-slate-500">Dana ini disisihkan untuk target tabungan, <span class="font-bold">tidak dicatat sebagai pengeluaran</span>.</p>
 
                                 <div class="mt-3 space-y-3">
                                     <div>
