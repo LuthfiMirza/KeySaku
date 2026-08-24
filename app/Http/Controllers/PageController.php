@@ -60,7 +60,7 @@ class PageController extends Controller
 
         $normalized = preg_replace('/\D+/', '', $request->input('initial_balance'));
 
-        $request->user()->update([
+        $request->user()->household->update([
             'initial_balance' => $normalized !== '' ? (float) $normalized : 0,
         ]);
 
