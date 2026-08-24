@@ -31,6 +31,7 @@ class CategoryManager extends Component
         $category = $this->editingCategory ?? new Category();
         $category->fill($validated);
         $category->user_id = auth()->id();
+        $category->household_id = auth()->user()->household->id;
         $category->save();
 
         $this->resetForm();
@@ -39,7 +40,7 @@ class CategoryManager extends Component
 
     public function edit(int $categoryId): void
     {
-        $category = $this->currentUserCategories()->whereKey($categoryId)->first();
+        $category = $this->currentHouseholdCategories()->whereKey($categoryId)->first();
 
         abort_if(! $category, 404);
 
@@ -52,7 +53,7 @@ class CategoryManager extends Component
 
     public function delete(int $categoryId): void
     {
-        $category = $this->currentUserCategories()->whereKey($categoryId)->first();
+        $category = $this->currentHouseholdCategories()->whereKey($categoryId)->first();
 
         abort_if(! $category, 404);
 
@@ -87,20 +88,20 @@ class CategoryManager extends Component
     public function render(): View
     {
         return view('livewire.category-manager', [
-            'expenseCategories' => $this->currentUserCategories()
+            'expenseCategories' => $this->currentHouseholdCategories()
                 ->where('type', Category::TYPE_EXPENSE)
                 ->orderBy('name')
                 ->get(),
-            'incomeCategories' => $this->currentUserCategories()
+            'incomeCategories' => $this->currentHouseholdCategories()
                 ->where('type', Category::TYPE_INCOME)
                 ->orderBy('name')
                 ->get(),
         ]);
     }
 
-    private function currentUserCategories()
+    private function currentHouseholdCategories()
     {
-        return auth()->user()->categories();
+        return auth()->user()->household->categories();
     }
 
 }
