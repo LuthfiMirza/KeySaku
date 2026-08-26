@@ -16,7 +16,7 @@ Status: BELUM / JALAN / SELESAI
 | 3 | Observer kategori + test otorisasi | SELESAI | fix/category-seeding |
 | 4 | Trait scoping + Policy | SELESAI | refactor/tenant-scoping |
 | 5 | Saldo awal + semantik earmarking | SELESAI | feat/initial-balance |
-| 6 | Household / family sharing | BELUM | feat/household |
+| 6 | Household / family sharing | SELESAI | feat/household |
 | 7 | Export PDF/CSV | BELUM | feat/export |
 | 8 | CategorySuggester v1 | BELUM | feat/category-suggester |
 | 9 | Frontend: redesign + migrasi format uang | BELUM | feat/frontend-rework |
@@ -228,6 +228,40 @@ Definition of done:
 - Dua user dalam satu household melihat data yang sama
 - Test otorisasi diperluas: user dari household lain → 404
 
+Catatan implementasi (lihat docs/TASK-6-HOUSEHOLD-DESIGN.md untuk draf
+lengkap sebelum eksekusi):
+- Premis "ganti global scope satu file" di plan tidak berlaku — Task 4
+  tidak pernah mengaktifkan global scope (opsi a-revisi). Realisasinya:
+  ~30 call site scoping manual diubah satu per satu di 9 file
+  (Category/Budget/SavingsGoal/Transaction Livewire components +
+  DashboardController), dari `auth()->user()->relasi()` jadi
+  `auth()->user()->household->relasi()`.
+- Bug ditemukan saat implementasi: `household_id` tidak ada di
+  `$fillable` kelima model bertenant, jadi sempat diam-diam terbuang
+  saat mass-assignment (kolom nullable, tidak ada error) — sudah
+  diperbaiki di kelima model sekaligus.
+- Kelima Policy (Task 4) diubah dari cek `user_id` jadi cek
+  `household_id`, supaya konsisten dengan model baru — sebelumnya
+  hanya TransactionPolicy yang benar-benar dipakai di satu 404 check.
+- `categories:backfill` (Task 3) dihapus — skenario yang ditanganinya
+  (user tanpa kategori) sudah tidak mungkin terjadi lagi berkat
+  provisioning household otomatis, dan implementasinya sendiri sudah
+  salah untuk skema baru (insert tanpa household_id).
+- Atribusi kontribusi tabungan (`ManageSavingsGoals::addContribution`)
+  diubah dari `$goal->user_id` (pemilik goal) jadi `auth()->id()`
+  (siapa yang benar-benar mencatat) — dua hal itu selalu sama sebelum
+  Task 6, sekarang bisa beda kalau anggota lain yang menambah dana.
+- `User::household` adalah Attribute accessor (lewat
+  `householdMembership`), bukan relasi Eloquent asli — tidak bisa
+  di-eager-load lewat `->with('household')`.
+- Halaman "Anggota Keluarga" ditambahkan di Pengaturan (lihat kode
+  undangan, keluarkan anggota, keluar household). Owner belum bisa
+  transfer kepemilikan sebelum keluar — dicatat sebagai utang
+  perbaikan di bawah.
+- `docs/SCHEMA.md` sudah usang jauh sebelum task ini (nama tabel dan
+  kolom sudah tidak cocok sejak beberapa task lalu) — tidak disegarkan
+  di task ini, di luar cakupan.
+
 ---
 
 ## Task 7 — Export PDF/CSV
@@ -303,3 +337,9 @@ Definition of done:
 - Timezone Asia/Jakarta fixed di config, tidak per-user
 - Tidak ada audit log untuk perubahan budget/goal
 - SoftDeletes hanya di Transaction
+- Owner household tidak bisa transfer kepemilikan — kalau masih ada
+  anggota lain, owner terkunci tidak bisa keluar sampai semua anggota
+  dikeluarkan dulu
+- docs/SCHEMA.md sudah usang, tidak mencerminkan skema sebenarnya
+  sejak beberapa task lalu (household_id, initial_balance, source,
+  raw_voice_text semua belum tercatat di sana)
