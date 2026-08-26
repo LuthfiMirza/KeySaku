@@ -104,6 +104,8 @@ class DashboardController extends Controller
             'thisMonthExpense' => $thisMonthExpense,
             'thisMonthBalance' => $thisMonthIncome - $thisMonthExpense,
             'netBalance' => $netBalance,
+            'shouldPromptInitialBalance' => (float) $household->initial_balance === 0.0
+                && $household->transactions()->exists(),
             'availableBalance' => $netBalance - $totalSavingsCurrent,
             'monthlyExpenseByCategory' => $monthlyExpenseByCategory,
             'currentMonthBudgetInsight' => [

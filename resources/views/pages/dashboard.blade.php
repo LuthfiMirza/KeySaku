@@ -24,6 +24,16 @@
                 </div>
                 <p class="mt-1 text-[11px] text-white/50">Total saldo dikurangi dana yang sudah disisihkan untuk target tabungan.</p>
 
+                @if ($shouldPromptInitialBalance)
+                    <a href="{{ route('settings.initial-balance') }}" class="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-white/15 px-3 py-2.5 transition active:scale-[0.99]">
+                        <span class="text-left">
+                            <span class="block text-xs font-bold">Saldo awal belum diatur</span>
+                            <span class="block text-[11px] text-white/60">Angka di atas baru menghitung transaksi tercatat, belum uang yang sudah kamu punya.</span>
+                        </span>
+                        <span class="shrink-0 text-xs font-bold">Atur →</span>
+                    </a>
+                @endif
+
                 <div class="flex gap-4 mt-4 pt-4 border-t border-white/20">
                     <div>
                         <p class="text-xs text-white/60">Pemasukan</p>
