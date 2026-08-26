@@ -74,6 +74,7 @@ class AuthorizationPoliciesTest extends TestCase
         $contribution = SavingsContribution::create([
             'savings_goal_id' => $goal->id,
             'user_id' => $owner->id,
+            'household_id' => $owner->household->id,
             'amount' => 50000,
             'contribution_date' => now()->toDateString(),
         ]);
@@ -97,6 +98,7 @@ class AuthorizationPoliciesTest extends TestCase
 
         return Transaction::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'type' => Transaction::TYPE_EXPENSE,
             'amount' => 15000,
@@ -111,6 +113,7 @@ class AuthorizationPoliciesTest extends TestCase
 
         return Budget::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'month' => (int) now()->month,
             'year' => (int) now()->year,
@@ -122,6 +125,7 @@ class AuthorizationPoliciesTest extends TestCase
     {
         return SavingsGoal::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'name' => 'Liburan',
             'target_amount' => 5000000,
             'current_amount' => 0,

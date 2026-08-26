@@ -22,7 +22,8 @@ class InitialBalanceSettingsTest extends TestCase
 
     public function test_user_can_update_initial_balance_with_thousand_separator(): void
     {
-        $user = User::factory()->create(['initial_balance' => 0]);
+        $user = User::factory()->create();
+        $user->household->update(['initial_balance' => 0]);
 
         $this->actingAs($user)
             ->patch(route('settings.initial-balance.update'), [
@@ -30,12 +31,13 @@ class InitialBalanceSettingsTest extends TestCase
             ])
             ->assertRedirect();
 
-        $this->assertSame('5500000.00', $user->fresh()->initial_balance);
+        $this->assertSame('5500000.00', $user->household->fresh()->initial_balance);
     }
 
     public function test_empty_initial_balance_is_rejected(): void
     {
-        $user = User::factory()->create(['initial_balance' => 1000]);
+        $user = User::factory()->create();
+        $user->household->update(['initial_balance' => 1000]);
 
         $this->actingAs($user)
             ->patch(route('settings.initial-balance.update'), [
@@ -43,6 +45,6 @@ class InitialBalanceSettingsTest extends TestCase
             ])
             ->assertSessionHasErrors('initial_balance');
 
-        $this->assertSame('1000.00', $user->fresh()->initial_balance);
+        $this->assertSame('1000.00', $user->household->fresh()->initial_balance);
     }
 }

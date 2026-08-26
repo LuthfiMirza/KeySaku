@@ -29,7 +29,7 @@ class VoiceTransaction extends Component
 
         $this->parsedDraft = $parser->parse(
             $this->transcript,
-            auth()->user()->categories()->get()
+            auth()->user()->household->categories()->get()
         );
     }
 
@@ -60,7 +60,9 @@ class VoiceTransaction extends Component
 
         $type = $this->parsedDraft['type'] ?? Transaction::TYPE_EXPENSE;
 
-        $category = auth()->user()
+        $household = auth()->user()->household;
+
+        $category = $household
             ->categories()
             ->whereKey($this->parsedDraft['category_id'])
             ->where('type', $type)
@@ -81,6 +83,7 @@ class VoiceTransaction extends Component
 
         Transaction::create([
             'user_id' => auth()->id(),
+            'household_id' => $household->id,
             'category_id' => $category->id,
             'type' => $type,
             'amount' => $amount,

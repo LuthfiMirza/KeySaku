@@ -39,8 +39,15 @@
                 <span class="flex items-center px-4 text-sm font-bold text-slate-400">Rp</span>
                 <input id="initial_balance" class="block w-full rounded-r-2xl border-0 bg-transparent px-2 py-3 text-sm focus:ring-0" type="text" inputmode="numeric" name="initial_balance" value="{{ old('initial_balance') }}" placeholder="0">
             </div>
-            <p class="mt-2 text-xs text-slate-400">Uang yang sudah kamu punya sebelum mulai mencatat di KeySaku. Bisa diisi nanti lewat Pengaturan.</p>
+            <p class="mt-2 text-xs text-slate-400">Uang yang sudah kamu punya sebelum mulai mencatat di KeySaku. Bisa diisi nanti lewat Pengaturan. Diabaikan kalau kamu mengisi kode undangan di bawah — keluarga yang kamu gabungi sudah punya saldo awal sendiri.</p>
             <x-input-error :messages="$errors->get('initial_balance')" class="mt-2" />
+        </div>
+
+        <div>
+            <label for="invite_code" class="block text-sm font-semibold text-slate-700">Kode undangan keluarga <span class="font-normal text-slate-400">(opsional)</span></label>
+            <input id="invite_code" class="mt-2 block w-full rounded-2xl border-slate-200 bg-white/80 px-4 py-3 text-sm uppercase shadow-sm focus:border-indigo-500 focus:ring-indigo-500" type="text" name="invite_code" value="{{ old('invite_code') }}" placeholder="Contoh: A7K3-9XPQ">
+            <p class="mt-2 text-xs text-slate-400">Punya kode dari keluarga yang sudah pakai KeySaku? Masukkan di sini untuk langsung gabung. Kosongkan untuk membuat keluarga baru.</p>
+            <x-input-error :messages="$errors->get('invite_code')" class="mt-2" />
         </div>
 
         <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition active:scale-[0.99]">

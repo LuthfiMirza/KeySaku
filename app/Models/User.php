@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Observers\UserObserver;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[ObservedBy(UserObserver::class)]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -22,7 +21,6 @@ class User extends Authenticatable
         'password',
         'preferred_currency',
         'language',
-        'initial_balance',
     ];
 
     protected $hidden = [
@@ -52,12 +50,23 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class);
     }
 
+    public function householdMembership(): HasOne
+    {
+        return $this->hasOne(HouseholdMember::class);
+    }
+
+    protected function household(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->householdMembership?->household,
+        );
+    }
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'initial_balance' => 'decimal:2',
         ];
     }
 }

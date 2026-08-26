@@ -60,11 +60,16 @@ class PageController extends Controller
 
         $normalized = preg_replace('/\D+/', '', $request->input('initial_balance'));
 
-        $request->user()->update([
+        $request->user()->household->update([
             'initial_balance' => $normalized !== '' ? (float) $normalized : 0,
         ]);
 
         return back()->with('settings_status', 'Saldo awal berhasil diperbarui.');
+    }
+
+    public function householdSettings(): View
+    {
+        return view('pages.settings.household');
     }
 
     public function languageSettings(): View

@@ -9,16 +9,16 @@ class SavingsGoalPolicy
 {
     public function view(User $user, SavingsGoal $savingsGoal): bool
     {
-        return $user->id === $savingsGoal->user_id;
+        return $user->household?->id === $savingsGoal->household_id;
     }
 
     public function update(User $user, SavingsGoal $savingsGoal): bool
     {
-        return $user->id === $savingsGoal->user_id;
+        return $user->household?->id === $savingsGoal->household_id;
     }
 
     public function delete(User $user, SavingsGoal $savingsGoal): bool
     {
-        return $user->id === $savingsGoal->user_id;
+        return $user->household?->id === $savingsGoal->household_id;
     }
 }
