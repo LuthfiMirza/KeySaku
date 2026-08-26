@@ -19,7 +19,7 @@ Status: BELUM / JALAN / SELESAI
 | 6 | Household / family sharing | SELESAI | feat/household |
 | 7 | Export PDF/CSV | SELESAI | feat/export |
 | 8 | CategorySuggester v1 | SELESAI | feat/category-suggester |
-| 9 | Frontend: redesign + migrasi format uang | BELUM | feat/frontend-rework |
+| 9 | Frontend: redesign + migrasi format uang | SELESAI | feat/frontend-rework |
 
 ---
 
@@ -362,6 +362,34 @@ Definition of done:
   angka uang
 - Nol number_format/'Rp ' tersisa di view
 
+Catatan implementasi:
+- Cakupan "redesign" dikonfirmasi ke user sebelum mulai: hanya item
+  DIKERJAKAN di atas, TANPA ganti tema visual. Tema terang/gradient
+  indigo-purple yang ada dipertahankan. Branch arsip
+  ui/bento-dark-dashboard tetap tidak di-merge (sesuai instruksi) dan
+  tidak dipakai — adopsi tema gelap penuh akan jadi task terpisah
+  kalau memang diinginkan.
+- Selain <x-money>, ditambahkan `Money::number()` (format tanpa
+  simbol) karena dibutuhkan di dua tempat: `<x-money :symbol="false">`
+  dan input saldo awal yang menampilkan angka polos di sebelah prefix
+  simbol terpisah.
+- `<x-money>` punya prop `prefix` supaya label gabungan seperti
+  "Lewat Rp 25.000" tetap satu text node — kalau dipecah jadi
+  `Lewat <span>Rp 25.000</span>`, assertion test lama yang mencocokkan
+  frasa utuh akan pecah padahal tampilannya identik.
+- Attribute value dan ekspresi PHP (mis. `<x-dashboard-card value="..."/>`,
+  ternary pembentuk string) tidak bisa memakai komponen Blade, jadi
+  di titik itu dipakai `\App\Support\Money::format()` langsung. Hasil
+  akhirnya tetap nol `number_format`/`'Rp '` di seluruh view.
+- Bug ditemukan saat migrasi: baris "Jenis" di preview halaman suara
+  hardcoded "Pengeluaran", jadi draf pemasukan yang sudah diparse
+  benar tetap tampil sebagai pengeluaran sampai detik disimpan.
+  Diperbaiki di commit terpisah.
+- `window.formatMoney` + `window.appCurrency` ternyata SUDAH tersambung
+  sejak Task 1 (`resources/js/app.js`, `layouts/app.blade.php`) — item
+  "Sambungkan window.formatMoney" tidak butuh pekerjaan baru,
+  diverifikasi bukan diasumsikan.
+
 ---
 
 ## Utang perbaikan (belum dijadwalkan)
@@ -380,3 +408,6 @@ Definition of done:
 - 33 advisory keamanan composer di 11 package (guzzlehttp/guzzle,
   laravel/framework, symfony/*, league/commonmark) — sudah ada sebelum
   Task 7, belum pernah ditangani. Cek `composer audit` untuk detail
+- Adopsi tema gelap (referensi: branch arsip ui/bento-dark-dashboard)
+  — Task 9 sengaja dibatasi ke item konkretnya saja setelah
+  dikonfirmasi ke user, tema visual belum diubah
