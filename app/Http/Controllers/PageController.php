@@ -67,6 +67,11 @@ class PageController extends Controller
         return back()->with('settings_status', 'Saldo awal berhasil diperbarui.');
     }
 
+    public function householdSettings(): View
+    {
+        return view('pages.settings.household');
+    }
+
     public function languageSettings(): View
     {
         return view('pages.settings.language');

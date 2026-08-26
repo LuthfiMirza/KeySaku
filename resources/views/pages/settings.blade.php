@@ -14,6 +14,7 @@
                 ['icon' => '🔔', 'label' => 'Notifikasi', 'href' => route('settings.notifications')],
                 ['icon' => '💱', 'label' => 'Mata Uang', 'href' => route('settings.currency')],
                 ['icon' => '💰', 'label' => 'Saldo Awal', 'href' => route('settings.initial-balance')],
+                ['icon' => '👨‍👩‍👧', 'label' => 'Anggota Keluarga', 'href' => route('settings.household')],
                 ['icon' => '🌐', 'label' => 'Bahasa', 'href' => route('settings.language')],
                 ['icon' => '🔒', 'label' => 'Keamanan', 'href' => route('settings.security')],
                 ['icon' => '📱', 'label' => 'Pasang di Layar Utama', 'href' => route('settings.install')],
