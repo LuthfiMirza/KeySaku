@@ -12,6 +12,11 @@
             </a>
         </div>
 
+        <div class="flex gap-2 text-xs font-bold">
+            <a href="{{ route('transactions.export.csv') }}" class="flex-1 rounded-2xl bg-white/80 px-3 py-2.5 text-center text-slate-600 shadow-sm border border-white/60">Unduh CSV</a>
+            <a href="{{ route('transactions.export.xlsx') }}" class="flex-1 rounded-2xl bg-white/80 px-3 py-2.5 text-center text-slate-600 shadow-sm border border-white/60">Unduh Excel</a>
+        </div>
+
         <livewire:transactions.transaction-list />
     </div>
 </x-app-layout>

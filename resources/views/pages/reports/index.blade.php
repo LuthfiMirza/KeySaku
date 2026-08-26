@@ -17,6 +17,12 @@
             </a>
         </div>
 
+        <div class="grid grid-cols-3 gap-2 text-xs font-bold">
+            <a href="{{ route('reports.export.csv', ['month' => $selectedMonthValue]) }}" class="rounded-2xl bg-white/80 px-2 py-2.5 text-center text-slate-600 shadow-sm border border-white/60">CSV</a>
+            <a href="{{ route('reports.export.xlsx', ['month' => $selectedMonthValue]) }}" class="rounded-2xl bg-white/80 px-2 py-2.5 text-center text-slate-600 shadow-sm border border-white/60">Excel</a>
+            <a href="{{ route('reports.export.pdf', ['month' => $selectedMonthValue]) }}" class="rounded-2xl bg-white/80 px-2 py-2.5 text-center text-slate-600 shadow-sm border border-white/60">PDF</a>
+        </div>
+
         <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-4 shadow-sm border border-white/60">
             <form method="GET" action="{{ route('reports.index') }}" class="space-y-3">
                 <div>

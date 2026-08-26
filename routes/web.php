@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -25,7 +26,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan/pasang', [PageController::class, 'installSettings'])->name('settings.install');
     Route::get('/kategori', [PageController::class, 'categories'])->name('categories');
     Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/laporan/export/csv', [ExportController::class, 'monthlyReportCsv'])->name('reports.export.csv');
+    Route::get('/laporan/export/xlsx', [ExportController::class, 'monthlyReportXlsx'])->name('reports.export.xlsx');
+    Route::get('/laporan/export/pdf', [ExportController::class, 'monthlyReportPdf'])->name('reports.export.pdf');
     Route::get('/transaksi', [PageController::class, 'transactions'])->name('transactions.index');
+    Route::get('/transaksi/export/csv', [ExportController::class, 'transactionsCsv'])->name('transactions.export.csv');
+    Route::get('/transaksi/export/xlsx', [ExportController::class, 'transactionsXlsx'])->name('transactions.export.xlsx');
     Route::get('/transaksi/tambah', [PageController::class, 'createTransaction'])->name('transactions.create');
     Route::get('/transaksi/suara', [PageController::class, 'voiceTransaction'])->name('transactions.voice');
     Route::get('/transaksi/{transaction}/edit', [PageController::class, 'editTransaction'])->name('transactions.edit');
