@@ -17,7 +17,7 @@ Status: BELUM / JALAN / SELESAI
 | 4 | Trait scoping + Policy | SELESAI | refactor/tenant-scoping |
 | 5 | Saldo awal + semantik earmarking | SELESAI | feat/initial-balance |
 | 6 | Household / family sharing | SELESAI | feat/household |
-| 7 | Export PDF/CSV | BELUM | feat/export |
+| 7 | Export PDF/CSV | SELESAI | feat/export |
 | 8 | CategorySuggester v1 | BELUM | feat/category-suggester |
 | 9 | Frontend: redesign + migrasi format uang | BELUM | feat/frontend-rework |
 
@@ -280,6 +280,24 @@ Definition of done:
 - File terunduh berisi data yang benar dan ter-scope
 - Format uang mengikuti preferred_currency
 
+Catatan implementasi:
+- Interpretasi "transaksi dan laporan bulanan ke CSV/XLSX dan PDF":
+  transaksi → CSV + XLSX (riwayat penuh, tanpa PDF — daftar transaksi
+  mentah tidak natural sebagai dokumen cetak); laporan bulanan →
+  CSV + XLSX + PDF (PDF berisi ringkasan + breakdown kategori + daftar
+  transaksi bulan itu, meniru tampilan halaman laporan).
+- Ditemukan sebelum kode ditulis: `ReportController` masih pakai
+  `$request->user()->transactions()`, lolos dari refactor scoping
+  Task 6 karena idiomnya beda dari `auth()->user()->` yang di-grep
+  waktu itu. Diperbaiki di commit terpisah sebelum fitur export
+  dibangun di atasnya — kalau tidak, laporan bulanan (dan exportnya)
+  tetap cuma tampilkan transaksi milik user yang login, bukan
+  household.
+- `composer require` memunculkan 33 advisory keamanan di 11 package
+  (guzzlehttp/guzzle, laravel/framework, symfony/*, league/commonmark)
+  — dikonfirmasi sudah ada sebelum install (composer.lock diff tidak
+  menyentuh versi package-package itu), di luar cakupan task ini.
+
 ---
 
 ## Task 8 — CategorySuggester v1
@@ -343,3 +361,6 @@ Definition of done:
 - docs/SCHEMA.md sudah usang, tidak mencerminkan skema sebenarnya
   sejak beberapa task lalu (household_id, initial_balance, source,
   raw_voice_text semua belum tercatat di sana)
+- 33 advisory keamanan composer di 11 package (guzzlehttp/guzzle,
+  laravel/framework, symfony/*, league/commonmark) — sudah ada sebelum
+  Task 7, belum pernah ditangani. Cek `composer audit` untuk detail
