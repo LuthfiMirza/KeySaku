@@ -200,13 +200,20 @@
                     @endif
 
                     <div class="mt-3 grid gap-2 text-sm">
+                        @php
+                            $draftIsIncome = ($parsedDraft['type'] ?? \App\Models\Transaction::TYPE_EXPENSE) === \App\Models\Transaction::TYPE_INCOME;
+                        @endphp
                         <div class="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
                             <span class="text-slate-500">Jenis</span>
-                            <span class="font-bold text-rose-600">Pengeluaran</span>
+                            <span class="font-bold {{ $draftIsIncome ? 'text-emerald-600' : 'text-rose-600' }}">{{ $draftIsIncome ? 'Pemasukan' : 'Pengeluaran' }}</span>
                         </div>
                         <div class="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
                             <span class="text-slate-500">Nominal</span>
-                            <span class="font-bold text-slate-800">{{ $parsedDraft['amount'] ? 'Rp '.number_format($parsedDraft['amount'], 0, ',', '.') : 'Belum dikenali' }}</span>
+                            @if ($parsedDraft['amount'])
+                                <x-money :value="$parsedDraft['amount']" class="font-bold text-slate-800" />
+                            @else
+                                <span class="font-bold text-slate-800">Belum dikenali</span>
+                            @endif
                         </div>
                         <div class="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
                             <span class="text-slate-500">Kategori</span>
