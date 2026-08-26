@@ -71,7 +71,8 @@
 
             <div>
                 <label for="note" class="block text-sm font-semibold text-slate-700">Catatan <span class="font-normal text-slate-400">opsional</span></label>
-                <textarea id="note" wire:model="note" rows="3" class="mt-2 block w-full rounded-2xl border-slate-200 bg-white/80 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Contoh: makan siang keluarga"></textarea>
+                <textarea id="note" wire:model.live.debounce.500ms="note" rows="3" class="mt-2 block w-full rounded-2xl border-slate-200 bg-white/80 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Contoh: makan siang keluarga"></textarea>
+                <p class="mt-1 text-xs text-slate-400">Ketik catatan dan kategori bisa terisi otomatis.</p>
                 @error('note')
                     <p class="mt-2 text-xs font-medium text-rose-500">{{ $message }}</p>
                 @enderror

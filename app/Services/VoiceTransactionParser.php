@@ -9,6 +9,10 @@ use Illuminate\Support\Str;
 
 class VoiceTransactionParser
 {
+    public function __construct(private ?CategorySuggester $categorySuggester = null)
+    {
+    }
+
     /**
      * @param  Collection<int, Category>  $categories
      * @return array{type: string, amount: float|null, category_id: int|null, category_name: string|null, transaction_date: string, note: string, raw_voice_text: string, warnings: array<int, string>}
@@ -22,10 +26,23 @@ class VoiceTransactionParser
         [$transactionDate, $workingText] = $this->extractDate($workingText);
         [$type, $workingText] = $this->extractType($workingText);
         [$category, $workingText] = $this->extractCategory($workingText, $categories);
-        $type = $type ?? $category?->type ?? Transaction::TYPE_EXPENSE;
         [$amount, $workingText] = $this->extractAmount($workingText);
 
         $note = $this->cleanNote($workingText);
+
+        if ($category === null && $this->categorySuggester !== null) {
+            $suggestion = $this->categorySuggester->suggest(
+                $note,
+                $type ?? Transaction::TYPE_EXPENSE,
+                $categories
+            );
+
+            if ($suggestion !== null && $suggestion->confidence >= CategorySuggester::MINIMUM_CONFIDENCE) {
+                $category = $categories->firstWhere('id', $suggestion->categoryId);
+            }
+        }
+
+        $type = $type ?? $category?->type ?? Transaction::TYPE_EXPENSE;
 
         if ($amount === null) {
             $warnings[] = 'Nominal belum terbaca. Tambahkan nominal seperti ‘dua puluh lima ribu’ atau ‘25.000’.';

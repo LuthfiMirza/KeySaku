@@ -4,6 +4,7 @@ namespace App\Livewire\Transactions;
 
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Services\CategorySuggester;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -29,6 +30,19 @@ class CreateTransaction extends Component
     public function updatedType(): void
     {
         $this->category_id = $this->categories()->first()?->id;
+    }
+
+    public function updatedNote(CategorySuggester $suggester): void
+    {
+        if (trim($this->note) === '') {
+            return;
+        }
+
+        $suggestion = $suggester->suggest($this->note, $this->type, $this->categories()->get());
+
+        if ($suggestion !== null && $suggestion->confidence >= CategorySuggester::MINIMUM_CONFIDENCE) {
+            $this->category_id = $suggestion->categoryId;
+        }
     }
 
     public function save(): void
