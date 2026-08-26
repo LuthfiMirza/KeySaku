@@ -84,6 +84,7 @@ class ReportPageTest extends TestCase
     ): Transaction {
         return Transaction::create([
             'user_id' => $user->id,
+            'household_id' => $user->household->id,
             'category_id' => $category->id,
             'type' => $type,
             'amount' => $amount,

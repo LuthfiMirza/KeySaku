@@ -14,9 +14,9 @@ class ReportController extends Controller
         $selectedMonth = $this->selectedMonth($request->query('month'));
         $startDate = $selectedMonth->copy()->startOfMonth();
         $endDate = $selectedMonth->copy()->endOfMonth();
-        $user = $request->user();
+        $household = $request->user()->household;
 
-        $monthlyTransactions = $user->transactions()
+        $monthlyTransactions = $household->transactions()
             ->whereBetween('transaction_date', [$startDate->toDateString(), $endDate->toDateString()]);
 
         $totalIncome = (float) (clone $monthlyTransactions)
