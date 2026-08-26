@@ -18,7 +18,7 @@ Status: BELUM / JALAN / SELESAI
 | 5 | Saldo awal + semantik earmarking | SELESAI | feat/initial-balance |
 | 6 | Household / family sharing | SELESAI | feat/household |
 | 7 | Export PDF/CSV | SELESAI | feat/export |
-| 8 | CategorySuggester v1 | BELUM | feat/category-suggester |
+| 8 | CategorySuggester v1 | SELESAI | feat/category-suggester |
 | 9 | Frontend: redesign + migrasi format uang | BELUM | feat/frontend-rework |
 
 ---
@@ -320,6 +320,22 @@ DIKERJAKAN:
 TIDAK DIKERJAKAN:
 - v2 Naive Bayes (task terpisah nanti)
 - OCR struk (ditolak, akurasi struk Indonesia buruk)
+
+Catatan implementasi:
+- Signature asli `suggest(string $text, string $type): ?CategorySuggestion`
+  diperluas jadi `suggest(string $text, string $type, Collection $categories): ?CategorySuggestion`
+  — konsisten dengan `VoiceTransactionParser::parse()` yang sudah lebih
+  dulu terima `Collection $categories`, dan memang wajib supaya hasil
+  `category_id` bisa di-scope ke household (Task 6), bukan cuma nama
+  kategori global.
+- Ambang confidence (`CategorySuggester::MINIMUM_CONFIDENCE = 0.5`)
+  sengaja ditaruh di interface, bukan di implementasi v1 — supaya v2
+  nanti bisa punya confidence yang benar-benar bervariasi tanpa
+  caller (VoiceTransactionParser, CreateTransaction) perlu tahu
+  implementasi mana yang sedang dipakai.
+- `VoiceTransactionParser` terima `CategorySuggester` lewat constructor
+  opsional (`= null`) supaya test unit lama (`new VoiceTransactionParser()`
+  tanpa argumen) tetap jalan tanpa modifikasi.
 
 ---
 
