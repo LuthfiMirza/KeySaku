@@ -78,9 +78,11 @@
                                 </div>
                             </div>
 
-                            <p class="shrink-0 text-sm font-extrabold tabular-nums {{ $amountClass }}">
-                                {{ $amountPrefix }} Rp {{ number_format((float) $transaction->amount, 0, ',', '.') }}
-                            </p>
+                            <x-money
+                                :value="$transaction->amount"
+                                :prefix="$amountPrefix.' '"
+                                class="shrink-0 text-sm font-extrabold {{ $amountClass }}"
+                            />
                         </div>
                     </article>
                 @endforeach

@@ -27,8 +27,8 @@
                 <div>
                     <label for="initial_balance" class="block text-sm font-semibold text-slate-700">Saldo Awal</label>
                     <div class="mt-2 flex rounded-2xl border border-slate-200 bg-white/80 shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
-                        <span class="flex items-center px-4 text-sm font-bold text-slate-400">Rp</span>
-                        <input id="initial_balance" class="block w-full rounded-r-2xl border-0 bg-transparent px-2 py-3 text-sm focus:ring-0" type="text" inputmode="numeric" name="initial_balance" value="{{ old('initial_balance', number_format((float) auth()->user()->household->initial_balance, 0, ',', '.')) }}" placeholder="0">
+                        <span class="flex items-center px-4 text-sm font-bold text-slate-400">{{ \App\Support\Money::symbol() }}</span>
+                        <input id="initial_balance" class="block w-full rounded-r-2xl border-0 bg-transparent px-2 py-3 text-sm focus:ring-0" type="text" inputmode="numeric" name="initial_balance" value="{{ old('initial_balance', \App\Support\Money::number(auth()->user()->household->initial_balance)) }}" placeholder="0">
                     </div>
                     @error('initial_balance')
                         <p class="mt-2 text-xs font-medium text-rose-500">{{ $message }}</p>

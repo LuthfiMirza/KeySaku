@@ -65,6 +65,29 @@ class Money
     }
 
     /**
+     * Format an amount without the currency symbol, separators still applied.
+     */
+    public static function number(int|float|string|null $amount, ?string $currency = null): string
+    {
+        $value = 0.0;
+        if ($amount !== null && $amount !== '') {
+            $value = is_numeric($amount) ? (float) $amount : 0.0;
+        }
+
+        $cfg = self::config($currency);
+        $isNegative = $value < 0;
+
+        $number = number_format(
+            $isNegative ? -$value : $value,
+            $cfg['decimals'],
+            $cfg['decimal_separator'],
+            $cfg['thousands_separator']
+        );
+
+        return $isNegative ? '-'.$number : $number;
+    }
+
+    /**
      * Format an amount. Null becomes 0. Negatives get a leading minus BEFORE the symbol.
      */
     public static function format(int|float|string|null $amount, ?string $currency = null): string
