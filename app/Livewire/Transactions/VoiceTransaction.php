@@ -54,7 +54,7 @@ class VoiceTransaction extends Component
         ]);
 
         if (! $this->parsedDraft || ! $this->canSave) {
-            $this->addError('parsedDraft', 'Lengkapi nominal, kategori, dan catatan sebelum menyimpan.');
+            $this->addError('parsedDraft', $this->missingFieldsMessage());
             return null;
         }
 
@@ -69,7 +69,13 @@ class VoiceTransaction extends Component
             ->first();
 
         if (! $category) {
-            $this->addError('parsedDraft', 'Kategori tidak valid untuk jenis transaksi ini.');
+            $typeLabel = $type === Transaction::TYPE_INCOME ? 'pemasukan' : 'pengeluaran';
+            $draftCategory = $this->parsedDraft['category_name'] ?? null;
+
+            $this->addError('parsedDraft', $draftCategory
+                ? "Kategori \"{$draftCategory}\" bukan kategori {$typeLabel}. Sebutkan kategori {$typeLabel}, atau ubah jenis transaksinya."
+                : "Kategori untuk {$typeLabel} belum ditemukan. Sebutkan seperti 'kategori makanan'.");
+
             return null;
         }
 
@@ -77,7 +83,7 @@ class VoiceTransaction extends Component
         $note = trim((string) $this->parsedDraft['note']);
 
         if ($amount <= 0 || $note === '') {
-            $this->addError('parsedDraft', 'Lengkapi nominal, kategori, dan catatan sebelum menyimpan.');
+            $this->addError('parsedDraft', $this->missingFieldsMessage());
             return null;
         }
 
@@ -103,8 +109,37 @@ class VoiceTransaction extends Component
         $this->parsedDraft = null;
     }
 
+    private function missingFieldsMessage(): string
+    {
+        if (! $this->parsedDraft) {
+            return 'Proses transkrip dulu sebelum menyimpan.';
+        }
+
+        $missing = [];
+
+        if (($this->parsedDraft['amount'] ?? 0) <= 0) {
+            $missing[] = 'nominal';
+        }
+
+        if (empty($this->parsedDraft['category_id'])) {
+            $missing[] = 'kategori';
+        }
+
+        if (trim((string) ($this->parsedDraft['note'] ?? '')) === '') {
+            $missing[] = 'catatan';
+        }
+
+        if ($missing === []) {
+            return 'Draf belum lengkap. Periksa lagi hasil proses transkrip.';
+        }
+
+        return 'Belum terbaca: '.implode(', ', $missing).'. Sebutkan ulang bagian itu di transkrip, lalu proses lagi.';
+    }
+
     public function render(): View
     {
-        return view('livewire.transactions.voice-transaction');
+        return view('livewire.transactions.voice-transaction', [
+            'hasCategories' => auth()->user()->household->categories()->exists(),
+        ]);
     }
 }

@@ -96,6 +96,15 @@
         <span class="rounded-full bg-purple-50 px-3 py-2 text-xs font-bold text-purple-600">Beta</span>
     </div>
 
+    @if (! $hasCategories)
+        <section class="rounded-3xl border border-amber-100 bg-amber-50 p-5 shadow-sm">
+            <p class="text-3xl">🏷️</p>
+            <p class="mt-2 text-sm font-bold text-amber-800">Belum ada kategori.</p>
+            <p class="mt-1 text-xs leading-relaxed text-amber-700">Input suara mencocokkan ucapanmu ke kategori yang ada. Buat minimal satu kategori dulu supaya transaksi bisa disimpan.</p>
+            <a href="{{ route('categories') }}" class="mt-3 inline-flex min-h-11 items-center rounded-2xl bg-amber-500 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-amber-500/20">Buat Kategori</a>
+        </section>
+    @endif
+
     <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-sm border border-white/60 text-center overflow-hidden relative">
         <div class="absolute inset-x-0 -top-20 mx-auto h-40 w-40 rounded-full bg-purple-200/40 blur-3xl"></div>
 
