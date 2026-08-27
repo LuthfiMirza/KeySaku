@@ -169,15 +169,19 @@
                         <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
                             <div class="rounded-2xl bg-slate-50 px-3 py-2">
                                 <p class="text-slate-400">Target</p>
-                                <p class="mt-1 font-extrabold leading-tight text-slate-800 tabular-nums">Rp {{ number_format($targetAmount, 0, ',', '.') }}</p>
+                                <x-money :value="$targetAmount" class="mt-1 block font-extrabold leading-tight text-slate-800" />
                             </div>
                             <div class="rounded-2xl bg-slate-50 px-3 py-2">
                                 <p class="text-slate-400">Terkumpul</p>
-                                <p class="mt-1 font-extrabold leading-tight text-indigo-600 tabular-nums">Rp {{ number_format($currentAmount, 0, ',', '.') }}</p>
+                                <x-money :value="$currentAmount" class="mt-1 block font-extrabold leading-tight text-indigo-600" />
                             </div>
                             <div class="rounded-2xl bg-slate-50 px-3 py-2">
                                 <p class="text-slate-400">Sisa</p>
-                                <p class="mt-1 font-extrabold leading-tight {{ $currentAmount >= $targetAmount ? 'text-emerald-600' : 'text-slate-800' }} tabular-nums">{{ $currentAmount >= $targetAmount ? 'Tercapai' : 'Rp '.number_format($remainingAmount, 0, ',', '.') }}</p>
+                                @if ($currentAmount >= $targetAmount)
+                                    <p class="mt-1 font-extrabold leading-tight text-emerald-600">Tercapai</p>
+                                @else
+                                    <x-money :value="$remainingAmount" class="mt-1 block font-extrabold leading-tight text-slate-800" />
+                                @endif
                             </div>
                         </div>
 
@@ -205,7 +209,7 @@
                                         <div class="rounded-2xl bg-white/80 px-3 py-3">
                                             <div class="flex items-start justify-between gap-3">
                                                 <div class="min-w-0">
-                                                    <p class="text-sm font-extrabold text-emerald-600 tabular-nums">Rp {{ number_format((float) $contribution->amount, 0, ',', '.') }}</p>
+                                                    <x-money :value="$contribution->amount" class="block text-sm font-extrabold text-emerald-600" />
                                                     <p class="mt-1 text-xs text-slate-400">{{ $contribution->contribution_date->translatedFormat('d F Y') }}</p>
                                                 </div>
                                             </div>

@@ -1,7 +1,4 @@
 <x-app-layout>
-    @php
-        $formatRupiah = fn ($amount) => 'Rp '.number_format((float) $amount, 0, ',', '.');
-    @endphp
     <x-slot:title>Beranda</x-slot:title>
 
     <div class="px-4 pt-6 space-y-6 pb-4">
@@ -18,24 +15,34 @@
             <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-10 -translate-x-8 blur-xl"></div>
             <div class="relative">
                 <p class="text-sm font-medium text-white/70">Total Saldo</p>
-                <p class="text-4xl font-bold mt-1 tabular-nums">{{ $formatRupiah($netBalance) }}</p>
+                <p class="text-4xl font-bold mt-1 tabular-nums">{{ \App\Support\Money::format($netBalance) }}</p>
                 <p class="text-xs text-white/60 mt-2">Saldo awal + semua transaksi</p>
 
                 <div class="mt-3 flex items-center justify-between rounded-2xl bg-white/10 px-3 py-2.5">
                     <span class="text-xs font-medium text-white/70">Saldo Tersedia</span>
-                    <span class="text-sm font-bold tabular-nums">{{ $formatRupiah($availableBalance) }}</span>
+                    <span class="text-sm font-bold tabular-nums">{{ \App\Support\Money::format($availableBalance) }}</span>
                 </div>
                 <p class="mt-1 text-[11px] text-white/50">Total saldo dikurangi dana yang sudah disisihkan untuk target tabungan.</p>
+
+                @if ($shouldPromptInitialBalance)
+                    <a href="{{ route('settings.initial-balance') }}" class="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-white/15 px-3 py-2.5 transition active:scale-[0.99]">
+                        <span class="text-left">
+                            <span class="block text-xs font-bold">Saldo awal belum diatur</span>
+                            <span class="block text-[11px] text-white/60">Angka di atas baru menghitung transaksi tercatat, belum uang yang sudah kamu punya.</span>
+                        </span>
+                        <span class="shrink-0 text-xs font-bold">Atur →</span>
+                    </a>
+                @endif
 
                 <div class="flex gap-4 mt-4 pt-4 border-t border-white/20">
                     <div>
                         <p class="text-xs text-white/60">Pemasukan</p>
-                        <p class="text-sm font-semibold tabular-nums">{{ $formatRupiah($thisMonthIncome) }}</p>
+                        <p class="text-sm font-semibold tabular-nums">{{ \App\Support\Money::format($thisMonthIncome) }}</p>
                     </div>
                     <div class="w-px bg-white/20"></div>
                     <div>
                         <p class="text-xs text-white/60">Pengeluaran</p>
-                        <p class="text-sm font-semibold tabular-nums">{{ $formatRupiah($thisMonthExpense) }}</p>
+                        <p class="text-sm font-semibold tabular-nums">{{ \App\Support\Money::format($thisMonthExpense) }}</p>
                     </div>
                 </div>
             </div>
@@ -50,12 +57,12 @@
             <div class="grid grid-cols-2 gap-3">
                 <x-dashboard-card
                     label="Pemasukan"
-                    value="{{ $formatRupiah($thisMonthIncome) }}"
+                    value="{{ \App\Support\Money::format($thisMonthIncome) }}"
                     color="emerald"
                 />
                 <x-dashboard-card
                     label="Pengeluaran"
-                    value="{{ $formatRupiah($thisMonthExpense) }}"
+                    value="{{ \App\Support\Money::format($thisMonthExpense) }}"
                     color="rose"
                 />
             </div>
@@ -76,18 +83,18 @@
                 @else
                     @php
                         $budgetRemainingLabel = $currentMonthBudgetInsight['totalRemaining'] >= 0
-                            ? $formatRupiah($currentMonthBudgetInsight['totalRemaining'])
-                            : 'Lewat '.$formatRupiah(abs($currentMonthBudgetInsight['totalRemaining']));
+                            ? \App\Support\Money::format($currentMonthBudgetInsight['totalRemaining'])
+                            : 'Lewat '.\App\Support\Money::format(abs($currentMonthBudgetInsight['totalRemaining']));
                     @endphp
 
                     <div class="grid grid-cols-2 gap-3 text-xs">
                         <div>
                             <p class="text-slate-400">Total Anggaran</p>
-                            <p class="mt-1 text-sm font-extrabold text-slate-800 tabular-nums">{{ $formatRupiah($currentMonthBudgetInsight['totalBudget']) }}</p>
+                            <p class="mt-1 text-sm font-extrabold text-slate-800 tabular-nums">{{ \App\Support\Money::format($currentMonthBudgetInsight['totalBudget']) }}</p>
                         </div>
                         <div>
                             <p class="text-slate-400">Terpakai</p>
-                            <p class="mt-1 text-sm font-extrabold text-rose-600 tabular-nums">{{ $formatRupiah($currentMonthBudgetInsight['totalUsed']) }}</p>
+                            <p class="mt-1 text-sm font-extrabold text-rose-600 tabular-nums">{{ \App\Support\Money::format($currentMonthBudgetInsight['totalUsed']) }}</p>
                         </div>
                         <div>
                             <p class="text-slate-400">Sisa</p>
@@ -131,7 +138,7 @@
                                         <p class="text-xs text-slate-400">{{ $percentage }}% dari pengeluaran</p>
                                     </div>
                                 </div>
-                                <p class="shrink-0 text-sm font-extrabold text-slate-700 tabular-nums">{{ $formatRupiah($item['total']) }}</p>
+                                <p class="shrink-0 text-sm font-extrabold text-slate-700 tabular-nums">{{ \App\Support\Money::format($item['total']) }}</p>
                             </div>
                             <div class="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
                                 <div class="h-2 rounded-full bg-gradient-to-r from-rose-400 to-pink-500" style="width: {{ $percentage }}%"></div>
@@ -169,11 +176,11 @@
                     <div class="grid grid-cols-3 gap-3 text-xs">
                         <div>
                             <p class="text-slate-400">Terkumpul</p>
-                            <p class="mt-1 text-sm font-extrabold text-emerald-600 tabular-nums">{{ $formatRupiah($savingsGoalInsight['totalSavingsCurrent']) }}</p>
+                            <p class="mt-1 text-sm font-extrabold text-emerald-600 tabular-nums">{{ \App\Support\Money::format($savingsGoalInsight['totalSavingsCurrent']) }}</p>
                         </div>
                         <div>
                             <p class="text-slate-400">Total Target</p>
-                            <p class="mt-1 text-sm font-extrabold text-slate-800 tabular-nums">{{ $formatRupiah($savingsGoalInsight['totalSavingsTarget']) }}</p>
+                            <p class="mt-1 text-sm font-extrabold text-slate-800 tabular-nums">{{ \App\Support\Money::format($savingsGoalInsight['totalSavingsTarget']) }}</p>
                         </div>
                         <div>
                             <p class="text-slate-400">Progress</p>
@@ -191,7 +198,7 @@
                                 <div class="flex items-start justify-between gap-3">
                                     <div class="min-w-0">
                                         <p class="truncate text-sm font-bold text-slate-800">{{ $item['goal']->name }}</p>
-                                        <p class="mt-1 text-xs text-slate-400 tabular-nums">{{ $formatRupiah($item['goal']->current_amount) }} dari {{ $formatRupiah($item['goal']->target_amount) }}</p>
+                                        <p class="mt-1 text-xs text-slate-400 tabular-nums">{{ \App\Support\Money::format($item['goal']->current_amount) }} dari {{ \App\Support\Money::format($item['goal']->target_amount) }}</p>
                                     </div>
                                     <span class="shrink-0 rounded-full bg-indigo-50 px-2 py-1 text-xs font-bold text-indigo-600">{{ $item['progressPercentage'] }}%</span>
                                 </div>
@@ -254,7 +261,7 @@
                                     </div>
                                 </div>
                                 <p class="shrink-0 text-sm font-extrabold tabular-nums {{ $amountClass }}">
-                                    {{ $amountPrefix }} {{ $formatRupiah($transaction->amount) }}
+                                    {{ $amountPrefix }} {{ \App\Support\Money::format($transaction->amount) }}
                                 </p>
                             </div>
                         </a>

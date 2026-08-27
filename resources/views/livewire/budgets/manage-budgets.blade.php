@@ -6,9 +6,7 @@
     @endif
 
     @php
-        $summaryRemainingLabel = $summary['totalRemaining'] >= 0
-            ? 'Rp '.number_format($summary['totalRemaining'], 0, ',', '.')
-            : 'Lewat Rp '.number_format(abs($summary['totalRemaining']), 0, ',', '.');
+        $summaryIsOverLimit = $summary['totalRemaining'] < 0;
     @endphp
 
     <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-sm border border-white/60">
@@ -23,15 +21,19 @@
         <div class="mt-4 grid grid-cols-2 gap-3">
             <div class="rounded-2xl bg-slate-50 px-4 py-3">
                 <p class="text-xs text-slate-400">Total Anggaran</p>
-                <p class="mt-1 text-sm font-extrabold text-slate-800 tabular-nums">Rp {{ number_format($summary['totalBudget'], 0, ',', '.') }}</p>
+                <x-money :value="$summary['totalBudget']" class="mt-1 block text-sm font-extrabold text-slate-800" />
             </div>
             <div class="rounded-2xl bg-slate-50 px-4 py-3">
                 <p class="text-xs text-slate-400">Terpakai</p>
-                <p class="mt-1 text-sm font-extrabold text-rose-600 tabular-nums">Rp {{ number_format($summary['totalUsed'], 0, ',', '.') }}</p>
+                <x-money :value="$summary['totalUsed']" class="mt-1 block text-sm font-extrabold text-rose-600" />
             </div>
             <div class="rounded-2xl bg-slate-50 px-4 py-3">
                 <p class="text-xs text-slate-400">Sisa</p>
-                <p class="mt-1 text-sm font-extrabold tabular-nums {{ $summary['totalRemaining'] >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">{{ $summaryRemainingLabel }}</p>
+                <x-money
+                    :value="abs($summary['totalRemaining'])"
+                    :prefix="$summaryIsOverLimit ? 'Lewat ' : ''"
+                    class="mt-1 block text-sm font-extrabold {{ $summaryIsOverLimit ? 'text-rose-600' : 'text-emerald-600' }}"
+                />
             </div>
             <div class="rounded-2xl bg-slate-50 px-4 py-3">
                 <p class="text-xs text-slate-400">Lewat Batas</p>
@@ -143,9 +145,7 @@
                 @foreach ($budgets as $item)
                     @php
                         $budget = $item['budget'];
-                        $remainingLabel = $item['remaining'] >= 0
-                            ? 'Rp '.number_format($item['remaining'], 0, ',', '.')
-                            : 'Lewat Rp '.number_format(abs($item['remaining']), 0, ',', '.');
+                        $itemIsOverLimit = $item['remaining'] < 0;
                     @endphp
 
                     <article wire:key="budget-{{ $budget->id }}" class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
@@ -188,15 +188,19 @@
                         <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
                             <div class="rounded-2xl bg-slate-50 px-3 py-2">
                                 <p class="text-slate-400">Anggaran</p>
-                                <p class="mt-1 break-words font-extrabold leading-tight text-slate-800 tabular-nums">Rp {{ number_format($item['amount'], 0, ',', '.') }}</p>
+                                <x-money :value="$item['amount']" class="mt-1 block break-words font-extrabold leading-tight text-slate-800" />
                             </div>
                             <div class="rounded-2xl bg-slate-50 px-3 py-2">
                                 <p class="text-slate-400">Terpakai</p>
-                                <p class="mt-1 break-words font-extrabold leading-tight text-rose-600 tabular-nums">Rp {{ number_format($item['used'], 0, ',', '.') }}</p>
+                                <x-money :value="$item['used']" class="mt-1 block break-words font-extrabold leading-tight text-rose-600" />
                             </div>
                             <div class="rounded-2xl bg-slate-50 px-3 py-2">
                                 <p class="text-slate-400">Sisa</p>
-                                <p class="mt-1 break-words font-extrabold leading-tight tabular-nums {{ $item['remaining'] >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">{{ $remainingLabel }}</p>
+                                <x-money
+                                    :value="abs($item['remaining'])"
+                                    :prefix="$itemIsOverLimit ? 'Lewat ' : ''"
+                                    class="mt-1 block break-words font-extrabold leading-tight {{ $itemIsOverLimit ? 'text-rose-600' : 'text-emerald-600' }}"
+                                />
                             </div>
                         </div>
 

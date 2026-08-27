@@ -2,7 +2,6 @@
     <x-slot:title>Laporan Bulanan</x-slot:title>
 
     @php
-        $formatRupiah = fn ($amount) => 'Rp '.number_format((float) $amount, 0, ',', '.');
         $balanceIsPositive = $monthlyBalance >= 0;
     @endphp
 
@@ -44,16 +43,16 @@
         <section class="grid grid-cols-2 gap-3">
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
                 <p class="text-xs font-bold uppercase tracking-wide text-emerald-500">Pemasukan</p>
-                <p class="mt-2 text-lg font-extrabold text-slate-800 tabular-nums">{{ $formatRupiah($totalIncome) }}</p>
+                <p class="mt-2 text-lg font-extrabold text-slate-800 tabular-nums">{{ \App\Support\Money::format($totalIncome) }}</p>
             </div>
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
                 <p class="text-xs font-bold uppercase tracking-wide text-rose-500">Pengeluaran</p>
-                <p class="mt-2 text-lg font-extrabold text-slate-800 tabular-nums">{{ $formatRupiah($totalExpense) }}</p>
+                <p class="mt-2 text-lg font-extrabold text-slate-800 tabular-nums">{{ \App\Support\Money::format($totalExpense) }}</p>
             </div>
             <div class="col-span-2 bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-sm border border-white/60">
                 <p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Saldo Bulan Ini</p>
                 <p class="mt-2 text-2xl font-extrabold tabular-nums {{ $balanceIsPositive ? 'text-emerald-600' : 'text-rose-600' }}">
-                    {{ $balanceIsPositive ? '+' : '-' }} {{ $formatRupiah(abs($monthlyBalance)) }}
+                    {{ $balanceIsPositive ? '+' : '-' }} {{ \App\Support\Money::format(abs($monthlyBalance)) }}
                 </p>
                 <p class="mt-1 text-xs text-slate-400">Pemasukan dikurangi pengeluaran pada {{ $selectedMonthLabel }}.</p>
             </div>
@@ -114,7 +113,7 @@
                     <h3 class="text-sm font-bold text-slate-800">Pengeluaran per Kategori</h3>
                     <p class="mt-1 text-xs text-slate-400">Kategori pengeluaran terbesar bulan ini.</p>
                 </div>
-                <span class="rounded-full bg-rose-50 px-3 py-1 text-xs font-bold text-rose-500">{{ $formatRupiah($totalExpense) }}</span>
+                <span class="rounded-full bg-rose-50 px-3 py-1 text-xs font-bold text-rose-500">{{ \App\Support\Money::format($totalExpense) }}</span>
             </div>
 
             @if ($expenseByCategory->isEmpty())
@@ -141,7 +140,7 @@
                                         <p class="text-xs text-slate-400">{{ $row['percentage'] }}% dari pengeluaran</p>
                                     </div>
                                 </div>
-                                <p class="shrink-0 text-sm font-extrabold text-slate-800 tabular-nums">{{ $formatRupiah($row['total']) }}</p>
+                                <p class="shrink-0 text-sm font-extrabold text-slate-800 tabular-nums">{{ \App\Support\Money::format($row['total']) }}</p>
                             </div>
                             <div class="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
                                 <div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" style="width: {{ $row['percentage'] }}%"></div>
@@ -198,7 +197,7 @@
                                     </div>
                                 </div>
                                 <p class="shrink-0 text-sm font-extrabold tabular-nums {{ $amountClass }}">
-                                    {{ $amountPrefix }} {{ $formatRupiah($transaction->amount) }}
+                                    {{ $amountPrefix }} {{ \App\Support\Money::format($transaction->amount) }}
                                 </p>
                             </div>
                         </a>
