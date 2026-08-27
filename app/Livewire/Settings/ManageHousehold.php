@@ -5,6 +5,7 @@ namespace App\Livewire\Settings;
 use App\Actions\ProvisionHouseholdForUser;
 use App\Models\HouseholdMember;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class ManageHousehold extends Component
@@ -29,6 +30,30 @@ class ManageHousehold extends Component
         (new ProvisionHouseholdForUser())->handle($removedUser, null, 0);
 
         session()->flash('household_status', $removedUser->name.' telah dikeluarkan dari keluarga.');
+    }
+
+    public function transferOwnership(int $memberId): void
+    {
+        abort_unless($this->isOwner(), 403);
+
+        $household = auth()->user()->household;
+        $target = $household->members()->whereKey($memberId)->first();
+
+        abort_if(! $target, 404);
+
+        if ($target->user_id === auth()->id()) {
+            $this->addError('member', 'Kamu sudah jadi pemilik.');
+            return;
+        }
+
+        $currentOwnerMembership = auth()->user()->householdMembership;
+
+        DB::transaction(function () use ($target, $currentOwnerMembership) {
+            $target->update(['role' => HouseholdMember::ROLE_OWNER]);
+            $currentOwnerMembership->update(['role' => HouseholdMember::ROLE_MEMBER]);
+        });
+
+        session()->flash('household_status', $target->user->name.' sekarang jadi pemilik keluarga ini.');
     }
 
     public function leaveHousehold()
