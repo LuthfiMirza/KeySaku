@@ -391,13 +391,35 @@ Catatan implementasi:
   "Sambungkan window.formatMoney" tidak butuh pekerjaan baru,
   diverifikasi bukan diasumsikan.
 
+## Utang perbaikan — Timezone per-user (branch feat/user-timezone)
+
+Laravel men-set `date_default_timezone_set()` dari `config('app.timezone')`
+saat boot (`LoadConfiguration`), sebelum auth resolve — jadi tidak bisa
+tahu user mana yang login di titik itu. Solusinya middleware
+`SetUserTimezone` di grup `web`, jalan setelah sesi/auth tersedia,
+meng-override timezone PHP proses untuk sisa request itu saja
+(diverifikasi empiris: `date_default_timezone_set()` di tengah request
+memang mengubah hasil `now()` untuk pemanggilan berikutnya). Kolom
+`users.timezone` default ke `config('app.timezone')` di level database,
+jadi user lama tidak berubah perilakunya.
+
+Ditemukan saat menulis test: `Livewire::test()`/`Livewire::actingAs()`
+**tidak** lewat HTTP kernel/middleware stack, jadi test yang mau
+membuktikan efek timezone harus pakai request HTTP asli
+(`$this->actingAs($user)->get(...)`), bukan `Livewire::test()` —
+kalau tidak, middleware tidak pernah jalan dan test lolos palsu.
+
+`ReportController`/`ExportController` yang tadinya baca
+`config('app.timezone')` untuk parse `?month=` diganti ke
+`date_default_timezone_get()` (baca timezone yang sedang AKTIF, bukan
+config asli yang sudah usang begitu middleware override berjalan).
+
 ---
 
 ## Utang perbaikan (belum dijadwalkan)
 
 - resources/views/dashboard.blade.php tidak dirujuk route mana pun —
   kandidat penghapusan
-- Timezone Asia/Jakarta fixed di config, tidak per-user
 - Tidak ada audit log untuk perubahan budget/goal
 - SoftDeletes hanya di Transaction
 - docs/SCHEMA.md sudah usang, tidak mencerminkan skema sebenarnya
