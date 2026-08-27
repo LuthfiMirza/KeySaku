@@ -22,6 +22,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan/anggota-keluarga', [PageController::class, 'householdSettings'])->name('settings.household');
     Route::get('/pengaturan/bahasa', [PageController::class, 'languageSettings'])->name('settings.language');
     Route::patch('/pengaturan/bahasa', [PageController::class, 'updateLanguage'])->name('settings.language.update');
+    Route::get('/pengaturan/zona-waktu', [PageController::class, 'timezoneSettings'])->name('settings.timezone');
+    Route::patch('/pengaturan/zona-waktu', [PageController::class, 'updateTimezone'])->name('settings.timezone.update');
     Route::get('/pengaturan/keamanan', [PageController::class, 'securitySettings'])->name('settings.security');
     Route::get('/pengaturan/pasang', [PageController::class, 'installSettings'])->name('settings.install');
     Route::get('/kategori', [PageController::class, 'categories'])->name('categories');

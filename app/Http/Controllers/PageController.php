@@ -67,6 +67,24 @@ class PageController extends Controller
         return back()->with('settings_status', 'Saldo awal berhasil diperbarui.');
     }
 
+    public function timezoneSettings(): View
+    {
+        return view('pages.settings.timezone');
+    }
+
+    public function updateTimezone(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'timezone' => ['required', 'in:Asia/Jakarta,Asia/Makassar,Asia/Jayapura'],
+        ]);
+
+        $request->user()->update([
+            'timezone' => $validated['timezone'],
+        ]);
+
+        return back()->with('settings_status', 'Zona waktu berhasil diperbarui.');
+    }
+
     public function householdSettings(): View
     {
         return view('pages.settings.household');

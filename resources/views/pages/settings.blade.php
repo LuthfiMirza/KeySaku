@@ -16,6 +16,7 @@
                 ['icon' => '💰', 'label' => 'Saldo Awal', 'href' => route('settings.initial-balance')],
                 ['icon' => '👨‍👩‍👧', 'label' => 'Anggota Keluarga', 'href' => route('settings.household')],
                 ['icon' => '🌐', 'label' => 'Bahasa', 'href' => route('settings.language')],
+                ['icon' => '🕒', 'label' => 'Zona Waktu', 'href' => route('settings.timezone')],
                 ['icon' => '🔒', 'label' => 'Keamanan', 'href' => route('settings.security')],
                 ['icon' => '📱', 'label' => 'Pasang di Layar Utama', 'href' => route('settings.install')],
             ] as $item)
