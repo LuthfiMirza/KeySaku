@@ -106,7 +106,7 @@ class ExportController extends Controller
     {
         if (is_string($month) && preg_match('/^\d{4}-\d{2}$/', $month) === 1) {
             try {
-                return Carbon::createFromFormat('Y-m', $month, config('app.timezone'))->startOfMonth();
+                return Carbon::createFromFormat('Y-m', $month, date_default_timezone_get())->startOfMonth();
             } catch (\Throwable) {
             }
         }
