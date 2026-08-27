@@ -21,12 +21,14 @@ class User extends Authenticatable
         'password',
         'preferred_currency',
         'language',
+        'timezone',
     ];
 
     protected $hidden = [
         'password',
         'preferred_currency',
         'language',
+        'timezone',
         'remember_token',
     ];
 
