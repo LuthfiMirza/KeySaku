@@ -257,7 +257,8 @@ lengkap sebelum eksekusi):
 - Halaman "Anggota Keluarga" ditambahkan di Pengaturan (lihat kode
   undangan, keluarkan anggota, keluar household). Owner belum bisa
   transfer kepemilikan sebelum keluar — dicatat sebagai utang
-  perbaikan di bawah.
+  perbaikan di bawah. **Update:** sudah dikerjakan, lihat commit
+  branch `feat/household-ownership-transfer`.
 - `docs/SCHEMA.md` sudah usang jauh sebelum task ini (nama tabel dan
   kolom sudah tidak cocok sejak beberapa task lalu) — tidak disegarkan
   di task ini, di luar cakupan.
@@ -399,9 +400,6 @@ Catatan implementasi:
 - Timezone Asia/Jakarta fixed di config, tidak per-user
 - Tidak ada audit log untuk perubahan budget/goal
 - SoftDeletes hanya di Transaction
-- Owner household tidak bisa transfer kepemilikan — kalau masih ada
-  anggota lain, owner terkunci tidak bisa keluar sampai semua anggota
-  dikeluarkan dulu
 - docs/SCHEMA.md sudah usang, tidak mencerminkan skema sebenarnya
   sejak beberapa task lalu (household_id, initial_balance, source,
   raw_voice_text semua belum tercatat di sana)

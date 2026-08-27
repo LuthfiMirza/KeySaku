@@ -45,14 +45,24 @@
                     </div>
 
                     @if ($isOwner && $member->user_id !== auth()->id())
-                        <button
-                            type="button"
-                            wire:click="removeMember({{ $member->id }})"
-                            wire:confirm="Keluarkan {{ $member->user->name }} dari keluarga?"
-                            class="shrink-0 rounded-2xl bg-rose-50 px-3 py-2 text-xs font-bold text-rose-600"
-                        >
-                            Keluarkan
-                        </button>
+                        <div class="flex shrink-0 gap-2">
+                            <button
+                                type="button"
+                                wire:click="transferOwnership({{ $member->id }})"
+                                wire:confirm="Jadikan {{ $member->user->name }} pemilik keluarga ini? Kamu akan jadi anggota biasa."
+                                class="rounded-2xl bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-600"
+                            >
+                                Jadikan Pemilik
+                            </button>
+                            <button
+                                type="button"
+                                wire:click="removeMember({{ $member->id }})"
+                                wire:confirm="Keluarkan {{ $member->user->name }} dari keluarga?"
+                                class="rounded-2xl bg-rose-50 px-3 py-2 text-xs font-bold text-rose-600"
+                            >
+                                Keluarkan
+                            </button>
+                        </div>
                     @endif
                 </div>
             @endforeach
@@ -62,7 +72,7 @@
     <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-sm border border-white/60">
         @if ($isOwner && $members->count() > 1)
             <p class="text-sm font-semibold text-slate-700">Kamu pemilik keluarga ini.</p>
-            <p class="mt-1 text-xs leading-relaxed text-slate-400">Keluarkan semua anggota lain dulu kalau ingin keluar dari keluarga ini.</p>
+            <p class="mt-1 text-xs leading-relaxed text-slate-400">Jadikan salah satu anggota di atas sebagai pemilik baru kalau ingin keluar, atau keluarkan semua anggota lain dulu.</p>
         @else
             <p class="text-sm font-semibold text-slate-700">Keluar dari keluarga ini?</p>
             <p class="mt-1 text-xs leading-relaxed text-slate-400">Kamu akan mendapat keluarga baru untuk dirimu sendiri. Data keuangan keluarga ini tidak ikut pindah.</p>
