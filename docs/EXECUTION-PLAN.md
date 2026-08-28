@@ -395,8 +395,6 @@ Catatan implementasi:
 
 ## Utang perbaikan (belum dijadwalkan)
 
-- resources/views/dashboard.blade.php tidak dirujuk route mana pun —
-  kandidat penghapusan
 - Timezone Asia/Jakarta fixed di config, tidak per-user
 - Tidak ada audit log untuk perubahan budget/goal
 - SoftDeletes hanya di Transaction
