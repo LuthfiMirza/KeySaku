@@ -29,8 +29,9 @@
     @livewireScripts
     <script>
         if ('serviceWorker' in navigator) {
-            // Service worker registration will go here in a later milestone.
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
         }
     </script>
+    @stack('scripts')
 </body>
 </html>

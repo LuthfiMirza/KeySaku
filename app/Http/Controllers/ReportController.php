@@ -27,6 +27,8 @@ class ReportController extends Controller
             ->where('type', Transaction::TYPE_EXPENSE)
             ->sum('amount');
 
+        $colors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#6366f1', '#84cc16'];
+
         $expenseByCategory = (clone $monthlyTransactions)
             ->with('category')
             ->selectRaw('category_id, SUM(amount) as total')
@@ -34,12 +36,14 @@ class ReportController extends Controller
             ->groupBy('category_id')
             ->orderByDesc('total')
             ->get()
-            ->map(fn (Transaction $row) => [
+            ->values()
+            ->map(fn (Transaction $row, int $index) => [
                 'category' => $row->category,
                 'total' => (float) $row->total,
                 'percentage' => $totalExpense > 0
                     ? round(((float) $row->total / $totalExpense) * 100)
                     : 0,
+                'color' => $colors[$index % count($colors)],
             ]);
 
         $latestTransactions = (clone $monthlyTransactions)
@@ -48,6 +52,22 @@ class ReportController extends Controller
             ->latest('id')
             ->limit(5)
             ->get();
+
+        $sixMonthTrend = collect(range(5, 0))->map(function ($i) use ($selectedMonth, $household) {
+            $month = $selectedMonth->copy()->subMonths($i);
+            $start = $month->copy()->startOfMonth();
+            $end = $month->copy()->endOfMonth();
+
+            $transactions = $household->transactions()
+                ->whereBetween('transaction_date', [$start->toDateString(), $end->toDateString()])
+                ->get();
+
+            return [
+                'label' => $month->translatedFormat('M Y'),
+                'income' => (float) $transactions->where('type', Transaction::TYPE_INCOME)->sum('amount'),
+                'expense' => (float) $transactions->where('type', Transaction::TYPE_EXPENSE)->sum('amount'),
+            ];
+        });
 
         return view('pages.reports.index', [
             'selectedMonth' => $selectedMonth,
@@ -60,6 +80,7 @@ class ReportController extends Controller
             'monthlyBalance' => $totalIncome - $totalExpense,
             'expenseByCategory' => $expenseByCategory,
             'latestTransactions' => $latestTransactions,
+            'sixMonthTrend' => $sixMonthTrend,
         ]);
     }
 

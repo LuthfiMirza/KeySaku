@@ -40,99 +40,86 @@
             </div>
         </section>
 
+        {{-- Summary Cards --}}
         <section class="grid grid-cols-2 gap-3">
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
                 <p class="text-xs font-bold uppercase tracking-wide text-emerald-500">Pemasukan</p>
-                <p class="mt-2 text-lg font-extrabold text-slate-800 tabular-nums">{{ \App\Support\Money::format($totalIncome) }}</p>
+                <p class="mt-2 text-lg font-extrabold text-slate-800 tabular-nums"><x-money :amount="$totalIncome" /></p>
             </div>
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
                 <p class="text-xs font-bold uppercase tracking-wide text-rose-500">Pengeluaran</p>
-                <p class="mt-2 text-lg font-extrabold text-slate-800 tabular-nums">{{ \App\Support\Money::format($totalExpense) }}</p>
+                <p class="mt-2 text-lg font-extrabold text-slate-800 tabular-nums"><x-money :amount="$totalExpense" /></p>
             </div>
             <div class="col-span-2 bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-sm border border-white/60">
                 <p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Saldo Bulan Ini</p>
                 <p class="mt-2 text-2xl font-extrabold tabular-nums {{ $balanceIsPositive ? 'text-emerald-600' : 'text-rose-600' }}">
-                    {{ $balanceIsPositive ? '+' : '-' }} {{ \App\Support\Money::format(abs($monthlyBalance)) }}
+                    {{ $balanceIsPositive ? '+' : '-' }} <x-money :amount="abs($monthlyBalance)" />
                 </p>
                 <p class="mt-1 text-xs text-slate-400">Pemasukan dikurangi pengeluaran pada {{ $selectedMonthLabel }}.</p>
             </div>
         </section>
 
+        {{-- ── CHART 1: Tren 6 Bulan (Bar Chart) ── --}}
         <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-sm border border-white/60">
-            <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center justify-between gap-3 mb-4">
                 <div>
-                    <h3 class="text-sm font-bold text-slate-800">Income vs Expense</h3>
-                    <p class="mt-1 text-xs text-slate-400">Perbandingan arus uang bulan ini.</p>
+                    <h3 class="text-sm font-bold text-slate-800">Tren 6 Bulan Terakhir</h3>
+                    <p class="mt-1 text-xs text-slate-400">Perbandingan pemasukan dan pengeluaran.</p>
                 </div>
-                <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-500">{{ $selectedMonthLabel }}</span>
+                <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-500">Bar Chart</span>
             </div>
 
-            @if ($totalIncome <= 0 && $totalExpense <= 0)
-                <div class="mt-4 rounded-2xl bg-slate-50 px-4 py-5 text-center">
+            @if ($sixMonthTrend->every(fn ($m) => $m['income'] == 0 && $m['expense'] == 0))
+                <div class="rounded-2xl bg-slate-50 px-4 py-8 text-center">
                     <p class="text-3xl">📊</p>
-                    <p class="mt-2 text-sm font-bold text-slate-700">Belum ada data bulan ini.</p>
-                    <p class="mt-1 text-xs text-slate-400">Catat pemasukan atau pengeluaran untuk melihat laporan bulanan.</p>
-                    <div class="mt-4 grid grid-cols-2 gap-2">
-                        <a href="{{ route('transactions.create') }}" class="rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-3 py-3 text-xs font-bold text-white shadow-lg shadow-indigo-500/30">Tambah Transaksi</a>
-                        <a href="{{ route('transactions.voice') }}" class="rounded-2xl bg-white px-3 py-3 text-xs font-bold text-indigo-600 border border-indigo-100">Input Suara</a>
-                    </div>
+                    <p class="mt-2 text-sm font-bold text-slate-700">Belum ada data transaksi.</p>
+                    <p class="mt-1 text-xs text-slate-400">Catat transaksi untuk melihat tren keuangan.</p>
                 </div>
             @else
-                @php
-                    $totalFlow = $totalIncome + $totalExpense;
-                    $incomePercentage = $totalFlow > 0 ? round(($totalIncome / $totalFlow) * 100) : 0;
-                    $expensePercentage = $totalFlow > 0 ? round(($totalExpense / $totalFlow) * 100) : 0;
-                @endphp
-
-                <div class="mt-4 space-y-3">
-                    <div>
-                        <div class="mb-2 flex items-center justify-between text-xs font-bold">
-                            <span class="text-emerald-600">Pemasukan</span>
-                            <span class="text-slate-500">{{ $incomePercentage }}%</span>
-                        </div>
-                        <div class="h-3 overflow-hidden rounded-full bg-slate-100">
-                            <div class="h-full rounded-full bg-emerald-500" style="width: {{ $incomePercentage }}%"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="mb-2 flex items-center justify-between text-xs font-bold">
-                            <span class="text-rose-600">Pengeluaran</span>
-                            <span class="text-slate-500">{{ $expensePercentage }}%</span>
-                        </div>
-                        <div class="h-3 overflow-hidden rounded-full bg-slate-100">
-                            <div class="h-full rounded-full bg-rose-500" style="width: {{ $expensePercentage }}%"></div>
-                        </div>
-                    </div>
+                <div class="relative h-52">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div class="mt-3 flex items-center gap-4 text-xs font-medium text-slate-500">
+                    <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-emerald-500 inline-block"></span>Pemasukan</span>
+                    <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-rose-500 inline-block"></span>Pengeluaran</span>
                 </div>
             @endif
         </section>
 
+        {{-- ── CHART 2: Doughnut per Kategori ── --}}
         <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-sm border border-white/60">
-            <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center justify-between gap-3 mb-4">
                 <div>
                     <h3 class="text-sm font-bold text-slate-800">Pengeluaran per Kategori</h3>
                     <p class="mt-1 text-xs text-slate-400">Kategori pengeluaran terbesar bulan ini.</p>
                 </div>
-                <span class="rounded-full bg-rose-50 px-3 py-1 text-xs font-bold text-rose-500">{{ \App\Support\Money::format($totalExpense) }}</span>
+                <span class="rounded-full bg-rose-50 px-3 py-1 text-xs font-bold text-rose-500"><x-money :amount="$totalExpense" /></span>
             </div>
 
             @if ($expenseByCategory->isEmpty())
-                <div class="mt-4 rounded-2xl bg-slate-50 px-4 py-5 text-center">
+                <div class="rounded-2xl bg-slate-50 px-4 py-8 text-center">
                     <p class="text-3xl">🧾</p>
                     <p class="mt-2 text-sm font-bold text-slate-700">Belum ada data bulan ini.</p>
-                    <p class="mt-1 text-xs text-slate-400">Catat pemasukan atau pengeluaran untuk melihat laporan bulanan.</p>
+                    <p class="mt-1 text-xs text-slate-400">Catat pengeluaran untuk melihat laporan bulanan.</p>
                     <div class="mt-4 grid grid-cols-2 gap-2">
                         <a href="{{ route('transactions.create') }}" class="rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-3 py-3 text-xs font-bold text-white shadow-lg shadow-indigo-500/30">Tambah Transaksi</a>
                         <a href="{{ route('transactions.voice') }}" class="rounded-2xl bg-white px-3 py-3 text-xs font-bold text-indigo-600 border border-indigo-100">Input Suara</a>
                     </div>
                 </div>
             @else
-                <div class="mt-4 space-y-4">
+                <div class="flex flex-col items-center">
+                    <div class="relative w-44 h-44">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="mt-5 space-y-4">
                     @foreach ($expenseByCategory as $row)
                         <div>
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-2 min-w-0">
-                                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-base" style="background-color: {{ $row['category']?->color ?? '#f1f5f9' }}22; color: {{ $row['category']?->color ?? '#64748b' }};">
+                                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-base"
+                                          style="background-color: {{ $row['color'] }}22; color: {{ $row['color'] }};">
                                         {{ $row['category']?->icon ?: '💸' }}
                                     </span>
                                     <div class="min-w-0">
@@ -140,10 +127,11 @@
                                         <p class="text-xs text-slate-400">{{ $row['percentage'] }}% dari pengeluaran</p>
                                     </div>
                                 </div>
-                                <p class="shrink-0 text-sm font-extrabold text-slate-800 tabular-nums">{{ \App\Support\Money::format($row['total']) }}</p>
+                                <p class="shrink-0 text-sm font-extrabold text-slate-800 tabular-nums"><x-money :amount="$row['total']" /></p>
                             </div>
                             <div class="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
-                                <div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" style="width: {{ $row['percentage'] }}%"></div>
+                                <div class="h-full rounded-full transition-all duration-500"
+                                     style="width: {{ $row['percentage'] }}%; background-color: {{ $row['color'] }};"></div>
                             </div>
                         </div>
                     @endforeach
@@ -151,6 +139,7 @@
             @endif
         </section>
 
+        {{-- Transaksi Bulan Ini --}}
         <section class="space-y-3">
             <div class="flex items-center justify-between gap-3">
                 <div>
@@ -184,7 +173,8 @@
                         <a href="{{ route('transactions.edit', $transaction) }}" class="block bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
                             <div class="flex items-start justify-between gap-3">
                                 <div class="flex items-start gap-3 min-w-0">
-                                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg" style="background-color: {{ $transaction->category?->color ?? '#f1f5f9' }}22; color: {{ $transaction->category?->color ?? '#64748b' }};">
+                                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg"
+                                          style="background-color: {{ $transaction->category?->color ?? '#f1f5f9' }}22; color: {{ $transaction->category?->color ?? '#64748b' }};">
                                         {{ $transaction->category?->icon ?: '💸' }}
                                     </span>
                                     <div class="min-w-0">
@@ -197,7 +187,7 @@
                                     </div>
                                 </div>
                                 <p class="shrink-0 text-sm font-extrabold tabular-nums {{ $amountClass }}">
-                                    {{ $amountPrefix }} {{ \App\Support\Money::format($transaction->amount) }}
+                                    {{ $amountPrefix }} <x-money :amount="$transaction->amount" />
                                 </p>
                             </div>
                         </a>
@@ -206,4 +196,99 @@
             @endif
         </section>
     </div>
+
+    {{-- Chart.js Scripts --}}
+    @if (!$sixMonthTrend->every(fn ($m) => $m['income'] == 0 && $m['expense'] == 0) || !$expenseByCategory->isEmpty())
+    @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+            Chart.defaults.color = '#94a3b8';
+
+            // ── Bar Chart: Tren 6 Bulan ──
+            const trendEl = document.getElementById('trendChart');
+            if (trendEl) {
+                const trend = @json($sixMonthTrend);
+                new Chart(trendEl, {
+                    type: 'bar',
+                    data: {
+                        labels: trend.map(m => m.label),
+                        datasets: [
+                            {
+                                label: 'Pemasukan',
+                                data: trend.map(m => m.income),
+                                backgroundColor: 'rgba(34,197,94,0.75)',
+                                borderRadius: 8,
+                                borderSkipped: false,
+                            },
+                            {
+                                label: 'Pengeluaran',
+                                data: trend.map(m => m.expense),
+                                backgroundColor: 'rgba(239,68,68,0.75)',
+                                borderRadius: 8,
+                                borderSkipped: false,
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => ' Rp ' + ctx.raw.toLocaleString('id-ID'),
+                                },
+                            },
+                        },
+                        scales: {
+                            x: { grid: { display: false }, border: { display: false } },
+                            y: {
+                                grid: { color: 'rgba(148,163,184,0.12)' },
+                                border: { display: false },
+                                ticks: {
+                                    callback: v => 'Rp ' + (v >= 1_000_000 ? (v / 1_000_000).toFixed(1) + 'jt' : v.toLocaleString('id-ID')),
+                                },
+                            },
+                        },
+                    },
+                });
+            }
+
+            // ── Doughnut Chart: Kategori ──
+            const doughnutEl = document.getElementById('doughnutChart');
+            if (doughnutEl) {
+                const categories = @json($expenseByCategory);
+                new Chart(doughnutEl, {
+                    type: 'doughnut',
+                    data: {
+                        labels: categories.map(r => r.category ? r.category.name : 'Lainnya'),
+                        datasets: [{
+                            data: categories.map(r => r.total),
+                            backgroundColor: categories.map(r => r.color),
+                            borderWidth: 2,
+                            borderColor: '#ffffff',
+                            hoverOffset: 6,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        cutout: '68%',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => ' Rp ' + ctx.raw.toLocaleString('id-ID') + ' (' + categories[ctx.dataIndex].percentage + '%)',
+                                },
+                            },
+                        },
+                    },
+                });
+            }
+        });
+    </script>
+    @endpush
+    @endif
 </x-app-layout>
