@@ -3,11 +3,13 @@
     "short_name": "KeySaku",
     "description": "Aplikasi pengelolaan keuangan keluarga yang cerdas dan mudah digunakan.",
     "start_url": "/",
+    "scope": "/",
     "display": "standalone",
     "orientation": "portrait",
     "background_color": "#6366f1",
     "theme_color": "#6366f1",
     "lang": "id",
+    "id": "keysaku-pwa",
     "icons": [
         {
             "src": "/images/icons/icon-192.png",
@@ -28,8 +30,16 @@
             "name": "Tambah Transaksi",
             "short_name": "Tambah",
             "description": "Tambah transaksi baru",
-            "url": "/?shortcut=add",
+            "url": "/transaksi/tambah",
+            "icons": [{"src": "/images/icons/icon-192.png", "sizes": "192x192"}]
+        },
+        {
+            "name": "Laporan Bulanan",
+            "short_name": "Laporan",
+            "description": "Lihat laporan keuangan bulan ini",
+            "url": "/laporan",
             "icons": [{"src": "/images/icons/icon-192.png", "sizes": "192x192"}]
         }
-    ]
+    ],
+    "screenshots": []
 }
