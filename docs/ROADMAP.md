@@ -19,74 +19,76 @@
 - 🟢 Bottom navigation (Beranda, Anggaran, Tabungan, Setelan)
 - 🟢 Dashboard shell with static placeholder data
 - 🟢 Blade components: dashboard-card, quick-action, insight-card
-- 🟢 PWA manifest.json
-- ⚪ npm install + Vite build (needs internet)
-- ⚪ Composer vendor install (needs internet)
+- 🟢 PWA manifest.json (updated with scope, id, shortcuts)
+- 🟢 npm install + Vite build
+- 🟢 Composer vendor install
 
 ---
 
-## Milestone 2 — Auth & Accounts ⚪
+## Milestone 2 — Auth & Accounts 🟢
 **Goal:** User register/login + account management
 
-- Register, login, logout
-- Email verification (optional)
-- User profile settings
-- Account CRUD (kas, bank, e-wallet)
-- Default categories seeded
+- 🟢 Register, login, logout (Laravel Breeze)
+- 🟢 User profile settings (restyled with KeySaku design)
+- 🟢 Account CRUD (kas, bank, e-wallet) — ManageAccounts Livewire
+- 🟢 Default categories seeded
 
 ---
 
-## Milestone 3 — Transactions ⚪
+## Milestone 3 — Transactions 🟢
 **Goal:** Core transaction recording
 
-- Add income transaction
-- Add expense transaction
-- Add transfer between accounts
-- Transaction list with filter (month, category)
-- Transaction delete
-- Balance auto-update on transaction
+- 🟢 Add income transaction
+- 🟢 Add expense transaction
+- 🟢 Transaction list with filter (month, category)
+- 🟢 Transaction edit
+- 🟢 Transaction soft delete
+- ⚪ Balance auto-update on transaction (account balance sync)
 
 ---
 
-## Milestone 4 — Budgets & Saving Goals ⚪
+## Milestone 4 — Budgets & Saving Goals 🟢
 **Goal:** Budget tracking and savings progress
 
-- Monthly budget per category
-- Budget progress indicator
-- Over-budget warning (insight card)
-- Saving goal CRUD
-- Saving goal progress tracker
-- Manual savings top-up
+- 🟢 Monthly budget per category
+- 🟢 Budget progress indicator (Aman / Mendekati Batas / Lewat Batas)
+- 🟢 Over-budget warning (insight card)
+- 🟢 Copy previous month budgets
+- 🟢 Saving goal CRUD
+- 🟢 Saving goal progress tracker
+- 🟢 Manual savings top-up (contributions)
 
 ---
 
-## Milestone 5 — Voice Input & Insights ⚪
+## Milestone 5 — Voice Input & Insights 🔵
 **Goal:** Voice-first expense input + AI-style insights
 
-- Browser SpeechRecognition integration
-- Voice text → transaction parser
-- Manual fallback always available
-- Monthly spending insights
-- Category breakdown chart (Chart.js)
-- Monthly trend chart
+- 🟢 Browser SpeechRecognition integration
+- 🟢 Voice text → transaction parser (Indonesian keyword-based)
+- 🟢 Manual fallback always available
+- 🟢 Category breakdown chart (Chart.js doughnut)
+- 🟢 Monthly trend chart (Chart.js bar — 6 months)
+- ⚪ Voice input modal (full-screen UX)
+- ⚪ Monthly spending insights (auto-generated text)
 
 ---
 
-## Milestone 6 — PWA & Deployment ⚪
+## Milestone 6 — PWA & Deployment 🔵
 **Goal:** Production-ready on Hostinger Premium
 
-- PWA service worker (offline support)
-- App install prompt
-- Hostinger Premium deployment
-- .htaccess tuning for Laravel
-- Production config cache
-- Error monitoring setup
+- 🟢 PWA service worker (offline support — network-first strategy)
+- 🟢 App install prompt (manifest shortcuts)
+- ⚪ Hostinger Premium deployment
+- ⚪ .htaccess tuning for Laravel
+- ⚪ Production config cache
+- ⚪ Error monitoring setup
 
 ---
 
 ## Post-launch ideas (backlog)
-- Family sharing (multi-user per household)
+- Family sharing (multi-user per household) — partially done (Household model exists)
 - Recurring transactions
-- CSV/PDF export
+- CSV/PDF export — done ✅
 - Push notifications (budget warnings)
 - Dark mode
+- Balance auto-update on transaction save/delete

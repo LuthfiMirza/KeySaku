@@ -56,12 +56,12 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Protect dashboard and app pages with `auth` middleware
 - [x] Restyle auth screens with KeySaku mobile-first UI
 - [ ] Run `php artisan migrate` against the configured local database
-- [ ] Create Account model + migration
+- [x] Create Account model + migration
 - [x] Create Category model + migration
 - [x] Add per-user default category seeding via Livewire
 - [x] Add Livewire category management page
-- [ ] Account CRUD pages
-- [ ] Profile settings page polish
+- [x] Account CRUD pages (ManageAccounts Livewire component)
+- [x] Profile settings page polish (gradient avatar, KeySaku design system)
 
 ---
 
@@ -69,7 +69,7 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Create Transaction model + migration
 - [x] Add User and Category transaction relationships
 - [x] Add soft delete and manual/voice source data foundation
-- [ ] Add Transaction form (Livewire)
+- [x] Add Transaction form (Livewire CreateTransaction)
 - [x] Transaction list page
 - [x] Transaction filter by month/type/category
 - [x] Transaction edit page and Livewire form
@@ -98,12 +98,12 @@ Active task board. Update this file as tasks are picked up and completed.
 ---
 
 ## Milestone 4 — Budgets & Goals
-- [ ] Create Budget model + migration
-- [ ] Create SavingGoal model + migration
-- [ ] Budget CRUD (Livewire)
-- [ ] Budget progress bar component
-- [ ] Saving goal CRUD (Livewire)
-- [ ] Saving goal progress tracker
+- [x] Create Budget model + migration
+- [x] Create SavingGoal model + migration
+- [x] Budget CRUD (Livewire ManageBudgets)
+- [x] Budget progress bar component
+- [x] Saving goal CRUD (Livewire ManageSavingsGoals)
+- [x] Saving goal progress tracker
 
 ---
 
@@ -176,6 +176,14 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Improve dashboard report shortcut copy
 - [x] Improve empty report states
 - [x] Add manual and voice input CTAs for empty reports
+
+---
+
+## Phase 6C — Chart.js Integration ✅ 2026-09-19
+- [x] Add Chart.js CDN via @stack('scripts')
+- [x] Add 6-month income/expense bar chart to reports page
+- [x] Add expense-by-category doughnut chart with colour-coded segments
+- [x] Pass sixMonthTrend and per-row color data from ReportController
 
 ---
 
@@ -329,21 +337,42 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Store preferences without changing formatting, translation, or calculations
 - [x] Add focused preference settings tests
 
+## Phase 10A — Account CRUD ✅ 2026-09-19
+- [x] Create accounts migration (household_id, user_id, name, type, balance, icon, color, is_active)
+- [x] Create Account model with type constants and typeLabel helper
+- [x] Add accounts() HasMany relation to User and Household
+- [x] Create ManageAccounts Livewire component (create, edit, delete, toggle active)
+- [x] Create manage-accounts Blade view with mobile-first design
+- [x] Add /akun route and PageController method
+- [x] Add Akun Keuangan link to Settings page
+
+## Phase 10B — Profile Page Polish ✅ 2026-09-19
+- [x] Redesign profile/edit.blade.php with gradient avatar card
+- [x] Restyle update-profile-information-form (Indonesian labels, rounded inputs)
+- [x] Restyle update-password-form (Indonesian labels)
+- [x] Replace modal delete-user-form with inline Alpine.js danger zone
+
+## Phase 10C — PWA Service Worker ✅ 2026-09-19
+- [x] Create public/sw.js with install/activate/fetch lifecycle
+- [x] Network-first for HTML pages, cache-first for static assets
+- [x] Register service worker in app layout
+- [x] Update manifest.json: scope, id, shortcut for reports
+
 ---
 
 ## Milestone 5 — Voice & Insights
 - [x] SpeechRecognition JS module
 - [ ] Voice input modal
 - [x] Text parser for voice → transaction
-- [ ] Chart.js integration
-- [ ] Monthly summary chart
-- [ ] Category breakdown chart
+- [x] Chart.js integration (bar chart + doughnut)
+- [ ] Monthly summary chart (standalone page — optional)
+- [ ] Category breakdown chart (standalone page — optional)
 
 ---
 
 ## Milestone 6 — Deploy
 - [ ] Test on Hostinger staging
-- [ ] PWA service worker
+- [x] PWA service worker (offline support)
 - [ ] Production .htaccess tuning
 - [ ] `php artisan config:cache && route:cache && view:cache`
 - [ ] Final smoke test

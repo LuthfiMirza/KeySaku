@@ -10,6 +10,7 @@
         <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/60 divide-y divide-slate-100">
             @foreach([
                 ['icon' => '👤', 'label' => 'Profil Pengguna', 'href' => route('profile.edit')],
+                ['icon' => '🏦', 'label' => 'Akun Keuangan', 'href' => route('accounts')],
                 ['icon' => '🏷️', 'label' => 'Kategori Transaksi', 'href' => route('categories')],
                 ['icon' => '🔔', 'label' => 'Notifikasi', 'href' => route('settings.notifications')],
                 ['icon' => '💱', 'label' => 'Mata Uang', 'href' => route('settings.currency')],
