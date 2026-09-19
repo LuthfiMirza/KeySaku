@@ -25,6 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengaturan/keamanan', [PageController::class, 'securitySettings'])->name('settings.security');
     Route::get('/pengaturan/pasang', [PageController::class, 'installSettings'])->name('settings.install');
     Route::get('/kategori', [PageController::class, 'categories'])->name('categories');
+    Route::get('/akun', [PageController::class, 'accounts'])->name('accounts');
     Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/laporan/export/csv', [ExportController::class, 'monthlyReportCsv'])->name('reports.export.csv');
     Route::get('/laporan/export/xlsx', [ExportController::class, 'monthlyReportXlsx'])->name('reports.export.xlsx');

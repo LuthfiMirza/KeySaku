@@ -105,6 +105,11 @@ class PageController extends Controller
         return view('pages.categories');
     }
 
+    public function accounts(): View
+    {
+        return view('pages.accounts.index');
+    }
+
     public function transactions(): View
     {
         return view('pages.transactions.index');
