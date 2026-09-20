@@ -19,9 +19,10 @@ class Transaction extends Model
     public const SOURCE_VOICE = 'voice';
 
     protected $fillable = [
-        'user_id',
         'household_id',
+        'user_id',
         'category_id',
+        'account_id',
         'type',
         'amount',
         'transaction_date',
@@ -36,6 +37,16 @@ class Transaction extends Model
             'amount' => 'decimal:2',
             'transaction_date' => 'date',
         ];
+    }
+
+    public function household(): BelongsTo
+    {
+        return $this->belongsTo(Household::class);
+    }
+
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Account::class);
     }
 
     public function user(): BelongsTo
