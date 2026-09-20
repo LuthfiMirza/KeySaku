@@ -200,15 +200,27 @@
     {{-- Chart.js Scripts --}}
     @if (!$sixMonthTrend->every(fn ($m) => $m['income'] == 0 && $m['expense'] == 0) || !$expenseByCategory->isEmpty())
     @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('livewire:navigated', function () {
+            if (typeof window.Chart === 'undefined') {
+                const els = [document.getElementById('trendChart'), document.getElementById('doughnutChart')];
+                els.forEach(el => {
+                    if (el && el.parentElement) {
+                        el.parentElement.innerHTML = '<div class="text-sm text-slate-400 p-4 text-center">Grafik tidak dapat dimuat.</div>';
+                    }
+                });
+                return;
+            }
+
             Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
             Chart.defaults.color = '#94a3b8';
 
             // ── Bar Chart: Tren 6 Bulan ──
             const trendEl = document.getElementById('trendChart');
             if (trendEl) {
+                let existingTrend = Chart.getChart(trendEl);
+                if (existingTrend) existingTrend.destroy();
+
                 const trend = @json($sixMonthTrend);
                 new Chart(trendEl, {
                     type: 'bar',
@@ -259,6 +271,9 @@
             // ── Doughnut Chart: Kategori ──
             const doughnutEl = document.getElementById('doughnutChart');
             if (doughnutEl) {
+                let existingDoughnut = Chart.getChart(doughnutEl);
+                if (existingDoughnut) existingDoughnut.destroy();
+
                 const categories = @json($expenseByCategory);
                 new Chart(doughnutEl, {
                     type: 'doughnut',
