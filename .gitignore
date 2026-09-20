@@ -29,3 +29,4 @@ yarn-error.log
 /public/build/hot
 
 .phpunit.result.cache
+.DS_Store
