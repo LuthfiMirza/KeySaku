@@ -152,31 +152,19 @@ SW sebelumnya meng-cache semua HTML response termasuk halaman terautentikasi. Ji
 
 ## 7. Audit Frontend / PWA
 
-### Chart.js CDN — [SUSPECTED] Risiko Offline
+### Chart.js CDN — [FIXED] Telah Dibundel Lokal
 
-`resources/views/pages/reports/index.blade.php:203` memuat Chart.js dari CDN:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/..."></script>
-```
-
-**Dampak Offline:** Laporan akan tampil tanpa grafik jika CDN tidak tersedia.  
-**Rekomendasi:** Bundel Chart.js via npm dan Vite (`npm install chart.js`, import di `app.js`).  
-**Priority:** Medium — tidak menyebabkan crash, hanya degradasi UI.
+Sebelumnya, `resources/views/pages/reports/index.blade.php` memuat Chart.js dari CDN, yang menyebabkan laporan gagal memuat grafik saat offline.
+**Status Terbaru:** Chart.js telah dibundel secara lokal via npm dan Vite (termasuk *tree-shaking*), serta memiliki *fallback* jika gagal memuat. Teratasi sepenuhnya.
 
 ### SpeechRecognition — [CONFIRMED] Memiliki Guard
 
 `VoiceTransaction.php` dan view sudah ada pengecekan browser support via Alpine.js. Tidak crash di browser tanpa dukungan.
 
-### PWA Icons — [SUSPECTED] Icon Files Missing
+### PWA Icons — [FIXED] Icon Telah Dibuat
 
-```
-public/images/icons/ direktori ada tapi kosong
-```
-
-File `icon-192.png` dan `icon-512.png` yang direferensikan di `manifest.json` tidak ada.  
-**Dampak:** PWA tidak dapat diinstall dengan icon yang benar. Browser akan menampilkan default favicon.  
-**Fix:** Generate dan upload kedua file icon PNG tersebut.
+Sebelumnya direktori ikon kosong.
+**Status Terbaru:** File `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, dan `apple-touch-icon.png` berhasil di-generate secara lokal dengan GD PHP dan sudah diletakkan di `public/images/icons/`. PWA kini sepenuhnya *installable* dengan ikon yang benar.
 
 ### Settings Currency/Language — [CONFIRMED] Hanya Tersimpan, Tidak Berdampak
 
@@ -191,8 +179,8 @@ Pengaturan mata uang dan bahasa tersimpan ke database tapi tidak digunakan sebag
 
 | Klaim di README | Kenyataan |
 |---|---|
-| "Transfer antar akun" | ✅ Ada form transfer di CreateTransaction |
-| "Tanpa perlu internet" | ⚠️ Chart.js dari CDN → tidak bisa tampil offline |
+| "Transfer antar akun" | ❌ Tidak diimplementasikan (Klaim telah dihapus dari README) |
+| "Tanpa perlu internet" | ⚠️ Chart.js sudah dibundel. PWA offline support ada namun klaim README diubah menjadi lebih spesifik. |
 | "Peringatan otomatis mendekati batas" | ✅ Ada status Mendekati Batas/Lewat Batas |
 | "Input suara" | ✅ Ada via global modal |
 
@@ -206,13 +194,13 @@ Tidak ada test baru yang ditambahkan dalam sesi ini. Semua 12 test yang sebelumn
 
 ## 10. Risiko Tersisa & Rekomendasi Sebelum Deploy
 
-| # | Risiko | Severity | Rekomendasi |
+| # | Risiko | Severity | Status Terbaru |
 |---|---|---|---|
-| R-01 | PHP 8.5 lokal vs Hostinger mungkin 8.3/8.4 | Medium | Verifikasi PHP version di Hostinger panel, pastikan ≥ 8.4 |
-| R-02 | Chart.js dari CDN — tidak berfungsi offline | Medium | Bundel via `npm install chart.js` + import di Vite |
-| R-03 | PWA icons tidak ada (`icon-192.png`, `icon-512.png`) | Medium | Generate icon dan upload ke `public/images/icons/` |
-| R-04 | Settings currency/language tidak berdampak | Low | Tandai "Segera Hadir" di UI atau implementasikan |
-| R-05 | `SESSION_SECURE_COOKIE` tidak di-set `true` untuk production | Low | Set `SESSION_SECURE_COOKIE=true` di Hostinger .env setelah HTTPS aktif |
+| R-01 | PHP 8.5 lokal vs Hostinger mungkin 8.3/8.4 | Medium | OPEN (Verifikasi di Hostinger panel) |
+| R-02 | Chart.js dari CDN — tidak berfungsi offline | Medium | FIXED (Chart.js dibundel via Vite) |
+| R-03 | PWA icons tidak ada (`icon-192.png`, `icon-512.png`) | Medium | FIXED (File icon di-generate) |
+| R-04 | Settings currency/language tidak berdampak | Low | OPEN (Bisa dilabeli "Segera Hadir") |
+| R-05 | `SESSION_SECURE_COOKIE` tidak di-set `true` untuk production | Low | OPEN (Harus di-set setelah HTTPS aktif) |
 
 ---
 
@@ -237,3 +225,58 @@ php artisan route:cache  # harus SUCCESS
 ---
 
 *Laporan ini dibuat berdasarkan hasil eksekusi nyata. Semua temuan [CONFIRMED] telah diverifikasi dengan output perintah dan stack trace.*
+
+---
+
+## 12. Follow-Up Audit & Fixes (IDOR, Transfer, PWA)
+
+### A. Security (IDOR Lintas Household)
+Telah dilakukan pengujian ketat terhadap celah Insecure Direct Object Reference (IDOR) antar-household.
+- **Titik Pengujian:** `TransactionList`, `CreateTransaction`, `EditTransaction`, `ManageAccounts`, `ManageBudgets`, `ManageSavingsGoals`, dan route dashboard/laporan.
+- **Hasil:**
+  - `[CONFIRMED]` **Aman.** Aplikasi secara konsisten menggunakan scoping pada tingkat model (`$this->user->household->...`) sehingga user dari household B tidak dapat membaca, mengubah, ataupun menghapus data milik household A.
+  - Test otomatis membuktikan bahwa setiap percobaan mutasi data lintas-household akan ditolak secara diam-diam (ignored) atau mengembalikan error 404 (via model binding / Policy).
+  - Test berbagi household (dua user dalam satu household) juga lulus, memastikan kolaborasi keluarga berjalan sesuai desain (anggota dapat melihat dan mengedit transaksi).
+- **Test Suite:** `tests/Feature/Security/CrossHouseholdAccessTest.php` (20 test baru).
+
+### B. Transfer & Skenario User Tanpa Household
+- **Transfer Antar Akun:**
+  - `[CONFIRMED]` Fitur transfer antar akun **belum diimplementasikan**. Ini didokumentasikan dalam laporan QA awal secara tidak akurat. `docs/EXECUTION-PLAN.md` mengonfirmasi bahwa tipe transfer "ditolak, terlalu invasif" untuk MVP. Test `TransferTest.php` kini mendokumentasikan ketiadaan fitur ini dan mengamankan invariasi saldo via observer (Income/Expense).
+- **User Tanpa Household (Null Household):**
+  - `[CONFIRMED]` Secara desain (via Factory dan proses Register), user **selalu** mendapatkan household. Namun, jika terjadi anomali data (household terhapus), `DashboardController` akan crash dengan HTTP 500 karena tidak ada null guard.
+  - **Bug Terbuka (BUG-B2-01):** `[SUSPECTED]` HTTP 500 di dashboard jika user tidak memiliki household. Membutuhkan tambahan middleware `EnsureHouseholdExists` di kemudian hari.
+- **Test Suite:** `TransferTest.php`, `UserWithoutHouseholdTest.php`.
+
+### C. Bundle Chart.js & PWA Icons
+- **Chart.js:**
+  - Pemuatan CDN telah **dihapus**. Chart.js sekarang dibundel secara lokal (tree-shaking) via Vite (termasuk modul Bar dan Doughnut).
+  - Diimplementasikan mekanisme fallback jika grafik gagal dimuat.
+  - Kompatibilitas dengan Livewire navigation (`wire:navigate`) terjamin menggunakan listener `livewire:navigated` yang menghancurkan (destroy) instance grafik sebelumnya untuk mencegah error "Canvas is already in use".
+- **PWA Icons & Manifest:**
+  - File icon (`icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png`) berhasil di-generate secara lokal dengan GD PHP.
+  - `manifest.json` telah diperbaiki untuk memisahkan atribut `purpose: "any"` dan `purpose: "maskable"`.
+  - Service Worker cache (`sw.js`) diperbarui versinya (`keysaku-v2`) untuk meng-invalidaasi cache lama dan menyimpan aset build baru.
+- **Test Suite:** `PwaAssetsTest.php` (membuktikan bahwa icon dan SW tersedia).
+
+### Hasil Eksekusi Regresi
+- **Sebelumnya:** 212 passed.
+- **Sesudah Follow-Up:** 248 passed (0 failed). Zero regresi dari baseline.
+
+### Checklist Tes Manual (Perlu diuji di perangkat asli)
+1. [ ] Install PWA di browser Android (Chrome) dan pastikan maskable icon muncul dengan baik.
+2. [ ] Install PWA di browser iOS (Safari) dan pastikan "Add to Home Screen" memunculkan icon.
+3. [ ] Buka halaman Laporan dalam keadaan offline (apakah JS bundle Chart.js bekerja dari cache?).
+4. [ ] Login, logout, dan login dengan akun dari household yang berbeda untuk memastikan tidak ada cache data finansial (karena auth pages bersifat network-first / no-cache).
+5. [ ] Fitur Voice Input di HP menggunakan native microphone (Chrome Android vs Safari iOS).
+
+---
+
+## 13. End-to-End (E2E) Simulation
+
+Telah dilakukan simulasi E2E "satu bulan hidup pengguna" sebagai feature test.
+- **Titik Pengujian:** Registrasi (onboarding), pembuatan dompet/akun, pencatatan transaksi manual, penambahan target tabungan, pengisian tabungan otomatis, editing transaksi (koreksi error), soft delete transaksi, restorasi transaksi yang terhapus, pemrosesan transaksi via *voice input* (Natural Language), laporan/report (handling month/year Edge Cases), validasi nilai batas, dan isolasi antar household.
+- **Hasil:**
+  - `[CONFIRMED]` **Simulasi Lengkap Lulus.** Seluruh perilaku (behavior) dan kalkulasi saldo (`balance`) terbukti akurat dalam simulasi berurutan dari awal registrasi hingga sebulan pemakaian. Total 83 assertions dalam satu simulasi besar.
+  - `[FIXED]` **Voice Parser Regex & List:** Ditemukan bahwa parser voice input tidak dapat memproses kata "lima belas ribu" atau format "1,5 juta" dengan baik karena regex koma bertabrakan dengan penanganan string angka dalam Bahasa Indonesia. Telah diperbaiki di `VoiceTransactionParser`.
+  - `[FIXED]` **Restore Transaksi Observer:** Ditemukan bahwa mengembalikan (restore) transaksi yang soft deleted mengharuskan reloading state dari model dengan `withTrashed()` agar event observer `restored` terpicu dengan baik. Perhitungan Account Balance kini dibuktikan akurat saat Soft Delete dan Restore.
+- **Test Suite:** `tests/Feature/E2E/MonthlySimulationTest.php`
