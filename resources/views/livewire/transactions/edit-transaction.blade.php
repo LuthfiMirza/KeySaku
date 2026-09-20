@@ -38,6 +38,26 @@
                     <p class="mt-2 text-xs font-medium text-rose-500">{{ $message }}</p>
                 @enderror
             </div>
+            
+            <div>
+                <label for="account_id" class="block text-sm font-semibold text-slate-700">Akun Kas/Bank</label>
+                @if ($accounts->isEmpty())
+                    <div class="mt-2 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-sm font-bold text-slate-600">Belum ada akun dompet.</p>
+                        <p class="mt-1 text-xs text-slate-500">Saldo tidak akan dilacak spesifik ke suatu kas.</p>
+                    </div>
+                @else
+                    <select id="account_id" wire:model="account_id" class="mt-2 block w-full rounded-2xl border-slate-200 bg-white/80 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">-- Pilih Akun (Opsional) --</option>
+                        @foreach ($accounts as $account)
+                            <option value="{{ $account->id }}">{{ $account->icon }} {{ $account->name }} ({{ 'Rp ' . number_format($account->balance, 0, ',', '.') }})</option>
+                        @endforeach
+                    </select>
+                @endif
+                @error('account_id')
+                    <p class="mt-2 text-xs font-medium text-rose-500">{{ $message }}</p>
+                @enderror
+            </div>
 
             <div>
                 <label for="category_id" class="block text-sm font-semibold text-slate-700">Kategori</label>

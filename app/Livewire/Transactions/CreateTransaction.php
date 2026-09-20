@@ -14,6 +14,8 @@ class CreateTransaction extends Component
     public string $type = Transaction::TYPE_EXPENSE;
 
     public ?int $category_id = null;
+    
+    public ?int $account_id = null;
 
     public string $amount = '';
 
@@ -25,6 +27,7 @@ class CreateTransaction extends Component
     {
         $this->transaction_date = now()->toDateString();
         $this->category_id = $this->categories()->first()?->id;
+        $this->account_id = $this->accounts()->first()?->id;
     }
 
     public function updatedType(): void
@@ -52,6 +55,7 @@ class CreateTransaction extends Component
         $validated = $this->validate([
             'type' => ['required', Rule::in(Transaction::types())],
             'category_id' => ['required', 'integer'],
+            'account_id' => ['nullable', 'integer'],
             'amount' => ['required', 'numeric', 'gt:0'],
             'transaction_date' => ['required', 'date'],
             'note' => ['nullable', 'string', 'max:1000'],
@@ -73,11 +77,20 @@ class CreateTransaction extends Component
             $this->addError('category_id', 'Kategori tidak sesuai dengan jenis transaksi.');
             return;
         }
+        
+        if (!empty($validated['account_id'])) {
+            $account = $household->accounts()->whereKey($validated['account_id'])->first();
+            if (! $account) {
+                $this->addError('account_id', 'Akun tidak ditemukan.');
+                return;
+            }
+        }
 
         Transaction::create([
             'user_id' => auth()->id(),
             'household_id' => $household->id,
             'category_id' => $category->id,
+            'account_id' => $validated['account_id'] ?: null,
             'type' => $validated['type'],
             'amount' => $validated['amount'],
             'transaction_date' => $validated['transaction_date'],
@@ -88,6 +101,7 @@ class CreateTransaction extends Component
 
         $this->reset(['amount', 'note']);
         $this->category_id = $this->categories()->first()?->id;
+        $this->account_id = $this->accounts()->first()?->id;
         $this->resetValidation();
 
         session()->flash('transaction_status', 'Transaksi berhasil disimpan.');
@@ -97,6 +111,7 @@ class CreateTransaction extends Component
     {
         return view('livewire.transactions.create-transaction', [
             'categories' => $this->categories()->get(),
+            'accounts' => $this->accounts()->get(),
         ]);
     }
 
@@ -105,6 +120,14 @@ class CreateTransaction extends Component
         return auth()->user()->household
             ->categories()
             ->where('type', $this->type)
+            ->orderBy('name');
+    }
+    
+    private function accounts()
+    {
+        return auth()->user()->household
+            ->accounts()
+            ->where('is_active', true)
             ->orderBy('name');
     }
 

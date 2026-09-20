@@ -14,6 +14,8 @@ class EditTransaction extends Component
     public string $type = Transaction::TYPE_EXPENSE;
 
     public ?int $category_id = null;
+    
+    public ?int $account_id = null;
 
     public string $amount = '';
 
@@ -28,6 +30,7 @@ class EditTransaction extends Component
         $this->transaction = $transaction;
         $this->type = $transaction->type;
         $this->category_id = $transaction->category_id;
+        $this->account_id = $transaction->account_id;
         $this->amount = (string) $transaction->amount;
         $this->transaction_date = $transaction->transaction_date->toDateString();
         $this->note = $transaction->note ?? '';
@@ -45,12 +48,15 @@ class EditTransaction extends Component
         $validated = $this->validate([
             'type' => ['required', Rule::in(Transaction::types())],
             'category_id' => ['required', 'integer'],
+            'account_id' => ['nullable', 'integer'],
             'amount' => ['required', 'numeric', 'gt:0'],
             'transaction_date' => ['required', 'date'],
             'note' => ['nullable', 'string', 'max:1000'],
         ]);
+        
+        $household = auth()->user()->household;
 
-        $category = auth()->user()->household
+        $category = $household
             ->categories()
             ->whereKey($validated['category_id'])
             ->first();
@@ -64,9 +70,18 @@ class EditTransaction extends Component
             $this->addError('category_id', 'Kategori tidak sesuai dengan jenis transaksi.');
             return;
         }
+        
+        if (!empty($validated['account_id'])) {
+            $account = $household->accounts()->whereKey($validated['account_id'])->first();
+            if (! $account) {
+                $this->addError('account_id', 'Akun tidak ditemukan.');
+                return;
+            }
+        }
 
         $this->transaction->update([
             'category_id' => $category->id,
+            'account_id' => $validated['account_id'] ?: null,
             'type' => $validated['type'],
             'amount' => $validated['amount'],
             'transaction_date' => $validated['transaction_date'],
@@ -91,6 +106,7 @@ class EditTransaction extends Component
     {
         return view('livewire.transactions.edit-transaction', [
             'categories' => $this->categories()->get(),
+            'accounts' => $this->accounts()->get(),
         ]);
     }
 
@@ -99,6 +115,14 @@ class EditTransaction extends Component
         return auth()->user()->household
             ->categories()
             ->where('type', $this->type)
+            ->orderBy('name');
+    }
+    
+    private function accounts()
+    {
+        return auth()->user()->household
+            ->accounts()
+            ->where('is_active', true)
             ->orderBy('name');
     }
 }
