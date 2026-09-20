@@ -22,8 +22,8 @@
 
             {{-- Tambah (FAB) --}}
             <div class="flex flex-col items-center -mt-6">
-                <a href="{{ route('transactions.create') }}" aria-label="Tambah transaksi" class="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 shadow-xl shadow-indigo-500/40 flex items-center justify-center text-white border-4 border-white transition-transform active:scale-95">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <a href="#" x-on:click.prevent="showAddMenu = true" aria-label="Tambah transaksi" class="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 shadow-xl shadow-indigo-500/40 flex items-center justify-center text-white border-4 border-white transition-transform active:scale-95">
+                    <svg class="w-7 h-7 transition-transform duration-300" x-bind:class="showAddMenu ? 'rotate-45' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                     </svg>
                 </a>

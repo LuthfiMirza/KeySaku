@@ -257,7 +257,7 @@
     <section class="bg-indigo-50/80 rounded-2xl p-4 border border-indigo-100">
         <p class="text-sm font-bold text-indigo-800">Belum bisa pakai suara?</p>
         <p class="mt-1 text-xs text-indigo-600">Input manual tetap tersedia sebagai fallback utama.</p>
-        <a href="{{ route('transactions.create') }}" class="mt-3 inline-flex w-full items-center justify-center rounded-2xl bg-indigo-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30">
+        <a href="{{ route('transactions.create') }}" class="mt-3 inline-flex w-full items-center justify-center rounded-2xl bg-indigo-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:bg-indigo-600">
             Input Manual
         </a>
     </section>

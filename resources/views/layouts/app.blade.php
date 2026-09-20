@@ -9,7 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="h-full bg-slate-100 antialiased" x-data="{}">
+<body class="h-full bg-slate-100 antialiased" x-data="{ showAddMenu: false, showVoiceModal: false }" x-on:keydown.escape="showAddMenu = false; showVoiceModal = false">
     <div class="min-h-screen relative">
         <div class="fixed inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 -z-10"></div>
         <div class="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.15)_0%,_transparent_60%)] -z-10"></div>
@@ -23,6 +23,7 @@
         </div>
     </div>
 
+    @include('layouts.partials.add-transaction-modal')
     @include('layouts.partials.bottom-nav')
 
     <script>window.appCurrency = @json(\App\Support\Money::config());</script>
