@@ -29,3 +29,7 @@ yarn-error.log
 /public/build/hot
 
 .phpunit.result.cache
+
+# macOS system files
+.DS_Store
+**/.DS_Store
