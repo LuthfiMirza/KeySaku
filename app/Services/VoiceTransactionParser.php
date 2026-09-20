@@ -190,21 +190,20 @@ class VoiceTransactionParser
         $patterns = [
             '/\brp\s*([0-9]+(?:\.[0-9]{3})+|[0-9]+)\b/u',
             '/\b([0-9]+(?:\.[0-9]{3})+)\b/u',
-            '/\b([0-9]+)\s*(?:juta|jt)\b/u',
+            '/\b([0-9]+(?:\.[0-9]+)?)\s*(?:juta|jt)\b/u',
             '/\b([0-9]+)\s*(?:ribu|rb)\b/u',
             '/\b([0-9]+)\b/u',
         ];
 
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $text, $matches)) {
-                $amount = str_replace('.', '', $matches[1]);
-
                 if (str_contains($matches[0], 'juta') || str_contains($matches[0], 'jt')) {
-                    $amount = (string) ((int) $amount * 1000000);
-                }
-
-                if (str_contains($matches[0], 'ribu') || str_contains($matches[0], 'rb')) {
-                    $amount = (string) ((int) $amount * 1000);
+                    $amount = (string) ((float) $matches[1] * 1000000);
+                } else {
+                    $amount = str_replace('.', '', $matches[1]);
+                    if (str_contains($matches[0], 'ribu') || str_contains($matches[0], 'rb')) {
+                        $amount = (string) ((int) $amount * 1000);
+                    }
                 }
 
                 return [(float) $amount, trim(str_replace($matches[0], '', $text))];
@@ -212,13 +211,17 @@ class VoiceTransactionParser
         }
 
         $wordAmounts = [
+            'seratus lima puluh ribu' => 150000,
             'dua puluh lima ribu' => 25000,
             'tiga puluh ribu' => 30000,
             'dua puluh ribu' => 20000,
+            'lima belas ribu' => 15000,
             'seratus ribu' => 100000,
             'sepuluh ribu' => 10000,
             'lima ribu' => 5000,
+            'lima juta' => 5000000,
             'satu juta' => 1000000,
+            'setengah juta' => 500000,
         ];
 
         foreach ($wordAmounts as $phrase => $amount) {
@@ -233,7 +236,8 @@ class VoiceTransactionParser
     private function normalizeText(string $text): string
     {
         $text = Str::lower($text);
-        $text = str_replace(['“', '”', '"', ','], ' ', $text);
+        $text = str_replace(['“', '”', '"'], ' ', $text);
+        $text = str_replace(',', '.', $text); // Convert Indonesian decimal comma to dot
         $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
 
         return trim($text);
