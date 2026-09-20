@@ -1,14 +1,12 @@
-// KeySaku Service Worker — v1.1.0
-const CACHE_NAME   = 'keysaku-v1';
-const STATIC_CACHE = 'keysaku-static-v1';
+// KeySaku Service Worker — v1.2.0
+const CACHE_NAME   = 'keysaku-v3';
+const STATIC_CACHE = 'keysaku-static-v3';
 
 // ── Install ──────────────────────────────────────────────────────────────────
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(STATIC_CACHE).then((cache) =>
-            // Only pre-cache the login page as offline shell
-            // NEVER pre-cache '/' as it redirects to authenticated dashboard
-            cache.addAll(['/login']).catch(() => {})
+            cache.addAll(['/offline.html']).catch(() => {})
         )
     );
     self.skipWaiting();
@@ -68,12 +66,12 @@ self.addEventListener('fetch', (event) => {
     }
 
     // HTML pages — SECURITY: Never cache authenticated pages.
-    // Network-first: if offline, fall back to /login (public page only).
+    // Network-first: if offline, fall back to /offline.html.
     // Intentionally do NOT write HTML responses to cache.
     event.respondWith(
         fetch(event.request)
             .catch(() =>
-                caches.match('/login').then(
+                caches.match('/offline.html').then(
                     (cached) => cached || Response.error()
                 )
             )
