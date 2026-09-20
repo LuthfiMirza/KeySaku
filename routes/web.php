@@ -34,7 +34,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaksi/export/csv', [ExportController::class, 'transactionsCsv'])->name('transactions.export.csv');
     Route::get('/transaksi/export/xlsx', [ExportController::class, 'transactionsXlsx'])->name('transactions.export.xlsx');
     Route::get('/transaksi/tambah', [PageController::class, 'createTransaction'])->name('transactions.create');
-    Route::get('/transaksi/suara', [PageController::class, 'voiceTransaction'])->name('transactions.voice');
     Route::get('/transaksi/{transaction}/edit', [PageController::class, 'editTransaction'])->name('transactions.edit');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

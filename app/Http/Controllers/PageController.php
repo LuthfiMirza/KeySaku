@@ -120,10 +120,6 @@ class PageController extends Controller
         return view('pages.transactions.create');
     }
 
-    public function voiceTransaction(): View
-    {
-        return view('pages.transactions.voice');
-    }
 
     public function editTransaction(Transaction $transaction): View
     {
