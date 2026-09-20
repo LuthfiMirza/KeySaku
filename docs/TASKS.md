@@ -365,14 +365,14 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Voice input modal
 - [x] Text parser for voice → transaction
 - [x] Chart.js integration (bar chart + doughnut)
-- [ ] Monthly summary chart (standalone page — optional)
-- [ ] Category breakdown chart (standalone page — optional)
+- [x] Monthly summary chart (standalone page — optional)
+- [x] Category breakdown chart (standalone page — optional)
 
 ---
 
-## Milestone 6 — Deploy
-- [ ] Test on Hostinger staging
+## Milestone 6 — Production & Deployment
+- [x] Test on Hostinger staging
 - [x] PWA service worker (offline support)
-- [ ] Production .htaccess tuning
-- [ ] `php artisan config:cache && route:cache && view:cache`
-- [ ] Final smoke test
+- [x] Production .htaccess tuning
+- [x] `php artisan config:cache && route:cache && view:cache`
+- [x] Final smoke test
