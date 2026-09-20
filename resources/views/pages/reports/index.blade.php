@@ -103,7 +103,7 @@
                     <p class="mt-1 text-xs text-slate-400">Catat pengeluaran untuk melihat laporan bulanan.</p>
                     <div class="mt-4 grid grid-cols-2 gap-2">
                         <a href="{{ route('transactions.create') }}" class="rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-3 py-3 text-xs font-bold text-white shadow-lg shadow-indigo-500/30">Tambah Transaksi</a>
-                        <a href="{{ route('transactions.voice') }}" class="rounded-2xl bg-white px-3 py-3 text-xs font-bold text-indigo-600 border border-indigo-100">Input Suara</a>
+                        <a href="#" @click.prevent="$dispatch('open-voice-modal')" class="rounded-2xl bg-white px-3 py-3 text-xs font-bold text-indigo-600 border border-indigo-100">Input Suara</a>
                     </div>
                 </div>
             @else
@@ -156,7 +156,7 @@
                     <p class="mt-1 text-xs text-slate-400">Catat pemasukan atau pengeluaran untuk melihat laporan bulanan.</p>
                     <div class="mt-4 grid grid-cols-2 gap-2">
                         <a href="{{ route('transactions.create') }}" class="rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-3 py-3 text-xs font-bold text-white shadow-lg shadow-indigo-500/30">Tambah Transaksi</a>
-                        <a href="{{ route('transactions.voice') }}" class="rounded-2xl bg-indigo-50 px-3 py-3 text-xs font-bold text-indigo-600">Input Suara</a>
+                        <a href="#" @click.prevent="$dispatch('open-voice-modal')" class="rounded-2xl bg-indigo-50 px-3 py-3 text-xs font-bold text-indigo-600">Input Suara</a>
                     </div>
                 </div>
             @else
