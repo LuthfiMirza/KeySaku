@@ -74,7 +74,7 @@ Active task board. Update this file as tasks are picked up and completed.
 - [x] Transaction filter by month/type/category
 - [x] Transaction edit page and Livewire form
 - [x] Transaction soft delete UX
-- [ ] Balance recalculation on transaction save/delete
+- [x] Balance recalculation on transaction save/delete
 
 ---
 
@@ -362,7 +362,7 @@ Active task board. Update this file as tasks are picked up and completed.
 
 ## Milestone 5 — Voice & Insights
 - [x] SpeechRecognition JS module
-- [ ] Voice input modal
+- [x] Voice input modal
 - [x] Text parser for voice → transaction
 - [x] Chart.js integration (bar chart + doughnut)
 - [ ] Monthly summary chart (standalone page — optional)
