@@ -18,11 +18,11 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name'              => fake()->name(),
+            'email'             => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'password'          => static::$password ??= Hash::make('password'),
+            'remember_token'    => Str::random(10),
         ];
     }
 
@@ -38,5 +38,17 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    /**
+     * Produce a user without triggering household auto-provisioning.
+     * Useful for tests where the user will join an existing household via invite code.
+     */
+    public function withoutHousehold(): static
+    {
+        // Override the afterCreating hook from configure() with a no-op.
+        return $this->afterCreating(function (User $user) {
+            // intentionally skip household auto-provisioning
+        });
     }
 }

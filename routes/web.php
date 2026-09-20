@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/welcome', '/login')->name('welcome');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\EnsureHouseholdExists::class])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/anggaran', [PageController::class, 'budgets'])->name('budgets.index');
     Route::get('/tabungan', [PageController::class, 'goals'])->name('savings.index');
