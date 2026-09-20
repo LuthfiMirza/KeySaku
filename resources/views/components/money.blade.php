@@ -1,15 +1,17 @@
 @props([
-    'value' => 0,
+    'value' => null,
+    'amount' => null,
     'symbol' => true,
     'signed' => false,
     'prefix' => '',
 ])
 
 @php
-    $amount = (float) $value;
+    // Accept both :value and :amount props; :amount takes precedence if both are given.
+    $resolvedAmount = (float) ($amount ?? $value ?? 0);
     $formatted = $symbol
-        ? \App\Support\Money::format($amount)
-        : \App\Support\Money::number($amount);
+        ? \App\Support\Money::format($resolvedAmount)
+        : \App\Support\Money::number($resolvedAmount);
 @endphp
 
-<span {{ $attributes->merge(['class' => 'tabular-nums']) }}>{{ $prefix }}{{ $signed && $amount > 0 ? '+ ' : '' }}{{ $formatted }}</span>
+<span {{ $attributes->merge(['class' => 'tabular-nums']) }}>{{ $prefix }}{{ $signed && $resolvedAmount > 0 ? '+ ' : '' }}{{ $formatted }}</span>
