@@ -11,7 +11,7 @@
 [![PWA](https://img.shields.io/badge/PWA-Ready-5A0FC8?style=flat-square&logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-*Catat pemasukan & pengeluaran keluarga dalam hitungan detik — dari mana saja, tanpa perlu internet.*
+*Catat pemasukan & pengeluaran keluarga dalam hitungan detik — dengan dukungan offline dasar (PWA).*
 
 </div>
 
@@ -52,7 +52,7 @@
 - Saldo akun diperbarui otomatis saat transaksi dibuat/diedit/dihapus
 
 ### 📒 Transaksi
-- Catat pemasukan, pengeluaran, dan transfer antar akun
+- Catat pemasukan dan pengeluaran
 - Filter riwayat transaksi berdasarkan bulan dan kategori
 - Edit dan hapus transaksi dengan konfirmasi
 
