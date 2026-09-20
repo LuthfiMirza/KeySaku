@@ -154,7 +154,7 @@
             <h2 class="text-sm font-bold text-slate-700 mb-3">Aksi Cepat</h2>
             <div class="grid grid-cols-4 gap-2">
                 <x-quick-action label="Tambah Manual" icon="✏️" color="indigo" href="{{ route('transactions.create') }}" />
-                <x-quick-action label="Input Suara" icon="🎙️" color="purple" href="{{ route('transactions.voice') }}" />
+                <x-quick-action label="Input Suara" icon="🎙️" color="purple" href="#" @click.prevent="$dispatch('open-voice-modal')" />
                 <x-quick-action label="Anggaran" icon="📊" color="emerald" href="{{ route('budgets.index') }}" />
                 <x-quick-action label="Tabungan" icon="🎯" color="amber" href="{{ route('savings.index') }}" />
             </div>
