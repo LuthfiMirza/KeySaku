@@ -62,6 +62,18 @@ class VoiceTransactionParserTest extends TestCase
         $this->assertSame('terima gaji', $result['note']);
     }
 
+    public function test_it_parses_gajian_as_income(): void
+    {
+        $result = $this->parser()->parse(
+            'gajian 5 juta',
+            $this->categories()
+        );
+
+        $this->assertSame('income', $result['type']);
+        $this->assertSame(5000000.0, $result['amount']);
+        $this->assertSame('gajian', $result['note']);
+    }
+
     public function test_it_parses_numeric_juta_amount(): void
     {
         $result = $this->parser()->parse(
@@ -175,7 +187,7 @@ class VoiceTransactionParserTest extends TestCase
 
     private function parser(): VoiceTransactionParser
     {
-        return new VoiceTransactionParser();
+        return new VoiceTransactionParser;
     }
 
     private function categories(): Collection

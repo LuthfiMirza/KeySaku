@@ -9,9 +9,7 @@ use Illuminate\Support\Str;
 
 class VoiceTransactionParser
 {
-    public function __construct(private ?CategorySuggester $categorySuggester = null)
-    {
-    }
+    public function __construct(private ?CategorySuggester $categorySuggester = null) {}
 
     /**
      * @param  Collection<int, Category>  $categories
@@ -105,10 +103,28 @@ class VoiceTransactionParser
             'terima',
             'menerima',
             'dapat',
+            'dapet',
             'gaji',
+            'gajian',
+            'salary',
+            'upah',
+            'honor',
             'bonus',
+            'thr',
             'usaha',
+            'jualan',
+            'omzet',
+            'omset',
+            'untung',
+            'cuan',
+            'laba',
             'hadiah',
+            'transferan',
+            'kiriman',
+            'sangu',
+            'uang saku',
+            'komisi',
+            'cashback',
         ];
 
         $expenseKeywords = [
