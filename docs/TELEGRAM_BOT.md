@@ -70,3 +70,8 @@ GROQ_API_KEY=optional_key_for_groq_whisper
 ### E. Voice Input (Input Suara)
 - **Keyboard Dictation:** Menggunakan tombol mic keyboard HP (0 setup).
 - **Voice Note (.oga):** Transkripsi otomatis pesan suara Telegram via Google Gemini Flash API (`GEMINI_API_KEY`) dengan domain priming kosakata belanja harian Indonesia.
+
+### F. Idempotensi & Anti-Duplikasi
+- **Atomic Cache Deduplication:** Setiap pesan, update, dan file suara Telegram diverifikasi melalui atomic cache lock (`telegram:update:*`, `telegram:msg:*`, `telegram:voice:*`) sehingga pemrosesan ganda dapat dicegah 100%.
+- **Single-Instance Poller Mutex:** Perintah `php artisan telegram:poll` dilindungi mutex lock otomatis. Jika pengguna menjalankan polling kedua di terminal lain saat daemon latar belakang aktif, proses kedua langsung menolak eksekusi untuk mencegah duplicate race conditions.
+- **Pintar Deteksi Pemasukan Bahasa Alami:** Sistem otomatis mendeteksi kata-kata pemasukan Indonesia seperti `gajian`, `gaji`, `salary`, `upah`, `honor`, `thr`, `bonus`, `usaha`, `omset`, `cuan`, `transferan`, dan otomatis mengarahkannya ke transaksi bertipe Pemasukan (*Income*) dan kategori *Gaji*.
