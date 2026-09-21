@@ -461,4 +461,57 @@ class TelegramBotTest extends TestCase
             'source' => Transaction::SOURCE_VOICE,
         ]);
     }
+
+    public function test_voice_note_with_gemini_fallback_model_on_first_model_failure(): void
+    {
+        $this->user->linkTelegramChat('999888');
+        config()->set('telegram.gemini_api_key', 'fake_gemini_key');
+        config()->set('telegram.gemini_model', 'gemini-non-existent');
+
+        Http::swap(new Factory);
+        Http::fake([
+            '*getFile*' => Http::response([
+                'ok' => true,
+                'result' => [
+                    'file_path' => 'voice/file_123.oga',
+                ],
+            ], 200),
+            '*file/bot*/*' => Http::response('fake_audio_binary', 200),
+            '*gemini-non-existent*' => Http::response([
+                'error' => ['code' => 404, 'message' => 'Model not found'],
+            ], 404),
+            '*gemini-3.5-flash-lite*' => Http::response([
+                'candidates' => [
+                    [
+                        'content' => [
+                            'parts' => [
+                                ['text' => 'beli pulsa 50.000'],
+                            ],
+                        ],
+                    ],
+                ],
+            ], 200),
+            '*sendMessage*' => Http::response(['ok' => true, 'result' => ['message_id' => 125]], 200),
+        ]);
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 14,
+            'message' => [
+                'message_id' => 114,
+                'chat' => ['id' => 999888],
+                'from' => ['first_name' => 'Luthfi'],
+                'voice' => [
+                    'file_id' => 'fake_voice_file_id',
+                    'duration' => 3,
+                ],
+            ],
+        ]);
+
+        $this->assertDatabaseHas('transactions', [
+            'user_id' => $this->user->id,
+            'amount' => 50000,
+            'source' => Transaction::SOURCE_VOICE,
+        ]);
+    }
 }
