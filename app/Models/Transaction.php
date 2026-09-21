@@ -10,13 +10,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaction extends Model
 {
-    use HasFactory, SoftDeletes, BelongsToUser;
+    use BelongsToUser, HasFactory, SoftDeletes;
 
     public const TYPE_INCOME = 'income';
+
     public const TYPE_EXPENSE = 'expense';
 
     public const SOURCE_MANUAL = 'manual';
+
     public const SOURCE_VOICE = 'voice';
+
+    public const SOURCE_TELEGRAM = 'telegram';
 
     protected $fillable = [
         'household_id',
@@ -66,6 +70,6 @@ class Transaction extends Model
 
     public static function sources(): array
     {
-        return [self::SOURCE_MANUAL, self::SOURCE_VOICE];
+        return [self::SOURCE_MANUAL, self::SOURCE_VOICE, self::SOURCE_TELEGRAM];
     }
 }
