@@ -365,6 +365,155 @@ class TelegramBotTest extends TestCase
         });
     }
 
+    public function test_linked_user_can_get_rekap_harian(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        Transaction::create([
+            'user_id' => $this->user->id,
+            'household_id' => $this->household->id,
+            'category_id' => $this->expenseCategory->id,
+            'account_id' => $this->account->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 45000,
+            'transaction_date' => now()->toDateString(),
+            'note' => 'Makan siang padang',
+            'source' => Transaction::SOURCE_TELEGRAM,
+        ]);
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 101,
+            'message' => [
+                'message_id' => 1101,
+                'chat' => ['id' => 999888],
+                'from' => ['first_name' => 'Luthfi'],
+                'text' => '/hariini',
+            ],
+        ]);
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'sendMessage')
+                && str_contains($request['text'], 'Rekap Harian')
+                && str_contains($request['text'], 'Makan siang padang')
+                && str_contains($request['text'], '45.000');
+        });
+    }
+
+    public function test_linked_user_can_get_rekap_mingguan(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        Transaction::create([
+            'user_id' => $this->user->id,
+            'household_id' => $this->household->id,
+            'category_id' => $this->expenseCategory->id,
+            'account_id' => $this->account->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 85000,
+            'transaction_date' => now()->toDateString(),
+            'note' => 'Bensin motor mingguan',
+            'source' => Transaction::SOURCE_TELEGRAM,
+        ]);
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 102,
+            'message' => [
+                'message_id' => 1102,
+                'chat' => ['id' => 999888],
+                'from' => ['first_name' => 'Luthfi'],
+                'text' => '/mingguini',
+            ],
+        ]);
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'sendMessage')
+                && str_contains($request['text'], 'Rekap Mingguan')
+                && str_contains($request['text'], 'Pengeluaran Harian Pekan Ini')
+                && str_contains($request['text'], '85.000');
+        });
+    }
+
+    public function test_rekap_period_switcher_callback_query_edits_message(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        Transaction::create([
+            'user_id' => $this->user->id,
+            'household_id' => $this->household->id,
+            'category_id' => $this->expenseCategory->id,
+            'account_id' => $this->account->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 50000,
+            'transaction_date' => now()->toDateString(),
+            'note' => 'Belanja tes',
+            'source' => Transaction::SOURCE_TELEGRAM,
+        ]);
+
+        Http::swap(new Factory);
+        Http::fake([
+            '*answerCallbackQuery*' => Http::response(['ok' => true], 200),
+            '*editMessageText*' => Http::response(['ok' => true], 200),
+        ]);
+
+        $service = app(TelegramBotService::class);
+
+        // Test switch to daily
+        $service->handleUpdate([
+            'update_id' => 103,
+            'callback_query' => [
+                'id' => 'cb_query_daily',
+                'data' => 'rekap:daily',
+                'message' => [
+                    'message_id' => 300,
+                    'chat' => ['id' => 999888],
+                ],
+            ],
+        ]);
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'editMessageText')
+                && str_contains($request['text'], 'Rekap Harian');
+        });
+
+        // Test switch to weekly
+        $service->handleUpdate([
+            'update_id' => 104,
+            'callback_query' => [
+                'id' => 'cb_query_weekly',
+                'data' => 'rekap:weekly',
+                'message' => [
+                    'message_id' => 300,
+                    'chat' => ['id' => 999888],
+                ],
+            ],
+        ]);
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'editMessageText')
+                && str_contains($request['text'], 'Rekap Mingguan');
+        });
+
+        // Test switch to monthly
+        $service->handleUpdate([
+            'update_id' => 105,
+            'callback_query' => [
+                'id' => 'cb_query_monthly',
+                'data' => 'rekap:monthly',
+                'message' => [
+                    'message_id' => 300,
+                    'chat' => ['id' => 999888],
+                ],
+            ],
+        ]);
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'editMessageText')
+                && str_contains($request['text'], 'Rekap Keuangan');
+        });
+    }
+
     public function test_keyboard_shortcut_routes_correctly(): void
     {
         $this->user->linkTelegramChat('999888');
