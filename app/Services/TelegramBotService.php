@@ -44,7 +44,8 @@ class TelegramBotService
         return [
             'keyboard' => [
                 [['text' => '💰 Cek Saldo'], ['text' => '📊 Rekap Bulan Ini']],
-                [['text' => '🗑️ Batalkan Transaksi'], ['text' => '❓ Bantuan']],
+                [['text' => '📋 Riwayat'], ['text' => '🗑️ Batalkan Transaksi']],
+                [['text' => '❓ Bantuan']],
             ],
             'resize_keyboard' => true,
             'is_persistent' => true,
@@ -75,6 +76,59 @@ class TelegramBotService
         if (! $response->successful() && str_contains($response->body(), "can't parse entities")) {
             unset($payload['parse_mode']);
             $response = Http::post("{$this->baseUrl()}/sendMessage", $payload);
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Answer a callback query from an inline keyboard button.
+     */
+    public function answerCallbackQuery(string $callbackQueryId, ?string $text = null, bool $showAlert = false): ?array
+    {
+        if (! $this->isConfigured()) {
+            return null;
+        }
+
+        $payload = [
+            'callback_query_id' => $callbackQueryId,
+            'show_alert' => $showAlert,
+        ];
+
+        if ($text !== null) {
+            $payload['text'] = $text;
+        }
+
+        $response = Http::post("{$this->baseUrl()}/answerCallbackQuery", $payload);
+
+        return $response->json();
+    }
+
+    /**
+     * Edit message text in a Telegram chat.
+     */
+    public function editMessageText(string|int $chatId, int $messageId, string $text, ?array $replyMarkup = null): ?array
+    {
+        if (! $this->isConfigured()) {
+            return null;
+        }
+
+        $payload = [
+            'chat_id' => $chatId,
+            'message_id' => $messageId,
+            'text' => $text,
+            'parse_mode' => 'Markdown',
+        ];
+
+        if ($replyMarkup !== null) {
+            $payload['reply_markup'] = $replyMarkup;
+        }
+
+        $response = Http::post("{$this->baseUrl()}/editMessageText", $payload);
+
+        if (! $response->successful() && str_contains($response->body(), "can't parse entities")) {
+            unset($payload['parse_mode']);
+            $response = Http::post("{$this->baseUrl()}/editMessageText", $payload);
         }
 
         return $response->json();
@@ -177,7 +231,7 @@ class TelegramBotService
                                         ],
                                     ],
                                     [
-                                        'text' => 'Tuliskan hanya transkrip teks dari audio bahasa Indonesia ini tanpa tambahan kata atau tanda kutip.',
+                                        'text' => 'Tuliskan hanya transkrip teks persis dari audio rekaman suara ini dalam bahasa Indonesia tanpa tanda kutip. Audio ini berisi catatan pengeluaran/pemasukan keuangan keluarga sehari-hari (contoh kosakata yang sering muncul: beli kopi, makan siang, beli bensin, beli oli, bayar wifi, token listrik, pulsa, belanja dapur, dsb). Pastikan kata-kata belanja seperti "kopi" tidak keliru ditulis menjadi "koper".',
                                     ],
                                 ],
                             ],
@@ -273,6 +327,13 @@ class TelegramBotService
      */
     public function handleUpdate(array $update): void
     {
+        // Handle inline keyboard button clicks
+        if (isset($update['callback_query'])) {
+            $this->handleCallbackQuery($update['callback_query']);
+
+            return;
+        }
+
         $message = $update['message'] ?? null;
         if (! $message) {
             return;
@@ -299,7 +360,7 @@ class TelegramBotService
         // Handle button shortcuts or slash commands
         $lower = strtolower($text);
         if (str_starts_with($text, '/')
-            || in_array($lower, ['💰 cek saldo', 'cek saldo', 'saldo', '📊 rekap bulan ini', 'rekap bulan ini', 'rekap', '🗑️ batalkan transaksi', 'batalkan transaksi', 'batal', '❓ bantuan', 'bantuan', 'panduan'])) {
+            || in_array($lower, ['💰 cek saldo', 'cek saldo', 'saldo', '📊 rekap bulan ini', 'rekap bulan ini', 'rekap', '📋 riwayat', 'riwayat', 'riwayat transaksi', '🗑️ batalkan transaksi', 'batalkan transaksi', 'batal', '❓ bantuan', 'bantuan', 'panduan'])) {
             $this->handleCommand($chatId, $text);
 
             return;
@@ -359,14 +420,31 @@ class TelegramBotService
             return;
         }
 
-        if (str_contains($cleanText, 'rekap') || str_contains($cleanText, 'laporan')) {
+        if (str_contains($cleanText, 'rekap') || str_contains($cleanText, 'laporan') || str_contains($cleanText, 'bulanini')) {
             $this->handleRekapCommand($chatId);
 
             return;
         }
 
-        if (str_contains($cleanText, 'batal') || str_contains($cleanText, 'undo')) {
-            $this->handleBatalCommand($chatId);
+        if (str_contains($cleanText, 'riwayat')) {
+            $this->handleRiwayatCommand($chatId);
+
+            return;
+        }
+
+        if (str_starts_with($cleanText, '/batal') || str_starts_with($cleanText, '/hapus') || str_starts_with($cleanText, '/undo') || in_array($cleanText, ['🗑️ batalkan transaksi', 'batalkan transaksi', 'batal', 'undo'])) {
+            $parts = preg_split('/\s+/', trim($text), 2);
+            $param = trim($parts[1] ?? '');
+            $trxId = is_numeric($param) ? (int) $param : null;
+            $this->handleBatalCommand($chatId, $trxId);
+
+            return;
+        }
+
+        if (str_starts_with($cleanText, '/edit') || str_starts_with($cleanText, '/ubah')) {
+            $parts = preg_split('/\s+/', trim($text), 2);
+            $param = trim($parts[1] ?? '');
+            $this->handleEditCommand($chatId, $param);
 
             return;
         }
@@ -377,36 +455,17 @@ class TelegramBotService
             return;
         }
 
-        $parts = explode(' ', $text, 2);
-        $command = strtolower($parts[0]);
+        $parts = preg_split('/\s+/', trim($text), 2);
+        $command = strtolower($parts[0] ?? '');
+        $param = trim($parts[1] ?? '');
+
         if (str_contains($command, '@')) {
             $command = explode('@', $command)[0];
         }
 
-        $param = trim($parts[1] ?? '');
-
         switch ($command) {
             case '/start':
                 $this->handleStartCommand($chatId, $param);
-                break;
-
-            case '/rekap':
-            case '/bulanini':
-                $this->handleRekapCommand($chatId);
-                break;
-
-            case '/saldo':
-                $this->handleSaldoCommand($chatId);
-                break;
-
-            case '/bantuan':
-            case '/help':
-                $this->handleHelpCommand($chatId);
-                break;
-
-            case '/batal':
-            case '/undo':
-                $this->handleBatalCommand($chatId);
                 break;
 
             case '/unlink':
@@ -568,7 +627,7 @@ class TelegramBotService
         );
     }
 
-    protected function handleBatalCommand(string $chatId): void
+    protected function handleRiwayatCommand(string $chatId): void
     {
         $user = User::where('telegram_chat_id', $chatId)->first();
         if (! $user) {
@@ -577,36 +636,238 @@ class TelegramBotService
             return;
         }
 
-        // Look for the latest telegram or voice transaction within 60 minutes
-        $transaction = Transaction::where('user_id', $user->id)
-            ->whereIn('source', [Transaction::SOURCE_TELEGRAM, Transaction::SOURCE_VOICE])
-            ->where('created_at', '>=', now()->subMinutes(60))
-            ->latest()
-            ->first();
+        $household = $user->household;
+        if (! $household) {
+            $this->sendMessage($chatId, '⚠️ Akun Anda belum memiliki keluarga/household di KeySaku.');
 
-        if (! $transaction) {
+            return;
+        }
+
+        $transactions = Transaction::where('household_id', $household->id)
+            ->latest('id')
+            ->take(5)
+            ->get();
+
+        if ($transactions->isEmpty()) {
+            $this->sendMessage($chatId, '📋 Belum ada transaksi yang tercatat di keluarga Anda.');
+
+            return;
+        }
+
+        $lines = ["📋 *5 Transaksi Terakhir Keluarga Anda:*\n"];
+        $inlineButtons = [];
+        $numberEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣'];
+
+        foreach ($transactions->values() as $index => $trx) {
+            $emoji = $numberEmojis[$index] ?? '•';
+            $typeEmoji = $trx->type === Transaction::TYPE_INCOME ? '🟢' : '🔴';
+            $formattedAmount = number_format((float) $trx->amount, 0, ',', '.');
+            $categoryName = $trx->category?->name ?? 'Lainnya';
+            $note = $trx->note ?: '-';
+
+            $lines[] = "{$emoji} *#{$trx->id}* • *{$note}*\n     {$typeEmoji} Rp {$formattedAmount} ({$categoryName})";
+
+            $inlineButtons[] = [
+                ['text' => "🗑️ Hapus #{$trx->id} ({$note})", 'callback_data' => "del_trx:{$trx->id}"],
+            ];
+        }
+
+        $lines[] = "\n💡 *Aksi via Chat:*";
+        $lines[] = '• *Hapus:* Ketik `/hapus <ID>` (contoh: `/hapus 9`)';
+        $lines[] = '• *Edit:* Ketik `/edit <ID> <catatan baru> <nominal>` (contoh: `/edit 9 beli kopi 37rb`)';
+        $lines[] = '• Atau ketuk tombol di bawah untuk hapus langsung:';
+
+        $this->sendMessage($chatId, implode("\n", $lines), [
+            'inline_keyboard' => $inlineButtons,
+        ]);
+    }
+
+    protected function handleEditCommand(string $chatId, string $payload): void
+    {
+        $user = User::where('telegram_chat_id', $chatId)->first();
+        if (! $user) {
+            $this->promptUnlinked($chatId);
+
+            return;
+        }
+
+        $household = $user->household;
+        if (! $household) {
+            $this->sendMessage($chatId, '⚠️ Akun Anda belum memiliki keluarga/household di KeySaku.');
+
+            return;
+        }
+
+        if (! preg_match('/^(\d+)\s+(.+)$/s', trim($payload), $matches)) {
             $this->sendMessage(
                 $chatId,
-                'ℹ️ Tidak ada transaksi dari Telegram dalam 60 menit terakhir yang dapat dibatalkan.'
+                "⚠️ *Format /edit belum tepat.*\n\n*Format:*\n`/edit <ID> <catatan baru> <nominal>`\n\n*Contoh:*\n• `/edit 9 beli kopi 37.000`\n• `/edit 9 kopi 37rb kategori makanan`\n\n💡 Ketik /riwayat untuk melihat daftar ID transaksi."
             );
 
             return;
         }
 
+        $transactionId = (int) $matches[1];
+        $newContent = trim($matches[2]);
+
+        $transaction = Transaction::where('id', $transactionId)
+            ->where('household_id', $household->id)
+            ->first();
+
+        if (! $transaction) {
+            $this->sendMessage($chatId, "⚠️ Transaksi #{$transactionId} tidak ditemukan di keluarga Anda.\nKetik /riwayat untuk melihat ID transaksi.");
+
+            return;
+        }
+
+        $categories = $household->categories()->get();
+        $draft = $this->parser->parse($newContent, $categories);
+
+        $newAmount = (float) ($draft['amount'] ?? 0);
+        if ($newAmount > 0) {
+            $transaction->amount = $newAmount;
+        }
+
+        $newNote = trim((string) ($draft['note'] ?? ''));
+        if ($newNote !== '') {
+            $transaction->note = $newNote;
+        }
+
+        if (! empty($draft['category_id'])) {
+            $transaction->category_id = $draft['category_id'];
+        }
+
+        if (! empty($draft['type'])) {
+            $transaction->type = $draft['type'];
+        }
+
+        if (! empty($draft['transaction_date'])) {
+            $transaction->transaction_date = $draft['transaction_date'];
+        }
+
+        $transaction->save();
+
+        $account = $transaction->account?->fresh();
+        $formattedAmount = number_format((float) $transaction->amount, 0, ',', '.');
+        $categoryName = $transaction->category?->name ?? 'Lainnya';
+        $accountName = $account ? $account->name : 'Kas';
+        $newBalance = $account ? 'Rp '.number_format((float) $account->balance, 0, ',', '.') : '-';
+
+        $this->sendMessage(
+            $chatId,
+            "✏️ *Transaksi Berhasil Diperbarui!*\n\n• *ID:* #{$transaction->id}\n• *Catatan:* {$transaction->note}\n• *Nominal:* Rp {$formattedAmount}\n• *Kategori:* {$categoryName}\n• *Akun:* {$accountName}\n\n💰 *Sisa Saldo {$accountName}:* {$newBalance}"
+        );
+    }
+
+    protected function handleBatalCommand(string $chatId, ?int $transactionId = null): void
+    {
+        $user = User::where('telegram_chat_id', $chatId)->first();
+        if (! $user) {
+            $this->promptUnlinked($chatId);
+
+            return;
+        }
+
+        $household = $user->household;
+        if (! $household) {
+            $this->sendMessage($chatId, '⚠️ Akun Anda belum memiliki keluarga/household di KeySaku.');
+
+            return;
+        }
+
+        if ($transactionId !== null) {
+            $transaction = Transaction::where('id', $transactionId)
+                ->where('household_id', $household->id)
+                ->first();
+
+            if (! $transaction) {
+                $this->sendMessage(
+                    $chatId,
+                    "⚠️ Transaksi #{$transactionId} tidak ditemukan atau bukan milik keluarga Anda.\nKetik /riwayat untuk melihat daftar ID transaksi."
+                );
+
+                return;
+            }
+        } else {
+            // Look for the latest telegram or voice transaction within 60 minutes
+            $transaction = Transaction::where('user_id', $user->id)
+                ->whereIn('source', [Transaction::SOURCE_TELEGRAM, Transaction::SOURCE_VOICE])
+                ->where('created_at', '>=', now()->subMinutes(60))
+                ->latest('id')
+                ->first();
+
+            if (! $transaction) {
+                $this->sendMessage(
+                    $chatId,
+                    "ℹ️ Tidak ada transaksi dari Telegram dalam 60 menit terakhir yang dapat dibatalkan.\n\nKetik /riwayat untuk melihat transaksi sebelumnya dan menghapusnya dengan `/hapus <ID>`."
+                );
+
+                return;
+            }
+        }
+
         $note = $transaction->note;
+        $id = $transaction->id;
         $formattedAmount = number_format((float) $transaction->amount, 0, ',', '.');
         $typeLabel = $transaction->type === Transaction::TYPE_INCOME ? 'Pemasukan' : 'Pengeluaran';
+        $account = $transaction->account;
 
         // Delete transaction (TransactionObserver will restore account balance)
         $transaction->delete();
 
-        $account = $transaction->account_id ? $transaction->account?->fresh() : null;
-        $balanceInfo = $account ? "\nSaldo *{$account->name}* dipulihkan: Rp ".number_format((float) $account->balance, 0, ',', '.') : '';
+        $balanceInfo = $account ? "\n💰 Saldo *{$account->name}* dipulihkan: Rp ".number_format((float) $account->fresh()->balance, 0, ',', '.') : '';
 
         $this->sendMessage(
             $chatId,
-            "🗑️ *Transaksi Dibatalkan!*\n\n• *Jenis:* {$typeLabel}\n• *Catatan:* {$note}\n• *Nominal:* Rp {$formattedAmount}{$balanceInfo}"
+            "🗑️ *Transaksi Dibatalkan!*\n\n• *ID:* #{$id}\n• *Jenis:* {$typeLabel}\n• *Catatan:* {$note}\n• *Nominal:* Rp {$formattedAmount}{$balanceInfo}"
         );
+    }
+
+    protected function handleCallbackQuery(array $callbackQuery): void
+    {
+        $queryId = (string) ($callbackQuery['id'] ?? '');
+        $data = (string) ($callbackQuery['data'] ?? '');
+        $chatId = (string) ($callbackQuery['message']['chat']['id'] ?? '');
+        $messageId = (int) ($callbackQuery['message']['message_id'] ?? 0);
+
+        if (str_starts_with($data, 'del_trx:')) {
+            $transactionId = (int) str_replace('del_trx:', '', $data);
+            $user = User::where('telegram_chat_id', $chatId)->first();
+
+            if (! $user || ! $user->household) {
+                $this->answerCallbackQuery($queryId, 'Akun belum terhubung ke KeySaku.', true);
+
+                return;
+            }
+
+            $transaction = Transaction::where('id', $transactionId)
+                ->where('household_id', $user->household->id)
+                ->first();
+
+            if (! $transaction) {
+                $this->answerCallbackQuery($queryId, 'Transaksi tidak ditemukan atau sudah dihapus.', true);
+
+                return;
+            }
+
+            $note = $transaction->note;
+            $formattedAmount = number_format((float) $transaction->amount, 0, ',', '.');
+            $account = $transaction->account;
+
+            $transaction->delete();
+
+            $balanceInfo = $account ? 'Rp '.number_format((float) $account->fresh()->balance, 0, ',', '.') : '-';
+
+            $this->answerCallbackQuery($queryId, "Transaksi '{$note}' berhasil dihapus!");
+
+            if ($messageId > 0) {
+                $this->editMessageText(
+                    $chatId,
+                    $messageId,
+                    "🗑️ *Transaksi Dibatalkan!*\n\n• *ID:* #{$transactionId}\n• *Catatan:* {$note}\n• *Nominal:* Rp {$formattedAmount}\n\n💰 Saldo dipulihkan: {$balanceInfo}"
+                );
+            }
+        }
     }
 
     protected function handleUnlinkCommand(string $chatId): void
@@ -630,7 +891,7 @@ class TelegramBotService
     {
         $this->sendMessage(
             $chatId,
-            "📖 *Panduan Penggunaan Bot KeySaku*\n\nAnda bisa langsung mencatat pengeluaran atau pemasukan secepat mengirim chat biasa!\n\n*Contoh Pengeluaran:*\n• `makan siang 35000`\n• `kopi 25rb kategori hiburan`\n• `beli bensin 50.000 kemarin`\n• `belanja dapur 150rb`\n\n*Contoh Pemasukan:*\n• `gaji bulanan 8.000.000`\n• `terima bonus proyek 500rb`\n\n*Catat Lewat Suara:*\n• Tekan tombol mikrofon pada keyboard HP saat mengetik chat\n\n*Perintah Tersedia:*\n• 💰 *Cek Saldo* — Cek saldo seluruh dompet & rekening\n• 📊 *Rekap Bulan Ini* — Ringkasan keuangan bulan berjalan\n• 🗑️ *Batalkan Transaksi* — Hapus transaksi terakhir jika salah ketik\n• /putus — Putuskan hubungan akun dari bot ini"
+            "📖 *Panduan Penggunaan Bot KeySaku*\n\nAnda bisa langsung mencatat pengeluaran atau pemasukan secepat mengirim chat atau pesan suara Voice Note!\n\n*Contoh Format:*\n• `makan siang 35000`\n• `kopi 25rb kategori hiburan`\n• `beli bensin 50.000 kemarin`\n• `gaji bulanan 8.000.000`\n\n*Perintah Tersedia:*\n• 💰 *Cek Saldo* — Cek saldo seluruh dompet & rekening\n• 📊 *Rekap Bulan Ini* — Ringkasan keuangan bulan berjalan\n• 📋 */riwayat* — Lihat 5 transaksi terakhir & tombol hapus cepat\n• 🗑️ */hapus <ID>* — Hapus transaksi tertentu (misal: `/hapus 9`)\n• ✏️ */edit <ID> <catatan> <nominal>* — Ubah transaksi (misal: `/edit 9 beli kopi 37rb`)\n• 🗑️ */batal* — Batalkan transaksi paling terakhir\n• /putus — Putuskan hubungan akun dari bot"
         );
     }
 
@@ -717,9 +978,18 @@ class TelegramBotService
         $dateFormatted = $transaction->transaction_date ? $transaction->transaction_date->format('d/m/Y') : date('d/m/Y');
         $voicePrefix = $isVoice ? "🎙️ *Suara Terdeteksi:* \"_{$text}_\"\n\n" : '';
 
+        $inlineMarkup = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '🗑️ Batalkan Transaksi Ini', 'callback_data' => "del_trx:{$transaction->id}"],
+                ],
+            ],
+        ];
+
         $this->sendMessage(
             $chatId,
-            "{$voicePrefix}✅ *{$typeLabel} Berhasil Dicatat!*\n\n• *Catatan:* {$note}\n• *Nominal:* Rp {$formattedAmount}\n• *Kategori:* {$category->name}\n• *Akun:* {$accountName}\n• *Tanggal:* {$dateFormatted}\n\n💰 *Sisa Saldo {$accountName}:* {$newBalance}\n\n_(Salah catat? Ketik /batal untuk membatalkan)_"
+            "{$voicePrefix}✅ *{$typeLabel} Berhasil Dicatat!*\n\n• *ID Transaksi:* #{$transaction->id}\n• *Catatan:* {$note}\n• *Nominal:* Rp {$formattedAmount}\n• *Kategori:* {$category->name}\n• *Akun:* {$accountName}\n• *Tanggal:* {$dateFormatted}\n\n💰 *Sisa Saldo {$accountName}:* {$newBalance}\n\n_(Salah catat? Klik tombol di bawah atau ketik /hapus {$transaction->id})_",
+            $inlineMarkup
         );
     }
 
