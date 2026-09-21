@@ -7,6 +7,7 @@ use App\Models\Household;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -329,6 +330,16 @@ class TelegramBotService
      */
     public function handleUpdate(array $update): void
     {
+        $updateId = $update['update_id'] ?? null;
+        if ($updateId !== null) {
+            $updateLockKey = "telegram:update_processed:{$updateId}";
+            if (! Cache::add($updateLockKey, true, now()->addHours(1))) {
+                Log::info("TelegramBotService: Update #{$updateId} already processed, skipping duplicate.");
+
+                return;
+            }
+        }
+
         // Handle inline keyboard button clicks
         if (isset($update['callback_query'])) {
             $this->handleCallbackQuery($update['callback_query']);
@@ -344,6 +355,16 @@ class TelegramBotService
         $chatId = (string) ($message['chat']['id'] ?? '');
         if ($chatId === '') {
             return;
+        }
+
+        $messageId = $message['message_id'] ?? null;
+        if ($messageId !== null) {
+            $msgLockKey = "telegram:msg_processed:{$chatId}:{$messageId}";
+            if (! Cache::add($msgLockKey, true, now()->addHours(1))) {
+                Log::info("TelegramBotService: Message {$chatId}:{$messageId} already processed, skipping duplicate.");
+
+                return;
+            }
         }
 
         // Handle voice or audio messages
@@ -374,6 +395,16 @@ class TelegramBotService
 
     protected function handleVoiceMessage(string $chatId, array $voice): void
     {
+        $fileUniqueId = $voice['file_unique_id'] ?? $voice['file_id'] ?? null;
+        if ($fileUniqueId !== null) {
+            $voiceLockKey = "telegram:voice_processed:{$chatId}:{$fileUniqueId}";
+            if (! Cache::add($voiceLockKey, true, now()->addHours(1))) {
+                Log::info("TelegramBotService: Voice file {$fileUniqueId} already processed, skipping duplicate.");
+
+                return;
+            }
+        }
+
         $user = User::where('telegram_chat_id', $chatId)->first();
         if (! $user) {
             $this->promptUnlinked($chatId);
