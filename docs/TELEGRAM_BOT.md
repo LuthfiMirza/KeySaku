@@ -26,6 +26,7 @@ TELEGRAM_BOT_TOKEN=your_bot_token_from_botfather
 TELEGRAM_BOT_USERNAME=Keysaku_bot
 TELEGRAM_WEBHOOK_SECRET=optional_secret_token
 GEMINI_API_KEY=optional_key_for_voice_note_transcription
+GEMINI_MODEL=gemini-3.5-flash-lite
 GROQ_API_KEY=optional_key_for_groq_whisper
 ```
 
