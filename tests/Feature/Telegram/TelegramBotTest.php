@@ -287,4 +287,46 @@ class TelegramBotTest extends TestCase
             'source' => Transaction::SOURCE_TELEGRAM,
         ]);
     }
+
+    public function test_telegram_webhook_command_info(): void
+    {
+        Http::fake([
+            '*getWebhookInfo*' => Http::response([
+                'ok' => true,
+                'result' => [
+                    'url' => 'https://example.com/webhook',
+                    'pending_update_count' => 0,
+                ],
+            ], 200),
+        ]);
+
+        $this->artisan('telegram:webhook', ['action' => 'info'])
+            ->assertSuccessful();
+    }
+
+    public function test_telegram_webhook_command_set(): void
+    {
+        Http::fake([
+            '*setWebhook*' => Http::response([
+                'ok' => true,
+                'description' => 'Webhook was set',
+            ], 200),
+        ]);
+
+        $this->artisan('telegram:webhook', ['action' => 'set', '--url' => 'https://example.com/hook'])
+            ->assertSuccessful();
+    }
+
+    public function test_telegram_webhook_command_delete(): void
+    {
+        Http::fake([
+            '*deleteWebhook*' => Http::response([
+                'ok' => true,
+                'description' => 'Webhook was deleted',
+            ], 200),
+        ]);
+
+        $this->artisan('telegram:webhook', ['action' => 'delete'])
+            ->assertSuccessful();
+    }
 }
