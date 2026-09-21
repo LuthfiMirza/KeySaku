@@ -3,43 +3,28 @@
 Dokumen ini menjelaskan pola input suara yang saat ini didukung oleh MVP KeySaku.
 
 ## Status
-- Input suara saat ini hanya untuk transaksi pengeluaran.
-- Pengguna tetap harus mengecek preview sebelum menyimpan transaksi.
-- Transkrip bisa diedit manual sebelum diproses.
-- Transaksi yang disimpan dari halaman ini memakai `source = voice` dan menyimpan transkrip di `raw_voice_text`.
+- Mendukung input pengeluaran dan pemasukan.
+- Mendukung input suara via Web Speech API (PWA / Browser) dan via Telegram Bot (@Keysaku_bot).
+- Mendukung kata keterangan tanggal natural seperti "hari ini", "kemarin", dan "kemaren".
+- Transaksi yang disimpan memakai `source = voice` dan menyimpan transkrip di `raw_voice_text`.
 
 ## Format yang Didukung
-Gunakan pola sederhana:
+Gunakan pola natural sehari-hari:
 
 ```text
-[keterangan pengeluaran] [nominal] kategori [nama kategori]
+[keterangan transaksi] [nominal] kategori [nama kategori]
 ```
 
-Contoh:
+Contoh Pengeluaran:
 - “Beli nasi goreng dua puluh lima ribu kategori makanan”
-- “Bayar parkir lima ribu kategori transportasi”
+- “Bayar parkir lima ribu kemarin”
 - “Belanja dapur 150.000 kategori belanja dapur”
 - “Beli obat tiga puluh ribu kategori kesehatan”
 
-## Nominal yang Didukung
-Parser MVP mendukung:
-- Angka biasa, misalnya `25000`
-- Angka ribuan dengan titik, misalnya `25.000` atau `150.000`
-- Bentuk `rb` atau `ribu`, misalnya `25rb` atau `25 ribu`
-- Beberapa nominal kata sederhana, misalnya `lima ribu`, `dua puluh lima ribu`, dan `tiga puluh ribu`
+Contoh Pemasukan:
+- “Gaji bulanan delapan juta”
+- “Terima bonus proyek 500rb”
 
-## Kategori
-Kategori harus disebut setelah kata `kategori`, misalnya:
-
-```text
-kategori makanan
-```
-
-Nama kategori harus cocok dengan kategori pengeluaran milik pengguna.
-
-## Batasan MVP
-- Belum mendukung input pemasukan via suara.
-- Belum mendukung transfer via suara.
-- Belum mendukung tanggal natural seperti “kemarin” atau “minggu lalu”.
-- Belum mendukung parsing kalimat bebas yang kompleks.
-- Jika hasil parser belum tepat, gunakan edit transkrip atau input manual.
+## Integrasi Telegram Voice
+- **Keyboard Dictation:** Tekan ikon mic pada keyboard HP saat mengetik pesan ke @Keysaku_bot.
+- **Voice Note (.oga):** Kirim VN langsung ke bot dengan backend transkripsi Google Gemini Flash API (`GEMINI_API_KEY`).
