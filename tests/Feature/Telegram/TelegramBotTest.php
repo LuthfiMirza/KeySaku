@@ -11,6 +11,7 @@ use App\Services\TelegramBotService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -287,6 +288,46 @@ class TelegramBotTest extends TestCase
             'amount' => 50000,
             'source' => Transaction::SOURCE_TELEGRAM,
         ]);
+    }
+
+    public function test_duplicate_update_is_deduplicated_by_service(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        $update = [
+            'update_id' => 999111,
+            'message' => [
+                'message_id' => 456,
+                'chat' => ['id' => 999888],
+                'from' => ['first_name' => 'Luthfi'],
+                'text' => 'beli bensin 40000',
+            ],
+        ];
+
+        $service = app(TelegramBotService::class);
+
+        // Process first time
+        $service->handleUpdate($update);
+
+        // Process duplicate
+        $service->handleUpdate($update);
+
+        // Must only be recorded once
+        $this->assertEquals(1, Transaction::where('note', 'beli bensin')->count());
+    }
+
+    public function test_telegram_poll_command_warns_when_another_instance_running(): void
+    {
+        $lock = Cache::lock('telegram:poll:single_instance_lock', 60);
+        $lock->get();
+
+        try {
+            $this->artisan('telegram:poll', ['--once' => true])
+                ->expectsOutputToContain('Instance telegram:poll lain sudah berjalan aktif')
+                ->assertSuccessful();
+        } finally {
+            $lock->release();
+        }
     }
 
     public function test_telegram_webhook_command_info(): void
