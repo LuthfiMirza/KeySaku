@@ -13,6 +13,7 @@
                 ['icon' => '🏦', 'label' => 'Akun Keuangan', 'href' => route('accounts')],
                 ['icon' => '🏷️', 'label' => 'Kategori Transaksi', 'href' => route('categories')],
                 ['icon' => '🔔', 'label' => 'Notifikasi', 'href' => route('settings.notifications')],
+                ['icon' => '✈️', 'label' => 'Integrasi Telegram', 'href' => route('settings.telegram')],
                 ['icon' => '💱', 'label' => 'Mata Uang', 'href' => route('settings.currency')],
                 ['icon' => '💰', 'label' => 'Saldo Awal', 'href' => route('settings.initial-balance')],
                 ['icon' => '👨‍👩‍👧', 'label' => 'Anggota Keluarga', 'href' => route('settings.household')],

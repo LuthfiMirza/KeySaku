@@ -5,11 +5,13 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TelegramWebhookController;
+use App\Http\Middleware\EnsureHouseholdExists;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/welcome', '/login')->name('welcome');
 
-Route::middleware(['auth', \App\Http\Middleware\EnsureHouseholdExists::class])->group(function () {
+Route::middleware(['auth', EnsureHouseholdExists::class])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/anggaran', [PageController::class, 'budgets'])->name('budgets.index');
     Route::get('/tabungan', [PageController::class, 'goals'])->name('savings.index');
@@ -36,9 +38,15 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureHouseholdExists::class])->
     Route::get('/transaksi/tambah', [PageController::class, 'createTransaction'])->name('transactions.create');
     Route::get('/transaksi/{transaction}/edit', [PageController::class, 'editTransaction'])->name('transactions.edit');
 
+    Route::get('/pengaturan/telegram', [PageController::class, 'telegramSettings'])->name('settings.telegram');
+    Route::post('/pengaturan/telegram/unlink', [PageController::class, 'unlinkTelegram'])->name('settings.telegram.unlink');
+    Route::post('/pengaturan/telegram/token', [PageController::class, 'regenerateTelegramToken'])->name('settings.telegram.token');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::post('/api/telegram/webhook', [TelegramWebhookController::class, 'handle'])->name('telegram.webhook');
 
 require __DIR__.'/auth.php';

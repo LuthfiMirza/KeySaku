@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -120,7 +121,6 @@ class PageController extends Controller
         return view('pages.transactions.create');
     }
 
-
     public function editTransaction(Transaction $transaction): View
     {
         abort_unless(auth()->user()->can('view', $transaction), 404);
@@ -128,5 +128,36 @@ class PageController extends Controller
         return view('pages.transactions.edit', [
             'transaction' => $transaction,
         ]);
+    }
+
+    public function telegramSettings(): View
+    {
+        $user = auth()->user();
+        $token = $user->generateTelegramLinkToken();
+        $botUsername = config('telegram.bot_username', 'Keysaku_bot');
+        $linkUrl = "https://t.me/{$botUsername}?start={$token}";
+
+        return view('pages.settings.telegram', [
+            'user' => $user,
+            'token' => $token,
+            'botUsername' => $botUsername,
+            'linkUrl' => $linkUrl,
+        ]);
+    }
+
+    public function unlinkTelegram(Request $request): RedirectResponse
+    {
+        $request->user()->unlinkTelegramChat();
+
+        return back()->with('settings_status', 'Akun Telegram berhasil diputuskan.');
+    }
+
+    public function regenerateTelegramToken(Request $request): RedirectResponse
+    {
+        $request->user()->forceFill([
+            'telegram_link_token' => Str::random(32),
+        ])->save();
+
+        return back()->with('settings_status', 'Token tautan Telegram berhasil diperbarui.');
     }
 }
