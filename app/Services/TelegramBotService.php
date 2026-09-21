@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Models\Category;
+use App\Models\Household;
 use App\Models\Transaction;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -360,7 +362,7 @@ class TelegramBotService
         // Handle button shortcuts or slash commands
         $lower = strtolower($text);
         if (str_starts_with($text, '/')
-            || in_array($lower, ['💰 cek saldo', 'cek saldo', 'saldo', '📊 rekap bulan ini', 'rekap bulan ini', 'rekap', '📋 riwayat', 'riwayat', 'riwayat transaksi', '🗑️ batalkan transaksi', 'batalkan transaksi', 'batal', '❓ bantuan', 'bantuan', 'panduan'])) {
+            || in_array($lower, ['💰 cek saldo', 'cek saldo', 'saldo', '📊 rekap bulan ini', 'rekap bulan ini', 'rekap', '📅 rekap hari ini', 'hari ini', 'rekap harian', 'harian', '📆 rekap minggu ini', 'minggu ini', 'rekap mingguan', 'mingguan', '📋 riwayat', 'riwayat', 'riwayat transaksi', '🗑️ batalkan transaksi', 'batalkan transaksi', 'batal', '❓ bantuan', 'bantuan', 'panduan'])) {
             $this->handleCommand($chatId, $text);
 
             return;
@@ -416,6 +418,18 @@ class TelegramBotService
 
         if (str_contains($cleanText, 'saldo')) {
             $this->handleSaldoCommand($chatId);
+
+            return;
+        }
+
+        if (str_contains($cleanText, 'hari ini') || str_contains($cleanText, 'hariini') || str_contains($cleanText, 'harian') || $cleanText === '/hariini' || $cleanText === '/harian') {
+            $this->handleRekapHarianCommand($chatId);
+
+            return;
+        }
+
+        if (str_contains($cleanText, 'minggu ini') || str_contains($cleanText, 'mingguini') || str_contains($cleanText, 'mingguan') || $cleanText === '/mingguini' || $cleanText === '/mingguan') {
+            $this->handleRekapMingguanCommand($chatId);
 
             return;
         }
@@ -558,22 +572,163 @@ class TelegramBotService
         );
     }
 
-    protected function handleRekapCommand(string $chatId): void
+    public function rekapPeriodKeyboard(string $activePeriod = 'monthly'): array
     {
-        $user = User::where('telegram_chat_id', $chatId)->first();
-        if (! $user) {
-            $this->promptUnlinked($chatId);
+        return [
+            'inline_keyboard' => [
+                [
+                    ['text' => ($activePeriod === 'daily' ? '🔘 ' : '').'📅 Hari Ini', 'callback_data' => 'rekap:daily'],
+                    ['text' => ($activePeriod === 'weekly' ? '🔘 ' : '').'📆 Minggu Ini', 'callback_data' => 'rekap:weekly'],
+                    ['text' => ($activePeriod === 'monthly' ? '🔘 ' : '').'📊 Bulan Ini', 'callback_data' => 'rekap:monthly'],
+                ],
+            ],
+        ];
+    }
 
-            return;
+    public function getRekapHarianText(Household $household): string
+    {
+        $dateFormatted = now()->translatedFormat('l, d F Y');
+        $today = now()->toDateString();
+
+        $transactions = Transaction::where('household_id', $household->id)
+            ->whereDate('transaction_date', $today)
+            ->with('category')
+            ->latest('id')
+            ->get();
+
+        $incomeTotal = (float) $transactions->where('type', Transaction::TYPE_INCOME)->sum('amount');
+        $expenseTotal = (float) $transactions->where('type', Transaction::TYPE_EXPENSE)->sum('amount');
+        $surplus = $incomeTotal - $expenseTotal;
+
+        $formattedIncome = number_format($incomeTotal, 0, ',', '.');
+        $formattedExpense = number_format($expenseTotal, 0, ',', '.');
+        $formattedSurplus = number_format(abs($surplus), 0, ',', '.');
+        $surplusLabel = $surplus >= 0 ? 'Surplus Hari Ini' : 'Defisit Hari Ini';
+        $surplusEmoji = $surplus >= 0 ? '🟢' : '🔴';
+
+        if ($transactions->isEmpty()) {
+            return "📅 *Rekap Harian — {$dateFormatted}*\n\nBelum ada transaksi yang dicatat untuk hari ini.\n\n💡 _Kirim chat atau pesan suara untuk mencatat transaksi hari ini!_";
         }
 
-        $household = $user->household;
-        if (! $household) {
-            $this->sendMessage($chatId, '⚠️ Akun Anda belum memiliki keluarga/household di KeySaku.');
-
-            return;
+        $trxLines = [];
+        foreach ($transactions as $t) {
+            $typeEmoji = $t->type === Transaction::TYPE_INCOME ? '🟢' : '🔴';
+            $amt = number_format((float) $t->amount, 0, ',', '.');
+            $cat = $t->category?->name ?? 'Lainnya';
+            $sourceIcon = $t->source === Transaction::SOURCE_VOICE ? '🎙️ ' : '';
+            $trxLines[] = "• {$sourceIcon}*{$t->note}* — {$typeEmoji} Rp {$amt} ({$cat})";
         }
 
+        $expenseTransactions = $transactions->where('type', Transaction::TYPE_EXPENSE);
+        $byCategory = $expenseTransactions->groupBy('category_id')->map(function ($group) {
+            return [
+                'name' => $group->first()->category?->name ?? 'Lainnya',
+                'icon' => $group->first()->category?->icon ?? '🏷️',
+                'amount' => (float) $group->sum('amount'),
+            ];
+        })->sortByDesc('amount')->take(3);
+
+        $categoryLines = [];
+        $rank = 1;
+        foreach ($byCategory as $cat) {
+            $catAmount = $cat['amount'];
+            $pct = $expenseTotal > 0 ? (int) round(($catAmount / $expenseTotal) * 100) : 0;
+            $filledBars = (int) round(($pct / 100) * 8);
+            $emptyBars = max(0, 8 - $filledBars);
+            $bar = str_repeat('█', $filledBars).str_repeat('░', $emptyBars);
+            $formattedCatAmount = number_format($catAmount, 0, ',', '.');
+
+            $categoryLines[] = "{$rank}. {$cat['icon']} *{$cat['name']}*: Rp {$formattedCatAmount} ({$pct}%)\n   `[{$bar}]`";
+            $rank++;
+        }
+
+        $detailSection = "\n\n📝 *Rincian Transaksi Hari Ini:*\n".implode("\n", $trxLines);
+        $categorySection = ! empty($categoryLines) ? "\n\n🏷️ *Kategori Pengeluaran Hari Ini:*\n".implode("\n", $categoryLines) : '';
+
+        return "📅 *Rekap Harian — {$dateFormatted}*\n\n📈 *Pemasukan:* Rp {$formattedIncome}\n📉 *Pengeluaran:* Rp {$formattedExpense} ({$transactions->count()} transaksi)\n━━━━━━━━━━━━━━━━━━━━\n{$surplusEmoji} *{$surplusLabel}:* Rp {$formattedSurplus}{$detailSection}{$categorySection}";
+    }
+
+    public function getRekapMingguanText(Household $household): string
+    {
+        $startOfWeek = now()->startOfWeek();
+        $endOfWeek = now()->endOfWeek();
+        $rangeLabel = $startOfWeek->translatedFormat('d M').' - '.$endOfWeek->translatedFormat('d M Y');
+
+        $transactions = Transaction::where('household_id', $household->id)
+            ->whereBetween('transaction_date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])
+            ->with('category')
+            ->latest('transaction_date')
+            ->get();
+
+        $incomeTotal = (float) $transactions->where('type', Transaction::TYPE_INCOME)->sum('amount');
+        $expenseTotal = (float) $transactions->where('type', Transaction::TYPE_EXPENSE)->sum('amount');
+        $surplus = $incomeTotal - $expenseTotal;
+
+        $formattedIncome = number_format($incomeTotal, 0, ',', '.');
+        $formattedExpense = number_format($expenseTotal, 0, ',', '.');
+        $formattedSurplus = number_format(abs($surplus), 0, ',', '.');
+        $surplusLabel = $surplus >= 0 ? 'Surplus Pekan Ini' : 'Defisit Pekan Ini';
+        $surplusEmoji = $surplus >= 0 ? '🟢' : '🔴';
+
+        if ($transactions->isEmpty()) {
+            return "📆 *Rekap Mingguan — {$rangeLabel}*\n\nBelum ada transaksi yang dicatat untuk pekan ini.\n\n💡 _Kirim chat atau pesan suara untuk mencatat transaksi!_";
+        }
+
+        $daysOfWeek = [
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+            7 => 'Minggu',
+        ];
+
+        $expenseTransactions = $transactions->where('type', Transaction::TYPE_EXPENSE);
+        $dailyLines = [];
+        $expensesByDay = $expenseTransactions->groupBy(function ($t) {
+            return Carbon::parse($t->transaction_date)->dayOfWeekIso;
+        });
+
+        foreach ($daysOfWeek as $dayNum => $dayName) {
+            $dayTrxs = $expensesByDay->get($dayNum, collect());
+            if ($dayTrxs->isNotEmpty()) {
+                $dayTotal = (float) $dayTrxs->sum('amount');
+                $dailyLines[] = "• *{$dayName}:* Rp ".number_format($dayTotal, 0, ',', '.')." ({$dayTrxs->count()} transaksi)";
+            }
+        }
+
+        $dailySection = ! empty($dailyLines) ? "\n\n📆 *Pengeluaran Harian Pekan Ini:*\n".implode("\n", $dailyLines) : '';
+
+        $byCategory = $expenseTransactions->groupBy('category_id')->map(function ($group) {
+            return [
+                'name' => $group->first()->category?->name ?? 'Lainnya',
+                'icon' => $group->first()->category?->icon ?? '🏷️',
+                'amount' => (float) $group->sum('amount'),
+            ];
+        })->sortByDesc('amount')->take(3);
+
+        $categoryLines = [];
+        $rank = 1;
+        foreach ($byCategory as $cat) {
+            $catAmount = $cat['amount'];
+            $pct = $expenseTotal > 0 ? (int) round(($catAmount / $expenseTotal) * 100) : 0;
+            $filledBars = (int) round(($pct / 100) * 8);
+            $emptyBars = max(0, 8 - $filledBars);
+            $bar = str_repeat('█', $filledBars).str_repeat('░', $emptyBars);
+            $formattedCatAmount = number_format($catAmount, 0, ',', '.');
+
+            $categoryLines[] = "{$rank}. {$cat['icon']} *{$cat['name']}*: Rp {$formattedCatAmount} ({$pct}%)\n   `[{$bar}]`";
+            $rank++;
+        }
+
+        $categorySection = ! empty($categoryLines) ? "\n\n🏷️ *Kategori Terbesar Pekan Ini:*\n".implode("\n", $categoryLines) : '';
+
+        return "📆 *Rekap Mingguan — {$rangeLabel}*\n\n📈 *Pemasukan:* Rp {$formattedIncome}\n📉 *Pengeluaran:* Rp {$formattedExpense} ({$transactions->count()} transaksi)\n━━━━━━━━━━━━━━━━━━━━\n{$surplusEmoji} *{$surplusLabel}:* Rp {$formattedSurplus}{$dailySection}{$categorySection}";
+    }
+
+    public function getRekapBulananText(Household $household): string
+    {
         $start = now()->startOfMonth();
         $end = now()->endOfMonth();
         $monthName = now()->translatedFormat('F Y');
@@ -621,9 +776,75 @@ class TelegramBotService
             $categorySection = "\n\n🏷️ *Pengeluaran Terbesar:*\n".implode("\n", $categoryLines);
         }
 
+        return "📊 *Rekap Keuangan — {$monthName}*\n\n📈 *Pemasukan:* Rp {$formattedIncome}\n📉 *Pengeluaran:* Rp {$formattedExpense}\n━━━━━━━━━━━━━━━━━━━━\n{$surplusEmoji} *{$surplusPrefix}:* Rp {$formattedSurplus}{$categorySection}\n\n_Gunakan tombol di bawah untuk navigasi periode._";
+    }
+
+    protected function handleRekapCommand(string $chatId): void
+    {
+        $user = User::where('telegram_chat_id', $chatId)->first();
+        if (! $user) {
+            $this->promptUnlinked($chatId);
+
+            return;
+        }
+
+        $household = $user->household;
+        if (! $household) {
+            $this->sendMessage($chatId, '⚠️ Akun Anda belum memiliki keluarga/household di KeySaku.');
+
+            return;
+        }
+
         $this->sendMessage(
             $chatId,
-            "📊 *Rekap Keuangan — {$monthName}*\n\n📈 *Pemasukan:* Rp {$formattedIncome}\n📉 *Pengeluaran:* Rp {$formattedExpense}\n━━━━━━━━━━━━━━━━━━━━\n{$surplusEmoji} *{$surplusPrefix}:* Rp {$formattedSurplus}{$categorySection}\n\n_Gunakan tombol di bawah untuk navigasi cepat._"
+            $this->getRekapBulananText($household),
+            $this->rekapPeriodKeyboard('monthly')
+        );
+    }
+
+    protected function handleRekapHarianCommand(string $chatId): void
+    {
+        $user = User::where('telegram_chat_id', $chatId)->first();
+        if (! $user) {
+            $this->promptUnlinked($chatId);
+
+            return;
+        }
+
+        $household = $user->household;
+        if (! $household) {
+            $this->sendMessage($chatId, '⚠️ Akun Anda belum memiliki keluarga/household di KeySaku.');
+
+            return;
+        }
+
+        $this->sendMessage(
+            $chatId,
+            $this->getRekapHarianText($household),
+            $this->rekapPeriodKeyboard('daily')
+        );
+    }
+
+    protected function handleRekapMingguanCommand(string $chatId): void
+    {
+        $user = User::where('telegram_chat_id', $chatId)->first();
+        if (! $user) {
+            $this->promptUnlinked($chatId);
+
+            return;
+        }
+
+        $household = $user->household;
+        if (! $household) {
+            $this->sendMessage($chatId, '⚠️ Akun Anda belum memiliki keluarga/household di KeySaku.');
+
+            return;
+        }
+
+        $this->sendMessage(
+            $chatId,
+            $this->getRekapMingguanText($household),
+            $this->rekapPeriodKeyboard('weekly')
         );
     }
 
@@ -829,6 +1050,57 @@ class TelegramBotService
         $data = (string) ($callbackQuery['data'] ?? '');
         $chatId = (string) ($callbackQuery['message']['chat']['id'] ?? '');
         $messageId = (int) ($callbackQuery['message']['message_id'] ?? 0);
+
+        if ($data === 'rekap:daily') {
+            $user = User::where('telegram_chat_id', $chatId)->first();
+            if ($user && $user->household) {
+                $this->answerCallbackQuery($queryId);
+                if ($messageId > 0) {
+                    $this->editMessageText(
+                        $chatId,
+                        $messageId,
+                        $this->getRekapHarianText($user->household),
+                        $this->rekapPeriodKeyboard('daily')
+                    );
+                }
+            }
+
+            return;
+        }
+
+        if ($data === 'rekap:weekly') {
+            $user = User::where('telegram_chat_id', $chatId)->first();
+            if ($user && $user->household) {
+                $this->answerCallbackQuery($queryId);
+                if ($messageId > 0) {
+                    $this->editMessageText(
+                        $chatId,
+                        $messageId,
+                        $this->getRekapMingguanText($user->household),
+                        $this->rekapPeriodKeyboard('weekly')
+                    );
+                }
+            }
+
+            return;
+        }
+
+        if ($data === 'rekap:monthly') {
+            $user = User::where('telegram_chat_id', $chatId)->first();
+            if ($user && $user->household) {
+                $this->answerCallbackQuery($queryId);
+                if ($messageId > 0) {
+                    $this->editMessageText(
+                        $chatId,
+                        $messageId,
+                        $this->getRekapBulananText($user->household),
+                        $this->rekapPeriodKeyboard('monthly')
+                    );
+                }
+            }
+
+            return;
+        }
 
         if (str_starts_with($data, 'del_trx:')) {
             $transactionId = (int) str_replace('del_trx:', '', $data);
