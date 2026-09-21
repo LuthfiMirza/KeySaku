@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\TelegramBotService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\Factory;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -328,5 +329,133 @@ class TelegramBotTest extends TestCase
 
         $this->artisan('telegram:webhook', ['action' => 'delete'])
             ->assertSuccessful();
+    }
+
+    public function test_linked_user_can_get_rekap_overview(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        Transaction::create([
+            'user_id' => $this->user->id,
+            'household_id' => $this->household->id,
+            'category_id' => $this->expenseCategory->id,
+            'account_id' => $this->account->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 150000,
+            'transaction_date' => now()->toDateString(),
+            'note' => 'Belanja mingguan',
+            'source' => Transaction::SOURCE_TELEGRAM,
+        ]);
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 10,
+            'message' => [
+                'message_id' => 110,
+                'chat' => ['id' => 999888],
+                'from' => ['first_name' => 'Luthfi'],
+                'text' => '/rekap',
+            ],
+        ]);
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'sendMessage')
+                && str_contains($request['text'], 'Rekap Keuangan')
+                && str_contains($request['text'], 'Pengeluaran');
+        });
+    }
+
+    public function test_keyboard_shortcut_routes_correctly(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 11,
+            'message' => [
+                'message_id' => 111,
+                'chat' => ['id' => 999888],
+                'from' => ['first_name' => 'Luthfi'],
+                'text' => '💰 Cek Saldo',
+            ],
+        ]);
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'sendMessage')
+                && str_contains($request['text'], 'Saldo Akun KeySaku');
+        });
+    }
+
+    public function test_voice_note_without_api_key_returns_instructions(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 12,
+            'message' => [
+                'message_id' => 112,
+                'chat' => ['id' => 999888],
+                'from' => ['first_name' => 'Luthfi'],
+                'voice' => [
+                    'file_id' => 'fake_voice_file_id',
+                    'duration' => 3,
+                ],
+            ],
+        ]);
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'sendMessage')
+                && str_contains($request['text'], 'Pesan suara diterima');
+        });
+    }
+
+    public function test_voice_note_with_gemini_transcription(): void
+    {
+        $this->user->linkTelegramChat('999888');
+        config()->set('telegram.gemini_api_key', 'fake_gemini_key');
+
+        Http::swap(new Factory);
+        Http::fake([
+            '*getFile*' => Http::response([
+                'ok' => true,
+                'result' => [
+                    'file_path' => 'voice/file_123.oga',
+                ],
+            ], 200),
+            '*file/bot*/*' => Http::response('fake_audio_binary', 200),
+            '*generativelanguage.googleapis.com*' => Http::response([
+                'candidates' => [
+                    [
+                        'content' => [
+                            'parts' => [
+                                ['text' => 'beli bensin 40.000'],
+                            ],
+                        ],
+                    ],
+                ],
+            ], 200),
+            '*sendMessage*' => Http::response(['ok' => true, 'result' => ['message_id' => 124]], 200),
+        ]);
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 13,
+            'message' => [
+                'message_id' => 113,
+                'chat' => ['id' => 999888],
+                'from' => ['first_name' => 'Luthfi'],
+                'voice' => [
+                    'file_id' => 'fake_voice_file_id',
+                    'duration' => 3,
+                ],
+            ],
+        ]);
+
+        $this->assertDatabaseHas('transactions', [
+            'user_id' => $this->user->id,
+            'amount' => 40000,
+            'source' => Transaction::SOURCE_VOICE,
+        ]);
     }
 }
