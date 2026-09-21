@@ -514,4 +514,213 @@ class TelegramBotTest extends TestCase
             'source' => Transaction::SOURCE_VOICE,
         ]);
     }
+
+    public function test_user_can_view_transaction_riwayat(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        Transaction::create([
+            'user_id' => $this->user->id,
+            'household_id' => $this->household->id,
+            'category_id' => $this->expenseCategory->id,
+            'account_id' => $this->account->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 37000,
+            'transaction_date' => now()->toDateString(),
+            'note' => 'beli koper',
+            'source' => Transaction::SOURCE_VOICE,
+        ]);
+
+        $capturedText = '';
+        Http::swap(new Factory);
+        Http::fake([
+            '*sendMessage*' => function ($request) use (&$capturedText) {
+                $capturedText = $request['text'] ?? '';
+
+                return Http::response(['ok' => true, 'result' => ['message_id' => 126]], 200);
+            },
+        ]);
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 15,
+            'message' => [
+                'message_id' => 115,
+                'chat' => ['id' => 999888],
+                'text' => '/riwayat',
+            ],
+        ]);
+
+        $this->assertStringContainsString('5 Transaksi Terakhir', $capturedText);
+        $this->assertStringContainsString('beli koper', $capturedText);
+        $this->assertStringContainsString('37.000', $capturedText);
+    }
+
+    public function test_user_can_delete_specific_transaction_by_id_via_hapus_command(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        $trx = Transaction::create([
+            'user_id' => $this->user->id,
+            'household_id' => $this->household->id,
+            'category_id' => $this->expenseCategory->id,
+            'account_id' => $this->account->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 37000,
+            'transaction_date' => now()->toDateString(),
+            'note' => 'beli koper',
+            'source' => Transaction::SOURCE_VOICE,
+        ]);
+
+        Http::swap(new Factory);
+        Http::fake(['*sendMessage*' => Http::response(['ok' => true, 'result' => ['message_id' => 127]], 200)]);
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 16,
+            'message' => [
+                'message_id' => 116,
+                'chat' => ['id' => 999888],
+                'text' => "/hapus {$trx->id}",
+            ],
+        ]);
+
+        $this->assertSoftDeleted('transactions', [
+            'id' => $trx->id,
+        ]);
+    }
+
+    public function test_user_can_edit_transaction_via_edit_command(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        $trx = Transaction::create([
+            'user_id' => $this->user->id,
+            'household_id' => $this->household->id,
+            'category_id' => $this->expenseCategory->id,
+            'account_id' => $this->account->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 37000,
+            'transaction_date' => now()->toDateString(),
+            'note' => 'beli koper',
+            'source' => Transaction::SOURCE_VOICE,
+        ]);
+
+        $capturedText = '';
+        Http::swap(new Factory);
+        Http::fake([
+            '*sendMessage*' => function ($request) use (&$capturedText) {
+                $capturedText = $request['text'] ?? '';
+
+                return Http::response(['ok' => true, 'result' => ['message_id' => 128]], 200);
+            },
+        ]);
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 17,
+            'message' => [
+                'message_id' => 117,
+                'chat' => ['id' => 999888],
+                'text' => "/edit {$trx->id} beli kopi susu 45000",
+            ],
+        ]);
+
+        $trx->refresh();
+        $this->assertEquals('beli kopi susu', $trx->note);
+        $this->assertEquals(45000, $trx->amount);
+        $this->assertStringContainsString('Berhasil Diperbarui', $capturedText);
+    }
+
+    public function test_user_can_delete_transaction_via_callback_query(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        $trx = Transaction::create([
+            'user_id' => $this->user->id,
+            'household_id' => $this->household->id,
+            'category_id' => $this->expenseCategory->id,
+            'account_id' => $this->account->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 37000,
+            'transaction_date' => now()->toDateString(),
+            'note' => 'beli koper',
+            'source' => Transaction::SOURCE_VOICE,
+        ]);
+
+        Http::swap(new Factory);
+        Http::fake([
+            '*answerCallbackQuery*' => Http::response(['ok' => true], 200),
+            '*editMessageText*' => Http::response(['ok' => true], 200),
+        ]);
+
+        $service = app(TelegramBotService::class);
+        $service->handleUpdate([
+            'update_id' => 18,
+            'callback_query' => [
+                'id' => 'cb_query_999',
+                'data' => "del_trx:{$trx->id}",
+                'message' => [
+                    'message_id' => 200,
+                    'chat' => ['id' => 999888],
+                ],
+            ],
+        ]);
+
+        $this->assertSoftDeleted('transactions', [
+            'id' => $trx->id,
+        ]);
+    }
+
+    public function test_user_cannot_delete_or_edit_another_household_transaction(): void
+    {
+        $this->user->linkTelegramChat('999888');
+
+        $otherUser = User::factory()->create();
+        $otherCategory = $otherUser->household->categories()->first();
+        $otherTrx = Transaction::create([
+            'user_id' => $otherUser->id,
+            'household_id' => $otherUser->household_id,
+            'category_id' => $otherCategory->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 100000,
+            'transaction_date' => now()->toDateString(),
+            'note' => 'transaksi orang lain',
+            'source' => Transaction::SOURCE_VOICE,
+        ]);
+
+        Http::swap(new Factory);
+        Http::fake(['*sendMessage*' => Http::response(['ok' => true], 200)]);
+
+        $service = app(TelegramBotService::class);
+
+        // Attempt /hapus cross-household
+        $service->handleUpdate([
+            'update_id' => 19,
+            'message' => [
+                'message_id' => 118,
+                'chat' => ['id' => 999888],
+                'text' => "/hapus {$otherTrx->id}",
+            ],
+        ]);
+
+        $this->assertDatabaseHas('transactions', [
+            'id' => $otherTrx->id,
+            'deleted_at' => null,
+        ]);
+
+        // Attempt /edit cross-household
+        $service->handleUpdate([
+            'update_id' => 20,
+            'message' => [
+                'message_id' => 119,
+                'chat' => ['id' => 999888],
+                'text' => "/edit {$otherTrx->id} bajak 50000",
+            ],
+        ]);
+
+        $otherTrx->refresh();
+        $this->assertEquals(100000, $otherTrx->amount);
+        $this->assertEquals('transaksi orang lain', $otherTrx->note);
+    }
 }
