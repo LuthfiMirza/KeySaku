@@ -39,13 +39,19 @@ GROQ_API_KEY=optional_key_for_groq_whisper
 - Token didapatkan dari menu Web: **Pengaturan > Integrasi Telegram**.
 - Mengaitkan `telegram_chat_id` secara aman ke akun `User`.
 
-### B. Interactive Menu Keyboard
+### B. Interactive Menu Keyboard & Rekap Finansial Multi-Periode
 - Tombol keyboard interaktif di bagian bawah layar:
   - `💰 Cek Saldo` ➔ Menampilkan saldo akun dan total saldo keluarga.
   - `📊 Rekap Bulan Ini` ➔ Ringkasan finansial bulanan dengan visual progress bar.
   - `📋 Riwayat` ➔ Menampilkan 5 transaksi terakhir lengkap dengan ID dan tombol aksi hapus cepat.
   - `🗑️ Batalkan Transaksi` ➔ Membatalkan transaksi terakhir (dalam 60 menit) dan memulihkan saldo akun.
   - `❓ Bantuan` ➔ Menampilkan panduan dan contoh format transaksi.
+
+- **Rekap Multi-Periode:**
+  - **Rekap Harian (`/hariini` / `rekap harian`):** Detail seluruh transaksi hari ini (itemized list, nominal, kategori, indikator suara 🎙️) beserta ringkasan pemasukan, pengeluaran, dan surplus harian.
+  - **Rekap Mingguan (`/mingguini` / `rekap mingguan`):** Ringkasan keuangan sepekan terakhir, breakdown pengeluaran hari demi hari (Senin s/d Minggu), dan 3 kategori pengeluaran terbesar dengan visual bar.
+  - **Rekap Bulanan (`/rekap` / `📊 Rekap Bulan Ini`):** Ringkasan keuangan bulan berjalan, persentase pengeluaran per kategori dengan ASCII progress bar (`[████░░░░]`).
+  - **Interactive Period Switcher:** Setiap rekap dilengkapi inline keyboard `[📅 Hari Ini] [📆 Minggu Ini] [📊 Bulan Ini]` untuk beralih tampilan periode secara instan di bubble chat yang sama (*in-place edit*).
 
 ### C. Natural Language Transaction Recording
 - Format pengeluaran: `makan siang 35.000` atau `kopi susu 25rb kategori hiburan`.
