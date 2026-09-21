@@ -27,4 +27,10 @@ Contoh Pemasukan:
 
 ## Integrasi Telegram Voice
 - **Keyboard Dictation:** Tekan ikon mic pada keyboard HP saat mengetik pesan ke @Keysaku_bot.
-- **Voice Note (.oga):** Kirim VN langsung ke bot dengan backend transkripsi Google Gemini Flash API (`GEMINI_API_KEY`).
+- **Voice Note (.oga):** Kirim VN langsung ke bot dengan backend transkripsi Google Gemini Flash API (`GEMINI_API_KEY`, model default `gemini-3.5-flash-lite`).
+- **Domain Priming:** Prompt transkripsi dioptimalkan untuk mengenali kosakata belanja harian Indonesia secara akurat (misal: "kopi" bukan "koper").
+- **Koreksi & Pembatalan:**
+  - Tombol inline `[🗑️ Batalkan Transaksi Ini]` di bawah setiap notifikasi transaksi suara.
+  - Perintah `/hapus <ID>` atau `/batal <ID>` untuk menghapus transaksi suara tertentu.
+  - Perintah `/edit <ID> <catatan> <nominal>` untuk mengubah teks/nominal tanpa menghapus.
+  - Menu `📋 Riwayat` untuk melihat 5 transaksi terakhir dan tombol hapus cepat.
