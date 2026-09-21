@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Transactions;
 
-use App\Models\Category;
 use App\Models\Transaction;
 use App\Services\VoiceTransactionParser;
 use Illuminate\Contracts\View\View;
@@ -33,7 +32,6 @@ class VoiceTransaction extends Component
         );
     }
 
-
     public function getCanSaveProperty(): bool
     {
         return $this->parsedDraft !== null
@@ -55,6 +53,7 @@ class VoiceTransaction extends Component
 
         if (! $this->parsedDraft || ! $this->canSave) {
             $this->addError('parsedDraft', $this->missingFieldsMessage());
+
             return null;
         }
 
@@ -84,6 +83,7 @@ class VoiceTransaction extends Component
 
         if ($amount <= 0 || $note === '') {
             $this->addError('parsedDraft', $this->missingFieldsMessage());
+
             return null;
         }
 
@@ -107,6 +107,20 @@ class VoiceTransaction extends Component
     public function clearParsedDraft(): void
     {
         $this->parsedDraft = null;
+    }
+
+    public function clearTranscript(): void
+    {
+        $this->originalTranscript = '';
+        $this->transcript = '';
+        $this->parsedDraft = null;
+        $this->resetValidation();
+    }
+
+    public function resetToOriginal(): void
+    {
+        $this->transcript = $this->originalTranscript;
+        $this->clearParsedDraft();
     }
 
     private function missingFieldsMessage(): string
