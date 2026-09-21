@@ -31,6 +31,26 @@ class TelegramBotService
         return ! empty($this->botToken());
     }
 
+    public function hasSpeechRecognition(): bool
+    {
+        return ! empty(config('telegram.gemini_api_key')) || ! empty(config('telegram.groq_api_key'));
+    }
+
+    /**
+     * Default interactive bottom keyboard markup.
+     */
+    public function defaultKeyboard(): array
+    {
+        return [
+            'keyboard' => [
+                [['text' => '💰 Cek Saldo'], ['text' => '📊 Rekap Bulan Ini']],
+                [['text' => '🗑️ Batalkan Transaksi'], ['text' => '❓ Bantuan']],
+            ],
+            'resize_keyboard' => true,
+            'is_persistent' => true,
+        ];
+    }
+
     /**
      * Send a text message to a Telegram chat.
      */
@@ -46,11 +66,8 @@ class TelegramBotService
             'chat_id' => $chatId,
             'text' => $text,
             'parse_mode' => 'Markdown',
+            'reply_markup' => $replyMarkup ?? $this->defaultKeyboard(),
         ];
-
-        if ($replyMarkup !== null) {
-            $payload['reply_markup'] = $replyMarkup;
-        }
 
         $response = Http::post("{$this->baseUrl()}/sendMessage", $payload);
 
@@ -94,6 +111,91 @@ class TelegramBotService
         ]);
 
         return [];
+    }
+
+    /**
+     * Download binary audio file from Telegram.
+     */
+    public function downloadTelegramFile(string $fileId): ?array
+    {
+        if (! $this->isConfigured()) {
+            return null;
+        }
+
+        $response = Http::get("{$this->baseUrl()}/getFile", ['file_id' => $fileId]);
+        if (! $response->successful()) {
+            return null;
+        }
+
+        $filePath = $response->json('result.file_path');
+        if (! $filePath) {
+            return null;
+        }
+
+        $base = rtrim(config('telegram.api_base_url', 'https://api.telegram.org'), '/');
+        $fileUrl = "{$base}/file/bot{$this->botToken()}/{$filePath}";
+
+        $fileResponse = Http::get($fileUrl);
+        if (! $fileResponse->successful()) {
+            return null;
+        }
+
+        return [
+            'data' => $fileResponse->body(),
+            'mime' => str_ends_with($filePath, '.mp3') ? 'audio/mp3' : 'audio/ogg',
+        ];
+    }
+
+    /**
+     * Transcribe speech audio to text using Gemini or Groq Whisper.
+     */
+    public function transcribeAudio(string $binaryData, string $mimeType = 'audio/ogg'): ?string
+    {
+        $geminiKey = config('telegram.gemini_api_key');
+        if (! empty($geminiKey)) {
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$geminiKey}";
+            $response = Http::timeout(25)->post($url, [
+                'contents' => [
+                    [
+                        'parts' => [
+                            [
+                                'inlineData' => [
+                                    'mimeType' => $mimeType,
+                                    'data' => base64_encode($binaryData),
+                                ],
+                            ],
+                            [
+                                'text' => 'Tuliskan hanya transkrip teks dari audio bahasa Indonesia ini tanpa tambahan kata atau tanda kutip.',
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
+
+            if ($response->successful()) {
+                $text = trim((string) $response->json('candidates.0.content.parts.0.text', ''));
+
+                return $text !== '' ? $text : null;
+            }
+        }
+
+        $groqKey = config('telegram.groq_api_key');
+        if (! empty($groqKey)) {
+            $response = Http::timeout(25)->withToken($groqKey)
+                ->attach('file', $binaryData, 'audio.oga')
+                ->post('https://api.groq.com/openai/v1/audio/transcriptions', [
+                    'model' => 'whisper-large-v3',
+                    'language' => 'id',
+                ]);
+
+            if ($response->successful()) {
+                $text = trim((string) $response->json('text', ''));
+
+                return $text !== '' ? $text : null;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -158,12 +260,10 @@ class TelegramBotService
             return;
         }
 
-        // Handle voice messages
+        // Handle voice or audio messages
         if (isset($message['voice']) || isset($message['audio'])) {
-            $this->sendMessage(
-                $chatId,
-                "🎙️ *Pesan suara diterima!*\n\nUntuk saat ini, Anda dapat mencatat lewat suara di Telegram menggunakan fitur *Dikte / Speech-to-Text* bawaan keyboard HP Anda (tekan ikon mic pada keyboard saat mengetik pesan), atau gunakan menu *Input Suara* di aplikasi web KeySaku."
-            );
+            $voiceData = $message['voice'] ?? $message['audio'];
+            $this->handleVoiceMessage($chatId, $voiceData);
 
             return;
         }
@@ -173,8 +273,10 @@ class TelegramBotService
             return;
         }
 
-        // Handle Commands
-        if (str_starts_with($text, '/')) {
+        // Handle button shortcuts or slash commands
+        $lower = strtolower($text);
+        if (str_starts_with($text, '/')
+            || in_array($lower, ['💰 cek saldo', 'cek saldo', 'saldo', '📊 rekap bulan ini', 'rekap bulan ini', 'rekap', '🗑️ batalkan transaksi', 'batalkan transaksi', 'batal', '❓ bantuan', 'bantuan', 'panduan'])) {
             $this->handleCommand($chatId, $text);
 
             return;
@@ -184,11 +286,76 @@ class TelegramBotService
         $this->handleTransactionText($chatId, $text);
     }
 
+    protected function handleVoiceMessage(string $chatId, array $voice): void
+    {
+        $user = User::where('telegram_chat_id', $chatId)->first();
+        if (! $user) {
+            $this->promptUnlinked($chatId);
+
+            return;
+        }
+
+        $fileId = $voice['file_id'] ?? null;
+        if (! $fileId) {
+            return;
+        }
+
+        if (! $this->hasSpeechRecognition()) {
+            $this->sendMessage(
+                $chatId,
+                "🎙️ *Pesan suara diterima!*\n\nSaat ini cara tercepat mencatat lewat suara adalah menggunakan **tombol mic pada keyboard HP**:\n1. Ketuk kolom chat di bawah\n2. Tekan ikon mikrofon 🎙️ pada keyboard HP Anda\n3. Ucapkan transaksi (misal: `\"makan siang 35.000\"`)\n4. Tekan Kirim!\n\n💡 *Ingin transkripsi Voice Note langsung?*\nTambahkan `GEMINI_API_KEY` (gratis dari Google AI Studio) di file `.env` untuk mengaktifkan AI Voice Transcribe otomatis!"
+            );
+
+            return;
+        }
+
+        $downloaded = $this->downloadTelegramFile($fileId);
+        if (! $downloaded) {
+            $this->sendMessage($chatId, '⚠️ Gagal mengunduh rekaman suara dari Telegram. Silakan coba kirim ulang.');
+
+            return;
+        }
+
+        $transcript = $this->transcribeAudio($downloaded['data'], $downloaded['mime']);
+        if (! $transcript) {
+            $this->sendMessage($chatId, '⚠️ Suara tidak terdeteksi dengan jelas. Silakan coba rekam ulang lebih dekat ke mikrofon.');
+
+            return;
+        }
+
+        $this->handleTransactionText($chatId, $transcript, isVoice: true);
+    }
+
     protected function handleCommand(string $chatId, string $text): void
     {
+        $cleanText = strtolower(trim($text));
+
+        if (str_contains($cleanText, 'saldo')) {
+            $this->handleSaldoCommand($chatId);
+
+            return;
+        }
+
+        if (str_contains($cleanText, 'rekap') || str_contains($cleanText, 'laporan')) {
+            $this->handleRekapCommand($chatId);
+
+            return;
+        }
+
+        if (str_contains($cleanText, 'batal') || str_contains($cleanText, 'undo')) {
+            $this->handleBatalCommand($chatId);
+
+            return;
+        }
+
+        if (str_contains($cleanText, 'bantuan') || str_contains($cleanText, 'help') || str_contains($cleanText, 'panduan')) {
+            $this->handleHelpCommand($chatId);
+
+            return;
+        }
+
         $parts = explode(' ', $text, 2);
         $command = strtolower($parts[0]);
-        // Strip @bot_username if present (e.g. /start@Keysaku_bot)
         if (str_contains($command, '@')) {
             $command = explode('@', $command)[0];
         }
@@ -198,6 +365,11 @@ class TelegramBotService
         switch ($command) {
             case '/start':
                 $this->handleStartCommand($chatId, $param);
+                break;
+
+            case '/rekap':
+            case '/bulanini':
+                $this->handleRekapCommand($chatId);
                 break;
 
             case '/saldo':
@@ -246,7 +418,7 @@ class TelegramBotService
 
             $this->sendMessage(
                 $chatId,
-                "⚠️ *Token tidak valid atau sudah kedaluwarsa.*\n\nSilakan buka aplikasi KeySaku di menu *Pengaturan > Akun Telegram* untuk mendapatkan tautan atau token terbaru."
+                '⚠️ *Token tidak valid atau sudah kedaluwarsa.*\n\nSilakan buka aplikasi KeySaku di menu *Pengaturan > Akun Telegram* untuk mendapatkan tautan atau token terbaru.'
             );
 
             return;
@@ -256,13 +428,12 @@ class TelegramBotService
         if ($user) {
             $this->sendMessage(
                 $chatId,
-                "Halo, *{$user->name}*! Akun Telegram Anda sudah terhubung ke KeySaku.\n\nAnda bisa langsung mencatat transaksi (misal: `Makan siang 35rb`) atau ketik /saldo untuk cek saldo."
+                "Halo, *{$user->name}*! Akun Telegram Anda sudah terhubung ke KeySaku.\n\nAnda bisa langsung mencatat transaksi (misal: `Makan siang 35rb`) atau gunakan tombol di bawah untuk cek saldo dan rekap bulanan."
             );
 
             return;
         }
 
-        $botUsername = config('telegram.bot_username', 'Keysaku_bot');
         $this->sendMessage(
             $chatId,
             "👋 *Selamat datang di Bot KeySaku!*\n\nAkun Telegram Anda belum terhubung ke aplikasi KeySaku.\n\n*Cara menghubungkan:*\n1. Buka aplikasi KeySaku di HP atau browser Anda.\n2. Masuk ke menu *Pengaturan > Akun Telegram*.\n3. Klik tombol *Hubungkan ke Telegram* atau kirim token yang tertera dengan format:\n`/start <token_anda>`"
@@ -305,6 +476,75 @@ class TelegramBotService
         );
     }
 
+    protected function handleRekapCommand(string $chatId): void
+    {
+        $user = User::where('telegram_chat_id', $chatId)->first();
+        if (! $user) {
+            $this->promptUnlinked($chatId);
+
+            return;
+        }
+
+        $household = $user->household;
+        if (! $household) {
+            $this->sendMessage($chatId, '⚠️ Akun Anda belum memiliki keluarga/household di KeySaku.');
+
+            return;
+        }
+
+        $start = now()->startOfMonth();
+        $end = now()->endOfMonth();
+        $monthName = now()->translatedFormat('F Y');
+
+        $transactions = Transaction::where('household_id', $household->id)
+            ->whereBetween('transaction_date', [$start->toDateString(), $end->toDateString()])
+            ->with('category')
+            ->get();
+
+        $incomeTotal = (float) $transactions->where('type', Transaction::TYPE_INCOME)->sum('amount');
+        $expenseTotal = (float) $transactions->where('type', Transaction::TYPE_EXPENSE)->sum('amount');
+        $surplus = $incomeTotal - $expenseTotal;
+
+        $formattedIncome = number_format($incomeTotal, 0, ',', '.');
+        $formattedExpense = number_format($expenseTotal, 0, ',', '.');
+        $formattedSurplus = number_format(abs($surplus), 0, ',', '.');
+        $surplusPrefix = $surplus >= 0 ? 'Surplus Bulan Ini' : 'Defisit Bulan Ini';
+        $surplusEmoji = $surplus >= 0 ? '🟢' : '🔴';
+
+        $expenseTransactions = $transactions->where('type', Transaction::TYPE_EXPENSE);
+        $byCategory = $expenseTransactions->groupBy('category_id')->map(function ($group) {
+            return [
+                'name' => $group->first()->category?->name ?? 'Lainnya',
+                'icon' => $group->first()->category?->icon ?? '🏷️',
+                'amount' => (float) $group->sum('amount'),
+            ];
+        })->sortByDesc('amount')->take(3);
+
+        $categoryLines = [];
+        $rank = 1;
+        foreach ($byCategory as $cat) {
+            $catAmount = $cat['amount'];
+            $pct = $expenseTotal > 0 ? (int) round(($catAmount / $expenseTotal) * 100) : 0;
+            $filledBars = (int) round(($pct / 100) * 8);
+            $emptyBars = max(0, 8 - $filledBars);
+            $bar = str_repeat('█', $filledBars).str_repeat('░', $emptyBars);
+            $formattedCatAmount = number_format($catAmount, 0, ',', '.');
+
+            $categoryLines[] = "{$rank}. {$cat['icon']} *{$cat['name']}*: Rp {$formattedCatAmount} ({$pct}%)\n   `[{$bar}]`";
+            $rank++;
+        }
+
+        $categorySection = '';
+        if (! empty($categoryLines)) {
+            $categorySection = "\n\n🏷️ *Pengeluaran Terbesar:*\n".implode("\n", $categoryLines);
+        }
+
+        $this->sendMessage(
+            $chatId,
+            "📊 *Rekap Keuangan — {$monthName}*\n\n📈 *Pemasukan:* Rp {$formattedIncome}\n📉 *Pengeluaran:* Rp {$formattedExpense}\n━━━━━━━━━━━━━━━━━━━━\n{$surplusEmoji} *{$surplusPrefix}:* Rp {$formattedSurplus}{$categorySection}\n\n_Gunakan tombol di bawah untuk navigasi cepat._"
+        );
+    }
+
     protected function handleBatalCommand(string $chatId): void
     {
         $user = User::where('telegram_chat_id', $chatId)->first();
@@ -314,9 +554,9 @@ class TelegramBotService
             return;
         }
 
-        // Look for the latest telegram-created transaction within 60 minutes
+        // Look for the latest telegram or voice transaction within 60 minutes
         $transaction = Transaction::where('user_id', $user->id)
-            ->where('source', Transaction::SOURCE_TELEGRAM)
+            ->whereIn('source', [Transaction::SOURCE_TELEGRAM, Transaction::SOURCE_VOICE])
             ->where('created_at', '>=', now()->subMinutes(60))
             ->latest()
             ->first();
@@ -359,7 +599,7 @@ class TelegramBotService
 
         $this->sendMessage(
             $chatId,
-            "🔌 *Koneksi Diputus*\n\nAkun Telegram Anda telah diputuskan dari KeySaku. Anda tidak akan menerima notifikasi atau mencatat via bot ini lagi sampai dihubungkan kembali."
+            '🔌 *Koneksi Diputus*\n\nAkun Telegram Anda telah diputuskan dari KeySaku. Anda tidak akan menerima notifikasi atau mencatat via bot ini lagi sampai dihubungkan kembali.'
         );
     }
 
@@ -367,11 +607,11 @@ class TelegramBotService
     {
         $this->sendMessage(
             $chatId,
-            "📖 *Panduan Penggunaan Bot KeySaku*\n\nAnda bisa langsung mencatat pengeluaran atau pemasukan secepat mengirim chat biasa!\n\n*Contoh Pengeluaran:*\n• `makan siang 35000`\n• `kopi 25rb kategori hiburan`\n• `beli bensin 50.000 kemarin`\n• `belanja dapur 150rb`\n\n*Contoh Pemasukan:*\n• `gaji bulanan 8.000.000`\n• `terima bonus proyek 500rb`\n\n*Perintah Tersedia:*\n• /saldo - Cek saldo seluruh dompet & rekening\n• /batal - Batalkan transaksi terakhir jika salah ketik\n• /bantuan - Tampilkan pesan panduan ini\n• /putus - Putuskan hubungan akun dari bot ini"
+            "📖 *Panduan Penggunaan Bot KeySaku*\n\nAnda bisa langsung mencatat pengeluaran atau pemasukan secepat mengirim chat biasa!\n\n*Contoh Pengeluaran:*\n• `makan siang 35000`\n• `kopi 25rb kategori hiburan`\n• `beli bensin 50.000 kemarin`\n• `belanja dapur 150rb`\n\n*Contoh Pemasukan:*\n• `gaji bulanan 8.000.000`\n• `terima bonus proyek 500rb`\n\n*Catat Lewat Suara:*\n• Tekan tombol mikrofon pada keyboard HP saat mengetik chat\n\n*Perintah Tersedia:*\n• 💰 *Cek Saldo* — Cek saldo seluruh dompet & rekening\n• 📊 *Rekap Bulan Ini* — Ringkasan keuangan bulan berjalan\n• 🗑️ *Batalkan Transaksi* — Hapus transaksi terakhir jika salah ketik\n• /putus — Putuskan hubungan akun dari bot ini"
         );
     }
 
-    protected function handleTransactionText(string $chatId, string $text): void
+    protected function handleTransactionText(string $chatId, string $text, bool $isVoice = false): void
     {
         $user = User::where('telegram_chat_id', $chatId)->first();
         if (! $user) {
@@ -443,7 +683,7 @@ class TelegramBotService
             'amount' => $amount,
             'transaction_date' => $draft['transaction_date'] ?? now()->toDateString(),
             'note' => $note,
-            'source' => Transaction::SOURCE_TELEGRAM,
+            'source' => $isVoice ? Transaction::SOURCE_VOICE : Transaction::SOURCE_TELEGRAM,
             'raw_voice_text' => $text,
         ]);
 
@@ -452,10 +692,11 @@ class TelegramBotService
         $accountName = $account ? $account->name : 'Kas';
         $newBalance = $account ? 'Rp '.number_format((float) $account->fresh()->balance, 0, ',', '.') : '-';
         $dateFormatted = $transaction->transaction_date ? $transaction->transaction_date->format('d/m/Y') : date('d/m/Y');
+        $voicePrefix = $isVoice ? "🎙️ *Suara Terdeteksi:* \"_{$text}_\"\n\n" : '';
 
         $this->sendMessage(
             $chatId,
-            "✅ *{$typeLabel} Berhasil Dicatat!*\n\n• *Catatan:* {$note}\n• *Nominal:* Rp {$formattedAmount}\n• *Kategori:* {$category->name}\n• *Akun:* {$accountName}\n• *Tanggal:* {$dateFormatted}\n\n💰 *Sisa Saldo {$accountName}:* {$newBalance}\n\n_(Salah catat? Ketik /batal untuk membatalkan)_"
+            "{$voicePrefix}✅ *{$typeLabel} Berhasil Dicatat!*\n\n• *Catatan:* {$note}\n• *Nominal:* Rp {$formattedAmount}\n• *Kategori:* {$category->name}\n• *Akun:* {$accountName}\n• *Tanggal:* {$dateFormatted}\n\n💰 *Sisa Saldo {$accountName}:* {$newBalance}\n\n_(Salah catat? Ketik /batal untuk membatalkan)_"
         );
     }
 
