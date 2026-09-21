@@ -116,6 +116,20 @@ class TelegramBotService
     }
 
     /**
+     * Get current webhook status from Telegram.
+     */
+    public function getWebhookInfo(): array
+    {
+        if (! $this->isConfigured()) {
+            return ['ok' => false, 'description' => 'Bot token not configured'];
+        }
+
+        $response = Http::get("{$this->baseUrl()}/getWebhookInfo");
+
+        return $response->json() ?? [];
+    }
+
+    /**
      * Delete webhook (necessary before using long polling).
      */
     public function deleteWebhook(): array
