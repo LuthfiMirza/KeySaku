@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     protected $fillable = [
@@ -21,6 +22,8 @@ class User extends Authenticatable
         'password',
         'preferred_currency',
         'language',
+        'telegram_chat_id',
+        'telegram_link_token',
     ];
 
     protected $hidden = [
@@ -65,6 +68,38 @@ class User extends Authenticatable
         return Attribute::make(
             get: fn () => $this->householdMembership?->household,
         );
+    }
+
+    public function isTelegramLinked(): bool
+    {
+        return ! empty($this->telegram_chat_id);
+    }
+
+    public function generateTelegramLinkToken(): string
+    {
+        if (empty($this->telegram_link_token)) {
+            $this->forceFill([
+                'telegram_link_token' => Str::random(32),
+            ])->save();
+        }
+
+        return $this->telegram_link_token;
+    }
+
+    public function linkTelegramChat(string $chatId): void
+    {
+        $this->forceFill([
+            'telegram_chat_id' => $chatId,
+            'telegram_link_token' => null,
+        ])->save();
+    }
+
+    public function unlinkTelegramChat(): void
+    {
+        $this->forceFill([
+            'telegram_chat_id' => null,
+            'telegram_link_token' => null,
+        ])->save();
     }
 
     protected function casts(): array
