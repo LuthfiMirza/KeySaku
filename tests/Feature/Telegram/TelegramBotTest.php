@@ -388,6 +388,9 @@ class TelegramBotTest extends TestCase
 
     public function test_voice_note_without_api_key_returns_instructions(): void
     {
+        config()->set('telegram.gemini_api_key', '');
+        config()->set('telegram.groq_api_key', '');
+
         $this->user->linkTelegramChat('999888');
 
         $service = app(TelegramBotService::class);
