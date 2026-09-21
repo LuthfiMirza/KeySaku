@@ -153,35 +153,53 @@ class TelegramBotService
     {
         $geminiKey = config('telegram.gemini_api_key');
         if (! empty($geminiKey)) {
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$geminiKey}";
-            $response = Http::timeout(25)->post($url, [
-                'contents' => [
-                    [
-                        'parts' => [
+            $configuredModel = config('telegram.gemini_model', 'gemini-3.5-flash-lite');
+            $candidateModels = array_unique([
+                $configuredModel,
+                'gemini-3.5-flash-lite',
+                'gemini-3.5-flash',
+                'gemini-3.6-flash',
+                'gemini-flash-latest',
+            ]);
+
+            foreach ($candidateModels as $model) {
+                $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$geminiKey}";
+
+                try {
+                    $response = Http::timeout(25)->post($url, [
+                        'contents' => [
                             [
-                                'inlineData' => [
-                                    'mimeType' => $mimeType,
-                                    'data' => base64_encode($binaryData),
+                                'parts' => [
+                                    [
+                                        'inlineData' => [
+                                            'mimeType' => $mimeType,
+                                            'data' => base64_encode($binaryData),
+                                        ],
+                                    ],
+                                    [
+                                        'text' => 'Tuliskan hanya transkrip teks dari audio bahasa Indonesia ini tanpa tambahan kata atau tanda kutip.',
+                                    ],
                                 ],
                             ],
-                            [
-                                'text' => 'Tuliskan hanya transkrip teks dari audio bahasa Indonesia ini tanpa tambahan kata atau tanda kutip.',
-                            ],
                         ],
-                    ],
-                ],
-            ]);
+                    ]);
 
-            if ($response->successful()) {
-                $text = trim((string) $response->json('candidates.0.content.parts.0.text', ''));
+                    if ($response->successful()) {
+                        $text = trim((string) $response->json('candidates.0.content.parts.0.text', ''));
 
-                return $text !== '' ? $text : null;
+                        if ($text !== '') {
+                            return $text;
+                        }
+                    }
+
+                    Log::warning("TelegramBotService: Gemini transcription failed with model {$model}", [
+                        'status' => $response->status(),
+                        'body' => $response->body(),
+                    ]);
+                } catch (\Throwable $e) {
+                    Log::warning("TelegramBotService: Gemini transcription exception with model {$model}: {$e->getMessage()}");
+                }
             }
-
-            Log::warning('TelegramBotService: Gemini transcription failed', [
-                'status' => $response->status(),
-                'body' => $response->body(),
-            ]);
         }
 
         $groqKey = config('telegram.groq_api_key');
