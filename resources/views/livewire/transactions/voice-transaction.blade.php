@@ -3,8 +3,6 @@
     x-data="{
         supported: false,
         listening: false,
-        originalTranscript: @entangle('originalTranscript').live,
-        transcript: @entangle('transcript').live,
         errorMessage: '',
         statusMessage: 'Mikrofon siap digunakan',
         recognition: null,
@@ -13,37 +11,44 @@
             this.supported = Boolean(SpeechRecognition);
 
             if (! this.supported) {
-                this.statusMessage = 'Browser ini belum mendukung input suara. Gunakan Chrome atau input manual.';
+                this.statusMessage = 'Browser belum mendukung Web Speech API. Kamu bisa ketik teks langsung di bawah.';
                 return;
             }
 
-            this.recognition = new SpeechRecognition();
-            this.recognition.lang = 'id-ID';
-            this.recognition.interimResults = false;
-            this.recognition.continuous = false;
-            this.recognition.maxAlternatives = 1;
+            try {
+                this.recognition = new SpeechRecognition();
+                this.recognition.lang = 'id-ID';
+                this.recognition.interimResults = false;
+                this.recognition.continuous = false;
+                this.recognition.maxAlternatives = 1;
 
-            this.recognition.onstart = () => {
-                this.listening = true;
-                this.errorMessage = '';
-                this.statusMessage = 'Mendengarkan...';
-            };
+                this.recognition.onstart = () => {
+                    this.listening = true;
+                    this.errorMessage = '';
+                    this.statusMessage = 'Mendengarkan... Silakan bicara sekarang.';
+                };
 
-            this.recognition.onresult = (event) => {
-                this.originalTranscript = event.results[0][0].transcript;
-                this.transcript = this.originalTranscript;
-                this.statusMessage = 'Suara berhasil dibaca';
-                this.$wire.clearParsedDraft();
-            };
+                this.recognition.onresult = (event) => {
+                    const text = event.results[0][0].transcript;
+                    this.$wire.set('originalTranscript', text);
+                    this.$wire.set('transcript', text);
+                    this.statusMessage = 'Suara berhasil dibaca!';
+                    this.$wire.parse();
+                };
 
-            this.recognition.onerror = (event) => {
-                this.errorMessage = this.errorText(event.error);
-                this.statusMessage = 'Suara belum berhasil dibaca';
-            };
+                this.recognition.onerror = (event) => {
+                    this.listening = false;
+                    this.errorMessage = this.errorText(event.error);
+                    this.statusMessage = 'Suara belum berhasil dibaca';
+                };
 
-            this.recognition.onend = () => {
-                this.listening = false;
-            };
+                this.recognition.onend = () => {
+                    this.listening = false;
+                };
+            } catch (err) {
+                this.supported = false;
+                this.statusMessage = 'Input suara tidak tersedia. Silakan gunakan input teks manual di bawah.';
+            }
         },
         startListening() {
             if (! this.supported || ! this.recognition || this.listening) {
@@ -60,20 +65,9 @@
                 this.listening = false;
             }
         },
-        resetToOriginal() {
-            this.transcript = this.originalTranscript;
-            this.$wire.clearParsedDraft();
-        },
-        clearTranscript() {
-            this.originalTranscript = '';
-            this.transcript = '';
-            this.errorMessage = '';
-            this.statusMessage = this.supported ? 'Mikrofon siap digunakan' : 'Browser ini belum mendukung input suara. Gunakan Chrome atau input manual.';
-            this.$wire.clearParsedDraft();
-        },
         errorText(error) {
             if (error === 'not-allowed' || error === 'service-not-allowed') {
-                return 'Izin mikrofon ditolak. Aktifkan izin mikrofon di browser atau gunakan input manual.';
+                return 'Izin mikrofon belum aktif. Pastikan izin mikrofon diizinkan di browser Anda.';
             }
 
             if (error === 'no-speech') {
@@ -84,7 +78,11 @@
                 return 'Mikrofon tidak ditemukan. Periksa perangkat mikrofon kamu.';
             }
 
-            return 'Terjadi kendala saat membaca suara. Silakan coba lagi.';
+            if (error === 'network') {
+                return 'Koneksi ke speech recognition terputus. Pastikan perangkat terhubung internet.';
+            }
+
+            return 'Terjadi kendala saat membaca suara (' + error + '). Silakan coba lagi.';
         }
     }"
 >
@@ -124,7 +122,7 @@
 
             <p class="mt-5 text-sm font-bold text-slate-800" x-text="statusMessage"></p>
             <p class="mt-1 text-xs text-slate-400" x-show="supported">Tekan tombol saat siap bicara. Izin mikrofon baru diminta setelah tombol ditekan.</p>
-            <p class="mt-1 text-xs text-amber-600" x-show="! supported">Browser ini belum mendukung input suara. Gunakan Chrome atau input manual.</p>
+            <p class="mt-1 text-xs text-amber-600" x-show="! supported">Browser belum mendukung speech recognition atau dibatasi tanpa HTTPS. Anda bisa langsung ketik di kotak transkrip di bawah.</p>
 
             <template x-if="errorMessage">
                 <div class="mt-4 rounded-2xl bg-rose-50 border border-rose-100 px-4 py-3 text-left text-xs font-medium text-rose-600" x-text="errorMessage"></div>
@@ -136,7 +134,7 @@
                 x-bind:disabled="! supported || listening"
                 class="mt-5 w-full rounded-2xl px-4 py-3 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-60"
                 x-bind:class="supported ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30' : 'bg-slate-200 text-slate-500'"
-                x-text="transcript ? 'Mulai Bicara Lagi' : 'Mulai Bicara'"
+                x-text="listening ? 'Mendengarkan...' : 'Mulai Bicara'"
             ></button>
         </div>
     </section>
@@ -160,25 +158,27 @@
                 <div class="flex items-start justify-between gap-3">
                     <div>
                         <p class="text-sm font-bold text-slate-800">Periksa Transkrip</p>
-                        <p class="mt-1 text-xs text-slate-400">Perbaiki teks jika ada kata yang salah sebelum diproses.</p>
+                        <p class="mt-1 text-xs text-slate-400">Hasil suara akan muncul di sini. Anda juga bisa ketik langsung.</p>
                     </div>
-                    <button type="button" x-show="transcript" x-on:click="clearTranscript" class="shrink-0 text-xs font-bold text-rose-500">
-                        Hapus Teks
-                    </button>
+                    @if ($transcript !== '')
+                        <button type="button" wire:click="clearTranscript" class="shrink-0 text-xs font-bold text-rose-500">
+                            Hapus Teks
+                        </button>
+                    @endif
                 </div>
 
-                <p class="mt-3 text-xs text-slate-400" x-show="! transcript">Hasil suara akan muncul di sini sebelum disimpan.</p>
-
-                <div x-show="transcript" class="mt-3 space-y-3">
-                    <textarea x-model="transcript" rows="4" class="block w-full rounded-2xl border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold leading-relaxed text-slate-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Contoh: Beli nasi goreng dua puluh lima ribu kategori makanan"></textarea>
+                <div class="mt-3 space-y-3">
+                    <textarea wire:model.live.debounce.300ms="transcript" rows="3" class="block w-full rounded-2xl border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold leading-relaxed text-slate-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Contoh: Beli nasi goreng dua puluh lima ribu kategori makanan"></textarea>
 
                     @error('transcript')
                         <p class="text-xs font-medium text-rose-500">{{ $message }}</p>
                     @enderror
 
-                    <button type="button" x-show="originalTranscript && transcript !== originalTranscript" x-on:click="resetToOriginal" class="w-full rounded-2xl bg-slate-100 px-4 py-3 text-xs font-bold text-slate-600">
-                        Kembalikan ke Hasil Suara
-                    </button>
+                    @if ($originalTranscript && $transcript !== $originalTranscript)
+                        <button type="button" wire:click="resetToOriginal" class="w-full rounded-2xl bg-slate-100 px-4 py-3 text-xs font-bold text-slate-600">
+                            Kembalikan ke Hasil Suara
+                        </button>
+                    @endif
 
                     <button type="button" wire:click="parse" class="w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30">
                         Proses Teks
@@ -195,7 +195,7 @@
                 <p class="text-sm font-bold text-slate-800">Preview Transaksi</p>
 
                 @if (! $parsedDraft)
-                    <p class="mt-1 text-xs text-slate-400">Transkrip siap diproses.</p>
+                    <p class="mt-1 text-xs text-slate-400">Ketik atau ucapkan teks, lalu klik 'Proses Teks' untuk melihat ringkasan.</p>
                 @else
                     @if (! empty($parsedDraft['warnings']))
                         <div class="mt-3 rounded-2xl bg-amber-50 border border-amber-100 px-4 py-3">
@@ -255,10 +255,10 @@
     </section>
 
     <section class="bg-indigo-50/80 rounded-2xl p-4 border border-indigo-100">
-        <p class="text-sm font-bold text-indigo-800">Belum bisa pakai suara?</p>
-        <p class="mt-1 text-xs text-indigo-600">Input manual tetap tersedia sebagai fallback utama.</p>
+        <p class="text-sm font-bold text-indigo-800">Butuh input biasa?</p>
+        <p class="mt-1 text-xs text-indigo-600">Input manual dengan dropdown lengkap selalu tersedia.</p>
         <a href="{{ route('transactions.create') }}" class="mt-3 inline-flex w-full items-center justify-center rounded-2xl bg-indigo-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:bg-indigo-600">
-            Input Manual
+            Buka Form Manual
         </a>
     </section>
 </div>
