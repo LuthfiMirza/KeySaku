@@ -43,6 +43,7 @@ GROQ_API_KEY=optional_key_for_groq_whisper
 - Tombol keyboard interaktif di bagian bawah layar:
   - `💰 Cek Saldo` ➔ Menampilkan saldo akun dan total saldo keluarga.
   - `📊 Rekap Bulan Ini` ➔ Ringkasan finansial bulanan dengan visual progress bar.
+  - `📋 Riwayat` ➔ Menampilkan 5 transaksi terakhir lengkap dengan ID dan tombol aksi hapus cepat.
   - `🗑️ Batalkan Transaksi` ➔ Membatalkan transaksi terakhir (dalam 60 menit) dan memulihkan saldo akun.
   - `❓ Bantuan` ➔ Menampilkan panduan dan contoh format transaksi.
 
@@ -51,7 +52,15 @@ GROQ_API_KEY=optional_key_for_groq_whisper
 - Format pemasukan: `gaji bulanan 8.000.000` atau `terima transfer 500rb`.
 - Deteksi tanggal: "hari ini", "kemarin".
 - Otomatis memotong/menambah saldo akun dompet/rekening via `TransactionObserver`.
+- Disertai **Inline Action Button** `[🗑️ Batalkan Transaksi Ini]` untuk menghapus transaksi seketika dengan 1 ketukan.
 
-### D. Voice Input (Input Suara)
+### D. Koreksi, Edit, dan Pembatalan Transaksi
+- **Batalkan Terakhir:** `/batal`
+- **Hapus Spesifik berdasarkan ID:** `/hapus <ID>` atau `/batal <ID>` (misal: `/hapus 9`).
+- **Edit Transaksi via Chat:** `/edit <ID> <catatan baru> <nominal baru>` (misal: `/edit 9 beli kopi 37.000`).
+- **Riwayat & Tombol Hapus Cepat:** `/riwayat` (menampilkan 5 transaksi terakhir beserta tombol inline untuk hapus).
+- **Edit di Aplikasi Web PWA:** Buka menu Riwayat Transaksi di web app KeySaku untuk pengeditan visual lengkap.
+
+### E. Voice Input (Input Suara)
 - **Keyboard Dictation:** Menggunakan tombol mic keyboard HP (0 setup).
-- **Voice Note (.oga):** Transkripsi otomatis pesan suara Telegram via Google Gemini Flash API (`GEMINI_API_KEY`).
+- **Voice Note (.oga):** Transkripsi otomatis pesan suara Telegram via Google Gemini Flash API (`GEMINI_API_KEY`) dengan domain priming kosakata belanja harian Indonesia.
