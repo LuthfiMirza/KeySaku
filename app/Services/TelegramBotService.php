@@ -177,6 +177,11 @@ class TelegramBotService
 
                 return $text !== '' ? $text : null;
             }
+
+            Log::warning('TelegramBotService: Gemini transcription failed', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
         }
 
         $groqKey = config('telegram.groq_api_key');
