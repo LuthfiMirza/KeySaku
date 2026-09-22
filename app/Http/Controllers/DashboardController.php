@@ -14,23 +14,26 @@ class DashboardController extends Controller
         $startOfMonth = now()->startOfMonth()->toDateString();
         $endOfMonth = now()->endOfMonth()->toDateString();
 
-        $thisMonthIncome = $household->transactions()
-            ->where('type', Transaction::TYPE_INCOME)
+        $thisMonthSummary = $household->transactions()
             ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
-            ->sum('amount');
+            ->selectRaw('
+                COALESCE(SUM(CASE WHEN type = ? THEN amount ELSE 0 END), 0) as income,
+                COALESCE(SUM(CASE WHEN type = ? THEN amount ELSE 0 END), 0) as expense
+            ', [Transaction::TYPE_INCOME, Transaction::TYPE_EXPENSE])
+            ->first();
 
-        $thisMonthExpense = $household->transactions()
-            ->where('type', Transaction::TYPE_EXPENSE)
-            ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
-            ->sum('amount');
+        $thisMonthIncome = (float) ($thisMonthSummary?->income ?? 0);
+        $thisMonthExpense = (float) ($thisMonthSummary?->expense ?? 0);
 
-        $allTimeIncome = $household->transactions()
-            ->where('type', Transaction::TYPE_INCOME)
-            ->sum('amount');
+        $allTimeSummary = $household->transactions()
+            ->selectRaw('
+                COALESCE(SUM(CASE WHEN type = ? THEN amount ELSE 0 END), 0) as income,
+                COALESCE(SUM(CASE WHEN type = ? THEN amount ELSE 0 END), 0) as expense
+            ', [Transaction::TYPE_INCOME, Transaction::TYPE_EXPENSE])
+            ->first();
 
-        $allTimeExpense = $household->transactions()
-            ->where('type', Transaction::TYPE_EXPENSE)
-            ->sum('amount');
+        $allTimeIncome = (float) ($allTimeSummary?->income ?? 0);
+        $allTimeExpense = (float) ($allTimeSummary?->expense ?? 0);
 
         $monthlyExpenseByCategory = $household->transactions()
             ->with('category')
@@ -105,7 +108,7 @@ class DashboardController extends Controller
             'thisMonthBalance' => $thisMonthIncome - $thisMonthExpense,
             'netBalance' => $netBalance,
             'shouldPromptInitialBalance' => (float) $household->initial_balance === 0.0
-                && $household->transactions()->exists(),
+                && ($allTimeIncome > 0 || $allTimeExpense > 0 || $household->transactions()->exists()),
             'availableBalance' => $netBalance - $totalSavingsCurrent,
             'monthlyExpenseByCategory' => $monthlyExpenseByCategory,
             'currentMonthBudgetInsight' => [
