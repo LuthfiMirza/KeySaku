@@ -1,5 +1,5 @@
 <div
-    class="px-4 pt-6 space-y-5 pb-4"
+    class="space-y-4"
     x-data="{
         supported: false,
         listening: false,
@@ -25,7 +25,7 @@
                 this.recognition.onstart = () => {
                     this.listening = true;
                     this.errorMessage = '';
-                    this.statusMessage = 'Mendengarkan... Silakan bicara sekarang.';
+                    this.statusMessage = 'Mendengarkan ucapanmu...';
                 };
 
                 this.recognition.onresult = (event) => {
@@ -86,179 +86,238 @@
         }
     }"
 >
-    <div class="flex items-center justify-between gap-3">
-        <div>
-            <h2 class="text-base font-bold text-slate-800">Input Suara</h2>
-            <p class="mt-1 text-xs text-slate-400">Catat pengeluaran secepat bicara.</p>
-        </div>
-        <span class="rounded-full bg-purple-50 px-3 py-2 text-xs font-bold text-purple-600">Beta</span>
-    </div>
-
+    <!-- Warning if Household Has No Categories -->
     @if (! $hasCategories)
-        <section class="rounded-3xl border border-amber-100 bg-amber-50 p-5 shadow-sm">
-            <p class="text-3xl">🏷️</p>
-            <p class="mt-2 text-sm font-bold text-amber-800">Belum ada kategori.</p>
-            <p class="mt-1 text-xs leading-relaxed text-amber-700">Input suara mencocokkan ucapanmu ke kategori yang ada. Buat minimal satu kategori dulu supaya transaksi bisa disimpan.</p>
-            <a href="{{ route('categories') }}" class="mt-3 inline-flex min-h-11 items-center rounded-2xl bg-amber-500 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-amber-500/20">Buat Kategori</a>
-        </section>
+        <div class="rounded-2xl border border-amber-200/80 bg-amber-50/90 p-4 shadow-xs">
+            <div class="flex items-center gap-2">
+                <span class="text-xl">🏷️</span>
+                <p class="text-xs font-bold text-amber-900">Belum ada kategori.</p>
+            </div>
+            <p class="mt-1 text-xs text-amber-800 leading-relaxed">Input suara mencocokkan ucapanmu ke kategori yang ada. Buat minimal satu kategori dulu supaya transaksi bisa disimpan.</p>
+            <a href="{{ route('categories') }}" class="mt-3 inline-flex min-h-[44px] items-center rounded-xl bg-amber-500 hover:bg-amber-600 px-4 py-2 text-xs font-bold text-white shadow-xs transition active:scale-95">
+                Buat Kategori
+            </a>
+        </div>
     @endif
 
-    <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-sm border border-white/60 text-center overflow-hidden relative">
-        <div class="absolute inset-x-0 -top-20 mx-auto h-40 w-40 rounded-full bg-purple-200/40 blur-3xl"></div>
+    <!-- AI Smart Listener Hero Card -->
+    <section class="bg-white rounded-[28px] p-6 shadow-sm border border-black/5 text-center relative overflow-hidden">
+        <!-- Ambient Sunset Glow Blur -->
+        <div class="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-48 bg-gradient-to-br from-[#FF6B6B]/20 via-[#FF8E53]/15 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="relative">
+        <div class="relative z-10 flex flex-col items-center">
+            <!-- AI Smart Listener Badge -->
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold tracking-wider uppercase bg-amber-500/10 text-amber-600 border border-amber-500/20 mb-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span>
+                AI SMART LISTENER
+            </div>
+
+            <!-- Dynamic Headline -->
+            <h2 class="text-base font-extrabold text-[#121316] tracking-tight" x-text="listening ? 'Mendengarkan ucapanmu...' : 'Sentuh mikrofon untuk bicara'"></h2>
+            <p class="mt-1 text-xs text-[#8E8E93]" x-text="statusMessage"></p>
+
+            <!-- Voice Audio Waveform Glow -->
+            <div class="flex items-center justify-center gap-1.5 h-10 my-3">
+                <span class="w-1.5 rounded-full bg-gradient-to-t from-[#FF6B6B] to-[#FFA07A] transition-all" :class="listening ? 'animate-wave-1' : 'h-2 opacity-40'"></span>
+                <span class="w-1.5 rounded-full bg-gradient-to-t from-[#FF6B6B] to-[#FFA07A] transition-all" :class="listening ? 'animate-wave-2' : 'h-4 opacity-50'"></span>
+                <span class="w-1.5 rounded-full bg-gradient-to-t from-[#FF6B6B] to-[#FFA07A] transition-all" :class="listening ? 'animate-wave-3' : 'h-6 opacity-60'"></span>
+                <span class="w-1.5 rounded-full bg-gradient-to-t from-[#FF6B6B] to-[#FFA07A] transition-all" :class="listening ? 'animate-wave-4' : 'h-5 opacity-60'"></span>
+                <span class="w-1.5 rounded-full bg-gradient-to-t from-[#FF6B6B] to-[#FFA07A] transition-all" :class="listening ? 'animate-wave-5' : 'h-3 opacity-50'"></span>
+                <span class="w-1.5 rounded-full bg-gradient-to-t from-[#FF6B6B] to-[#FFA07A] transition-all" :class="listening ? 'animate-wave-6' : 'h-2 opacity-40'"></span>
+            </div>
+
+            <!-- Central Hero Mic Button -->
             <button
                 type="button"
                 x-on:click="startListening"
                 x-bind:disabled="! supported || listening"
-                class="mx-auto flex h-28 w-28 items-center justify-center rounded-full text-white shadow-2xl ring-8 transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
-                x-bind:class="listening ? 'bg-gradient-to-br from-rose-500 to-pink-600 shadow-rose-500/30 ring-rose-100/80 animate-pulse' : 'bg-gradient-to-br from-indigo-500 to-purple-600 shadow-indigo-500/30 ring-indigo-100/80'"
+                class="flex h-24 w-24 items-center justify-center rounded-full text-white shadow-xl transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 my-2"
+                x-bind:class="listening ? 'bg-gradient-to-br from-[#FF6B6B] to-[#EF4444] shadow-[#FF6B6B]/40 ring-8 ring-[#FF6B6B]/20 scale-105 animate-pulse' : 'bg-gradient-to-br from-[#FF6B6B] via-[#FF8E53] to-[#FFA07A] shadow-[0_10px_28px_rgba(255,107,107,0.35)] ring-8 ring-[#FF6B6B]/15 hover:scale-105'"
                 aria-label="Mulai bicara"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18.75a6 6 0 006-6v-1.5m-12 0v1.5a6 6 0 006 6zm0 0v3m-3 0h6M12 15a3 3 0 003-3V6a3 3 0 10-6 0v6a3 3 0 003 3z" />
                 </svg>
             </button>
 
-            <p class="mt-5 text-sm font-bold text-slate-800" x-text="statusMessage"></p>
-            <p class="mt-1 text-xs text-slate-400" x-show="supported">Tekan tombol saat siap bicara. Izin mikrofon baru diminta setelah tombol ditekan.</p>
-            <p class="mt-1 text-xs text-amber-600" x-show="! supported">Browser belum mendukung speech recognition atau dibatasi tanpa HTTPS. Anda bisa langsung ketik di kotak transkrip di bawah.</p>
-
+            <!-- Error Notification -->
             <template x-if="errorMessage">
-                <div class="mt-4 rounded-2xl bg-rose-50 border border-rose-100 px-4 py-3 text-left text-xs font-medium text-rose-600" x-text="errorMessage"></div>
+                <div class="mt-3 rounded-2xl bg-rose-50 border border-rose-100 px-4 py-2.5 text-left text-xs font-medium text-rose-600 w-full" x-text="errorMessage"></div>
             </template>
 
+            <!-- Bottom Action Trigger -->
             <button
                 type="button"
                 x-on:click="startListening"
                 x-bind:disabled="! supported || listening"
-                class="mt-5 w-full rounded-2xl px-4 py-3 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-60"
-                x-bind:class="supported ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30' : 'bg-slate-200 text-slate-500'"
+                class="mt-4 w-full min-h-[44px] rounded-2xl px-4 py-3 text-xs font-bold transition disabled:cursor-not-allowed disabled:opacity-60"
+                x-bind:class="supported ? 'bg-[#121316] text-white hover:bg-black shadow-md shadow-black/10' : 'bg-slate-200 text-slate-500'"
                 x-text="listening ? 'Mendengarkan...' : 'Mulai Bicara'"
             ></button>
         </div>
     </section>
 
-    <section class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
-        <p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Contoh ucapan</p>
-        <p class="mt-2 text-xs text-slate-400">Format saat ini: keterangan pengeluaran + nominal + kategori.</p>
-        <div class="mt-3 space-y-2 text-sm font-semibold leading-relaxed text-slate-700">
-            <p>“Beli nasi goreng dua puluh lima ribu kategori makanan”</p>
-            <p>“Bayar parkir lima ribu kategori transportasi”</p>
-            <p>“Belanja dapur 150.000 kategori belanja dapur”</p>
-            <p>“Beli obat tiga puluh ribu kategori kesehatan”</p>
-        </div>
-        <p class="mt-3 text-xs text-slate-400">KeySaku akan menampilkan hasil suara untuk dicek sebelum disimpan.</p>
-    </section>
-
-    <section class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
-        <div class="flex items-start gap-3">
-            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-xl">📝</span>
-            <div class="min-w-0 flex-1">
-                <div class="flex items-start justify-between gap-3">
-                    <div>
-                        <p class="text-sm font-bold text-slate-800">Periksa Transkrip</p>
-                        <p class="mt-1 text-xs text-slate-400">Hasil suara akan muncul di sini. Anda juga bisa ketik langsung.</p>
-                    </div>
-                    @if ($transcript !== '')
-                        <button type="button" wire:click="clearTranscript" class="shrink-0 text-xs font-bold text-rose-500">
-                            Hapus Teks
-                        </button>
-                    @endif
-                </div>
-
-                <div class="mt-3 space-y-3">
-                    <textarea wire:model.live.debounce.300ms="transcript" rows="3" class="block w-full rounded-2xl border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold leading-relaxed text-slate-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Contoh: Beli nasi goreng dua puluh lima ribu kategori makanan"></textarea>
-
-                    @error('transcript')
-                        <p class="text-xs font-medium text-rose-500">{{ $message }}</p>
-                    @enderror
-
-                    @if ($originalTranscript && $transcript !== $originalTranscript)
-                        <button type="button" wire:click="resetToOriginal" class="w-full rounded-2xl bg-slate-100 px-4 py-3 text-xs font-bold text-slate-600">
-                            Kembalikan ke Hasil Suara
-                        </button>
-                    @endif
-
-                    <button type="button" wire:click="parse" class="w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30">
-                        Proses Teks
-                    </button>
-                </div>
+    <!-- Real-time Speech Transcription Bubble -->
+    <section class="bg-white rounded-2xl p-4 shadow-sm border border-black/5">
+        <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-1.5">
+                <span class="text-sm">💬</span>
+                <span class="text-xs font-bold text-[#121316]">Transkrip Ucapan</span>
             </div>
+            @if ($transcript !== '')
+                <button type="button" wire:click="clearTranscript" class="text-[11px] font-bold text-rose-500 hover:text-rose-600 transition">
+                    Hapus
+                </button>
+            @endif
+        </div>
+
+        <div class="relative">
+            <textarea
+                wire:model.live.debounce.300ms="transcript"
+                rows="2"
+                class="block w-full rounded-xl border border-black/10 bg-[#FCF8F8] px-3.5 py-2.5 text-xs font-semibold leading-relaxed text-[#121316] placeholder:text-[#8E8E93]/70 focus:border-[#FF6B6B] focus:ring-1 focus:ring-[#FF6B6B]"
+                placeholder="Beli bensin motor empat puluh ribu pakai GoPay"
+            ></textarea>
+
+            @error('transcript')
+                <p class="mt-1 text-[11px] font-medium text-rose-500">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="mt-2.5 flex items-center gap-2">
+            @if ($originalTranscript && $transcript !== $originalTranscript)
+                <button type="button" wire:click="resetToOriginal" class="flex-1 min-h-[40px] rounded-xl bg-slate-100 hover:bg-slate-200 px-3 py-2 text-[11px] font-bold text-[#8E8E93] transition">
+                    Reset Suara
+                </button>
+            @endif
+            <button type="button" wire:click="parse" class="flex-1 min-h-[40px] rounded-xl bg-gradient-to-r from-[#FF6B6B] to-[#FF8E53] hover:from-[#FF5A5A] hover:to-[#FF8040] text-white px-4 py-2 text-xs font-bold shadow-sm shadow-[#FF6B6B]/25 transition active:scale-95">
+                Proses Teks
+            </button>
         </div>
     </section>
 
-    <section class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-white/60">
-        <div class="flex items-start gap-3">
-            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-xl">🧾</span>
-            <div class="min-w-0 flex-1">
-                <p class="text-sm font-bold text-slate-800">Preview Transaksi</p>
-
-                @if (! $parsedDraft)
-                    <p class="mt-1 text-xs text-slate-400">Ketik atau ucapkan teks, lalu klik 'Proses Teks' untuk melihat ringkasan.</p>
+    <!-- Parsed Data Confirmation Card -->
+    @if ($parsedDraft)
+        @php
+            $draftIsIncome = ($parsedDraft['type'] ?? \App\Models\Transaction::TYPE_EXPENSE) === \App\Models\Transaction::TYPE_INCOME;
+        @endphp
+        <section class="bg-white rounded-[28px] p-5 shadow-sm border border-black/5 space-y-4">
+            <!-- Header with Type Badge -->
+            <div class="flex items-center justify-between border-b border-black/5 pb-3">
+                <div>
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-[#8E8E93]">Hasil Ekstraksi AI</h3>
+                    <p class="text-sm font-bold text-[#121316] mt-0.5">Konfirmasi Transaksi</p>
+                </div>
+                
+                @if ($draftIsIncome)
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        Pemasukan
+                    </span>
                 @else
-                    @if (! empty($parsedDraft['warnings']))
-                        <div class="mt-3 rounded-2xl bg-amber-50 border border-amber-100 px-4 py-3">
-                            <p class="text-xs font-bold uppercase tracking-wide text-amber-600">Perlu Dicek</p>
-                            <ul class="mt-2 space-y-1 text-xs text-amber-700">
-                                @foreach ($parsedDraft['warnings'] as $warning)
-                                    <li>• {{ $warning }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <div class="mt-3 grid gap-2 text-sm">
-                        @php
-                            $draftIsIncome = ($parsedDraft['type'] ?? \App\Models\Transaction::TYPE_EXPENSE) === \App\Models\Transaction::TYPE_INCOME;
-                        @endphp
-                        <div class="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
-                            <span class="text-slate-500">Jenis</span>
-                            <span class="font-bold {{ $draftIsIncome ? 'text-emerald-600' : 'text-rose-600' }}">{{ $draftIsIncome ? 'Pemasukan' : 'Pengeluaran' }}</span>
-                        </div>
-                        <div class="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
-                            <span class="text-slate-500">Nominal</span>
-                            @if ($parsedDraft['amount'])
-                                <x-money :value="$parsedDraft['amount']" class="font-bold text-slate-800" />
-                            @else
-                                <span class="font-bold text-slate-800">Belum dikenali</span>
-                            @endif
-                        </div>
-                        <div class="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
-                            <span class="text-slate-500">Kategori</span>
-                            <span class="font-bold text-slate-800">{{ $parsedDraft['category_name'] ?? 'Belum ditemukan' }}</span>
-                        </div>
-                        <div class="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
-                            <span class="text-slate-500">Tanggal</span>
-                            <span class="font-bold text-slate-800">{{ $parsedDraft['transaction_date'] }}</span>
-                        </div>
-                        <div class="rounded-2xl bg-slate-50 px-4 py-3">
-                            <span class="text-slate-500">Catatan</span>
-                            <p class="mt-1 font-bold text-slate-800">{{ $parsedDraft['note'] ?: 'Belum dikenali' }}</p>
-                        </div>
-                    </div>
-
-                    @error('parsedDraft')
-                        <p class="mt-3 rounded-2xl bg-rose-50 px-4 py-3 text-xs font-medium text-rose-600">{{ $message }}</p>
-                    @enderror
-
-                    <button type="button" wire:click="save" @disabled(! $this->canSave) class="mt-3 w-full rounded-2xl px-4 py-3 text-sm font-bold transition {{ $this->canSave ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30' : 'bg-slate-200 text-slate-500 cursor-not-allowed' }}">
-                        Simpan Transaksi
-                    </button>
-
-                    @if (! $this->canSave)
-                        <p class="mt-2 text-xs text-slate-400">Lengkapi nominal, kategori, dan catatan sebelum menyimpan.</p>
-                    @endif
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                        Pengeluaran
+                    </span>
                 @endif
             </div>
-        </div>
-    </section>
 
-    <section class="bg-indigo-50/80 rounded-2xl p-4 border border-indigo-100">
-        <p class="text-sm font-bold text-indigo-800">Butuh input biasa?</p>
-        <p class="mt-1 text-xs text-indigo-600">Input manual dengan dropdown lengkap selalu tersedia.</p>
-        <a href="{{ route('transactions.create') }}" class="mt-3 inline-flex w-full items-center justify-center rounded-2xl bg-indigo-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:bg-indigo-600">
-            Buka Form Manual
-        </a>
-    </section>
+            <!-- Warnings if any -->
+            @if (! empty($parsedDraft['warnings']))
+                <div class="rounded-xl bg-amber-50 border border-amber-200/80 px-3.5 py-2.5">
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-amber-700">Perlu Dicek</p>
+                    <ul class="mt-1 space-y-0.5 text-xs text-amber-800">
+                        @foreach ($parsedDraft['warnings'] as $warning)
+                            <li>• {{ $warning }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <!-- Confirmation Fields -->
+            <div class="space-y-3">
+                <!-- Nominal Display -->
+                <div class="flex items-center justify-between p-3.5 rounded-2xl bg-[#FCF8F8] border border-black/5">
+                    <span class="text-xs font-semibold text-[#8E8E93]">Nominal</span>
+                    @if ($parsedDraft['amount'])
+                        <x-money :value="$parsedDraft['amount']" class="text-xl font-black text-[#121316] font-tabular tracking-tight" />
+                    @else
+                        <span class="text-xs font-bold text-rose-500">Belum terbaca</span>
+                    @endif
+                </div>
+
+                <!-- Category & Account Tags -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="p-3 rounded-2xl bg-[#FCF8F8] border border-black/5">
+                        <span class="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider block mb-1.5">Kategori</span>
+                        @if (!empty($parsedDraft['category_name']))
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-[#FF6B6B]/10 text-[#FF6B6B] border border-[#FF6B6B]/20">
+                                🏷️ {{ $parsedDraft['category_name'] }}
+                            </span>
+                        @else
+                            <span class="text-xs font-semibold text-[#8E8E93]">Belum ada</span>
+                        @endif
+                    </div>
+
+                    <div class="p-3 rounded-2xl bg-[#FCF8F8] border border-black/5">
+                        <span class="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider block mb-1.5">Metode / Akun</span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                            GoPay
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Notes & Date -->
+                <div class="p-3 rounded-2xl bg-[#FCF8F8] border border-black/5 space-y-1.5">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-semibold text-[#8E8E93]">Catatan:</span>
+                        <span class="font-bold text-[#121316] text-right truncate max-w-[200px]">{{ $parsedDraft['note'] ?: 'Belum dikenali' }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs pt-1 border-t border-black/5">
+                        <span class="font-semibold text-[#8E8E93]">Tanggal:</span>
+                        <span class="font-medium text-[#121316] font-tabular">{{ $parsedDraft['transaction_date'] }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error message for draft -->
+            @error('parsedDraft')
+                <div class="rounded-xl bg-rose-50 border border-rose-100 px-3.5 py-2.5 text-xs font-semibold text-rose-600">
+                    {{ $message }}
+                </div>
+            @enderror
+
+            <!-- Action Buttons: Batalkan & Konfirmasi -->
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <button
+                    type="button"
+                    wire:click="clearTranscript"
+                    x-on:click="if (typeof showVoiceModal !== 'undefined') showVoiceModal = false;"
+                    class="min-h-[44px] rounded-2xl bg-black/5 hover:bg-black/10 text-xs font-bold text-[#8E8E93] hover:text-[#121316] transition flex items-center justify-center active:scale-95"
+                >
+                    Batalkan
+                </button>
+                <button
+                    type="button"
+                    wire:click="save"
+                    @disabled(! $this->canSave)
+                    class="min-h-[44px] rounded-2xl px-4 py-2.5 text-xs font-bold transition flex items-center justify-center gap-1.5 active:scale-95 {{ $this->canSave ? 'bg-[#121316] hover:bg-black text-white shadow-md shadow-black/10' : 'bg-slate-200 text-slate-400 cursor-not-allowed' }}"
+                >
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>
+                    <span>Konfirmasi</span>
+                </button>
+            </div>
+        </section>
+    @endif
+
+    <!-- Guidance Examples Pill Accordion -->
+    <div class="bg-white/80 rounded-2xl p-4 border border-black/5 shadow-2xs">
+        <span class="text-[11px] font-bold text-[#FF6B6B] uppercase tracking-wider block mb-1.5">Tips Ucapan AI</span>
+        <div class="space-y-1 text-xs text-[#8E8E93]">
+            <p>• “Beli bensin motor 40 ribu kategori transportasi”</p>
+            <p>• “Beli nasi padang dua puluh lima ribu kategori makanan”</p>
+        </div>
+    </div>
 </div>
+
