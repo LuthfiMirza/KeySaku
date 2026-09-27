@@ -686,7 +686,7 @@ class TelegramBotService
         $rangeLabel = $startOfWeek->translatedFormat('d M').' - '.$endOfWeek->translatedFormat('d M Y');
 
         $transactions = Transaction::where('household_id', $household->id)
-            ->whereBetween('transaction_date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])
+            ->whereBetween('transaction_date', [$startOfWeek->startOfDay(), $endOfWeek->endOfDay()])
             ->with('category')
             ->latest('transaction_date')
             ->get();
@@ -765,7 +765,7 @@ class TelegramBotService
         $monthName = now()->translatedFormat('F Y');
 
         $transactions = Transaction::where('household_id', $household->id)
-            ->whereBetween('transaction_date', [$start->toDateString(), $end->toDateString()])
+            ->whereBetween('transaction_date', [$start->startOfDay(), $end->endOfDay()])
             ->with('category')
             ->get();
 
