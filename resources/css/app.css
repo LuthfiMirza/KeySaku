@@ -4,24 +4,91 @@
     html {
         -webkit-tap-highlight-color: transparent;
         scroll-behavior: smooth;
+        background-color: #FCF8F8;
     }
 
     body {
-        @apply font-sans;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        color: #121316;
+        background-color: #FCF8F8;
+        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     }
 
     * {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
+
+    .tabular-nums, [data-tabular] {
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: 'tnum';
+    }
 }
 
 @layer utilities {
+    .bg-porcelain {
+        background-color: #FCF8F8;
+    }
+
+    .text-charcoal {
+        color: #121316;
+    }
+
+    .text-muted-slate {
+        color: #8E8E93;
+    }
+
+    .bg-sunset-gradient {
+        background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFA07A 100%);
+    }
+
+    .text-sunset-gradient {
+        background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .card-porcelain {
+        background-color: #FFFFFF;
+        box-shadow: 0 4px 20px -2px rgba(18, 19, 22, 0.04);
+        border: 1px solid rgba(240, 235, 235, 0.8);
+    }
+
+    .dock-glass {
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+
     .glass {
-        @apply bg-white/80 backdrop-blur-sm border border-white/60;
+        background-color: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
     }
 
     .safe-bottom {
-        padding-bottom: env(safe-area-inset-bottom, 1rem);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5.5rem);
     }
 }
+
+@keyframes wave-bounce {
+    0%, 100% {
+        height: 8px;
+        opacity: 0.5;
+    }
+    50% {
+        height: 32px;
+        opacity: 1;
+    }
+}
+
+.animate-wave-1 { animation: wave-bounce 1.1s ease-in-out infinite; }
+.animate-wave-2 { animation: wave-bounce 0.9s ease-in-out infinite 0.15s; }
+.animate-wave-3 { animation: wave-bounce 0.75s ease-in-out infinite 0.3s; }
+.animate-wave-4 { animation: wave-bounce 1.0s ease-in-out infinite 0.1s; }
+.animate-wave-5 { animation: wave-bounce 0.85s ease-in-out infinite 0.25s; }
+.animate-wave-6 { animation: wave-bounce 1.2s ease-in-out infinite 0.4s; }
+
