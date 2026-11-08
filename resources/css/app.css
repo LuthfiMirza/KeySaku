@@ -76,6 +76,29 @@
             inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
     }
 
+    /* Luxury Skeuomorphic Cardholder Styles */
+    .leather-pocket {
+        background: linear-gradient(180deg, #25272F 0%, #18191E 55%, #101114 100%);
+        box-shadow: 
+            0 24px 48px -10px rgba(0, 0, 0, 0.45),
+            0 12px 24px -6px rgba(0, 0, 0, 0.3),
+            inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.16),
+            inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .card-emboss {
+        box-shadow: 
+            0 14px 28px -6px rgba(0, 0, 0, 0.22),
+            0 6px 12px -3px rgba(0, 0, 0, 0.12),
+            inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.35),
+            inset 0 -1px 1.5px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .leather-stitch {
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+    }
+
     .safe-bottom {
         padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5.5rem);
     }
