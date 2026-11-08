@@ -10,10 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SavingsGoal extends Model
 {
-    use HasFactory, BelongsToUser;
+    use BelongsToUser, HasFactory;
 
     public const STATUS_ACTIVE = 'active';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_ARCHIVED = 'archived';
 
     protected $fillable = [

@@ -15,9 +15,7 @@ class MonthlyReportExport implements FromCollection, WithHeadings, WithMapping
 {
     use Exportable;
 
-    public function __construct(private Household $household, private Carbon $month)
-    {
-    }
+    public function __construct(private Household $household, private Carbon $month) {}
 
     public function collection(): Collection
     {

@@ -8,7 +8,6 @@ use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Config;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 

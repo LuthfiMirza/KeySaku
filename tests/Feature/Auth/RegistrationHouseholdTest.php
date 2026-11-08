@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\Household;
 use App\Models\HouseholdMember;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,7 +24,7 @@ class RegistrationHouseholdTest extends TestCase
 
         $this->assertNotNull($user->household);
         $this->assertSame(HouseholdMember::ROLE_OWNER, $user->householdMembership->role);
-        $this->assertSame(13, $user->household->categories()->count());
+        $this->assertSame(count(config('default-categories')), $user->household->categories()->count());
     }
 
     public function test_registration_with_valid_invite_code_joins_existing_household_as_member(): void

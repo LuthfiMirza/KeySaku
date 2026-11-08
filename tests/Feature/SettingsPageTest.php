@@ -30,7 +30,6 @@ class SettingsPageTest extends TestCase
             ->assertDontSee('Segera');
     }
 
-
     public function test_authenticated_user_can_open_currency_settings_page(): void
     {
         $user = User::factory()->create();

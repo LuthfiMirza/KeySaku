@@ -3,9 +3,16 @@
 namespace Tests\Feature\Security;
 
 use App\Actions\ProvisionHouseholdForUser;
+use App\Livewire\Accounts\ManageAccounts;
+use App\Livewire\Budgets\ManageBudgets;
+use App\Livewire\Savings\ManageSavingsGoals;
+use App\Livewire\Transactions\CreateTransaction;
+use App\Livewire\Transactions\EditTransaction;
+use App\Livewire\Transactions\TransactionList;
 use App\Models\Account;
 use App\Models\Budget;
 use App\Models\Category;
+use App\Models\HouseholdMember;
 use App\Models\SavingsContribution;
 use App\Models\SavingsGoal;
 use App\Models\Transaction;
@@ -27,13 +34,19 @@ class CrossHouseholdAccessTest extends TestCase
     use RefreshDatabase;
 
     private User $userA;
+
     private User $userB;
 
     private Account $accountA;
+
     private Category $categoryA;
+
     private Transaction $transactionA;
+
     private Budget $budgetA;
+
     private SavingsGoal $goalA;
+
     private SavingsContribution $contributionA;
 
     protected function setUp(): void
@@ -42,15 +55,15 @@ class CrossHouseholdAccessTest extends TestCase
 
         // UserA with full household data
         $this->userA = User::factory()->create();
-        $householdA  = $this->userA->household;
+        $householdA = $this->userA->household;
 
         $this->accountA = Account::create([
             'household_id' => $householdA->id,
-            'user_id'      => $this->userA->id,
-            'name'         => 'BCA UserA',
-            'type'         => Account::TYPE_BANK,
-            'balance'      => 500_000,
-            'is_active'    => true,
+            'user_id' => $this->userA->id,
+            'name' => 'BCA UserA',
+            'type' => Account::TYPE_BANK,
+            'balance' => 500_000,
+            'is_active' => true,
         ]);
 
         $this->categoryA = $householdA->categories()
@@ -58,39 +71,39 @@ class CrossHouseholdAccessTest extends TestCase
             ->firstOrFail();
 
         $this->transactionA = Transaction::create([
-            'user_id'          => $this->userA->id,
-            'household_id'     => $householdA->id,
-            'category_id'      => $this->categoryA->id,
-            'account_id'       => $this->accountA->id,
-            'type'             => Transaction::TYPE_EXPENSE,
-            'amount'           => 50_000,
+            'user_id' => $this->userA->id,
+            'household_id' => $householdA->id,
+            'category_id' => $this->categoryA->id,
+            'account_id' => $this->accountA->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 50_000,
             'transaction_date' => now()->toDateString(),
-            'source'           => Transaction::SOURCE_MANUAL,
+            'source' => Transaction::SOURCE_MANUAL,
         ]);
 
         $this->budgetA = Budget::create([
-            'user_id'      => $this->userA->id,
+            'user_id' => $this->userA->id,
             'household_id' => $householdA->id,
-            'category_id'  => $this->categoryA->id,
-            'month'        => now()->month,
-            'year'         => now()->year,
-            'amount'       => 1_000_000,
+            'category_id' => $this->categoryA->id,
+            'month' => now()->month,
+            'year' => now()->year,
+            'amount' => 1_000_000,
         ]);
 
         $this->goalA = SavingsGoal::create([
-            'user_id'       => $this->userA->id,
-            'household_id'  => $householdA->id,
-            'name'          => 'Dana Darurat A',
+            'user_id' => $this->userA->id,
+            'household_id' => $householdA->id,
+            'name' => 'Dana Darurat A',
             'target_amount' => 10_000_000,
-            'current_amount'=> 500_000,
-            'status'        => SavingsGoal::STATUS_ACTIVE,
+            'current_amount' => 500_000,
+            'status' => SavingsGoal::STATUS_ACTIVE,
         ]);
 
         $this->contributionA = SavingsContribution::create([
-            'user_id'           => $this->userA->id,
-            'household_id'      => $householdA->id,
-            'savings_goal_id'   => $this->goalA->id,
-            'amount'            => 500_000,
+            'user_id' => $this->userA->id,
+            'household_id' => $householdA->id,
+            'savings_goal_id' => $this->goalA->id,
+            'amount' => 500_000,
             'contribution_date' => now()->toDateString(),
         ]);
 
@@ -114,13 +127,13 @@ class CrossHouseholdAccessTest extends TestCase
     public function user_a_can_edit_own_transaction(): void
     {
         Livewire::actingAs($this->userA)
-            ->test(\App\Livewire\Transactions\EditTransaction::class, ['transaction' => $this->transactionA])
+            ->test(EditTransaction::class, ['transaction' => $this->transactionA])
             ->set('amount', '75000')
             ->call('save')
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('transactions', [
-            'id'     => $this->transactionA->id,
+            'id' => $this->transactionA->id,
             'amount' => 75_000,
         ]);
     }
@@ -148,7 +161,7 @@ class CrossHouseholdAccessTest extends TestCase
         $this->actingAs($this->userB);
 
         $response = Livewire::actingAs($this->userB)
-            ->test(\App\Livewire\Transactions\EditTransaction::class, [
+            ->test(EditTransaction::class, [
                 'transaction' => $this->transactionA,
             ]);
 
@@ -166,12 +179,12 @@ class CrossHouseholdAccessTest extends TestCase
         $originalName = $this->accountA->name;
 
         Livewire::actingAs($this->userB)
-            ->test(\App\Livewire\Accounts\ManageAccounts::class)
+            ->test(ManageAccounts::class)
             ->call('openEdit', $this->accountA->id); // should be silently ignored
 
         // AccountA name must not be changed
         $this->assertDatabaseHas('accounts', [
-            'id'   => $this->accountA->id,
+            'id' => $this->accountA->id,
             'name' => $originalName,
         ]);
     }
@@ -180,7 +193,7 @@ class CrossHouseholdAccessTest extends TestCase
     public function livewire_manage_accounts_delete_cross_household_is_silently_ignored(): void
     {
         Livewire::actingAs($this->userB)
-            ->test(\App\Livewire\Accounts\ManageAccounts::class)
+            ->test(ManageAccounts::class)
             ->call('confirmDelete', $this->accountA->id)
             ->call('delete');
 
@@ -194,11 +207,11 @@ class CrossHouseholdAccessTest extends TestCase
         $original = $this->accountA->is_active;
 
         Livewire::actingAs($this->userB)
-            ->test(\App\Livewire\Accounts\ManageAccounts::class)
+            ->test(ManageAccounts::class)
             ->call('toggleActive', $this->accountA->id);
 
         $this->assertDatabaseHas('accounts', [
-            'id'        => $this->accountA->id,
+            'id' => $this->accountA->id,
             'is_active' => $original,
         ]);
     }
@@ -213,7 +226,7 @@ class CrossHouseholdAccessTest extends TestCase
         // ManageBudgets::deleteBudget uses abort_if(! $budget, 404) after household scope
         // So calling with a foreign ID returns 404 response
         Livewire::actingAs($this->userB)
-            ->test(\App\Livewire\Budgets\ManageBudgets::class)
+            ->test(ManageBudgets::class)
             ->call('deleteBudget', $this->budgetA->id)
             ->assertStatus(404);
 
@@ -228,12 +241,12 @@ class CrossHouseholdAccessTest extends TestCase
 
         // startEdit uses abort_if(! $budget, 404) → 404 for cross-household IDs
         Livewire::actingAs($this->userB)
-            ->test(\App\Livewire\Budgets\ManageBudgets::class)
+            ->test(ManageBudgets::class)
             ->call('startEdit', $this->budgetA->id)
             ->assertStatus(404);
 
         $this->assertDatabaseHas('budgets', [
-            'id'     => $this->budgetA->id,
+            'id' => $this->budgetA->id,
             'amount' => $originalAmount,
         ]);
     }
@@ -247,12 +260,12 @@ class CrossHouseholdAccessTest extends TestCase
     {
         // archiveGoal uses abort_if(! $goal, 404)
         Livewire::actingAs($this->userB)
-            ->test(\App\Livewire\Savings\ManageSavingsGoals::class)
+            ->test(ManageSavingsGoals::class)
             ->call('archiveGoal', $this->goalA->id)
             ->assertStatus(404);
 
         $this->assertDatabaseHas('savings_goals', [
-            'id'     => $this->goalA->id,
+            'id' => $this->goalA->id,
             'status' => SavingsGoal::STATUS_ACTIVE,
         ]);
     }
@@ -261,8 +274,8 @@ class CrossHouseholdAccessTest extends TestCase
     public function livewire_manage_savings_delete_cross_household_is_silently_ignored(): void
     {
         // Verify there is no deleteGoal public method — if any add: would also be 404 scoped
-        $reflection = new \ReflectionClass(\App\Livewire\Savings\ManageSavingsGoals::class);
-        $publicMethods = array_map(fn($m) => $m->getName(), $reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
+        $reflection = new \ReflectionClass(ManageSavingsGoals::class);
+        $publicMethods = array_map(fn ($m) => $m->getName(), $reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
         // The component intentionally has no deleteGoal — goals are archived, not deleted.
         // [CONFIRMED] By design: goals are never hard-deleted from UI.
         $this->assertNotContains('deleteGoal', $publicMethods);
@@ -275,12 +288,12 @@ class CrossHouseholdAccessTest extends TestCase
 
         // startContribution uses abort_if(! $goal, 404)
         Livewire::actingAs($this->userB)
-            ->test(\App\Livewire\Savings\ManageSavingsGoals::class)
+            ->test(ManageSavingsGoals::class)
             ->call('startContribution', $this->goalA->id)
             ->assertStatus(404);
 
         $this->assertDatabaseHas('savings_goals', [
-            'id'             => $this->goalA->id,
+            'id' => $this->goalA->id,
             'current_amount' => $originalAmount,
         ]);
     }
@@ -297,7 +310,7 @@ class CrossHouseholdAccessTest extends TestCase
         $this->actingAs($this->userB)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertDontSee($this->categoryA->name . ' (householdA)'); // should not appear
+            ->assertDontSee($this->categoryA->name.' (householdA)'); // should not appear
 
         // More direct: assert userB's total expense is Rp 0 (no transactions)
         // The dashboard shows "Pengeluaran Bulan Ini" — verify it shows 0, not 50000
@@ -325,7 +338,7 @@ class CrossHouseholdAccessTest extends TestCase
     {
         // UserB tries to save a transaction with categoryA.id (belongs to householdA)
         Livewire::actingAs($this->userB)
-            ->test(\App\Livewire\Transactions\CreateTransaction::class)
+            ->test(CreateTransaction::class)
             ->set('type', Transaction::TYPE_EXPENSE)
             ->set('category_id', $this->categoryA->id) // cross-household ID
             ->set('amount', '50000')
@@ -343,7 +356,7 @@ class CrossHouseholdAccessTest extends TestCase
             ->first();
 
         Livewire::actingAs($this->userB)
-            ->test(\App\Livewire\Transactions\CreateTransaction::class)
+            ->test(CreateTransaction::class)
             ->set('type', Transaction::TYPE_EXPENSE)
             ->set('category_id', $categoryB->id)
             ->set('account_id', $this->accountA->id) // cross-household account
@@ -361,24 +374,24 @@ class CrossHouseholdAccessTest extends TestCase
     public function two_users_in_same_household_share_transaction_visibility(): void
     {
         // Create userC without factory hooks by using raw Eloquent create
-        $userC = \App\Models\User::create([
-            'name'              => 'User C',
-            'email'             => 'userc@example.com',
+        $userC = User::create([
+            'name' => 'User C',
+            'email' => 'userc@example.com',
             'email_verified_at' => now(),
-            'password'          => bcrypt('password'),
+            'password' => bcrypt('password'),
         ]);
 
         // Manually join householdA as member (skips ProvisionHouseholdForUser)
-        \App\Models\HouseholdMember::create([
+        HouseholdMember::create([
             'household_id' => $this->userA->household->id,
-            'user_id'      => $userC->id,
-            'role'         => \App\Models\HouseholdMember::ROLE_MEMBER,
+            'user_id' => $userC->id,
+            'role' => HouseholdMember::ROLE_MEMBER,
         ]);
         $userC->refresh();
 
         // UserC (member of householdA) should see categoryA's name via TransactionList
         Livewire::actingAs($userC)
-            ->test(\App\Livewire\Transactions\TransactionList::class)
+            ->test(TransactionList::class)
             ->assertSee($this->categoryA->name);
     }
 
@@ -390,21 +403,21 @@ class CrossHouseholdAccessTest extends TestCase
     public function transaction_model_fillable_is_appropriately_scoped(): void
     {
         // 'deleted_at' is NOT in fillable (should never be mass-assignable)
-        $this->assertNotContains('deleted_at', (new Transaction())->getFillable());
+        $this->assertNotContains('deleted_at', (new Transaction)->getFillable());
         // 'id' is NOT in fillable
-        $this->assertNotContains('id', (new Transaction())->getFillable());
+        $this->assertNotContains('id', (new Transaction)->getFillable());
     }
 
     /** @test [CONFIRMED] Account fillable does not include dangerous fields */
     public function account_model_fillable_does_not_include_id(): void
     {
-        $this->assertNotContains('id', (new Account())->getFillable());
-        $this->assertNotContains('deleted_at', (new Account())->getFillable());
+        $this->assertNotContains('id', (new Account)->getFillable());
+        $this->assertNotContains('deleted_at', (new Account)->getFillable());
     }
 
     /** @test [CONFIRMED] SavingsGoal fillable does not include id */
     public function savings_goal_model_fillable_does_not_include_id(): void
     {
-        $this->assertNotContains('id', (new SavingsGoal())->getFillable());
+        $this->assertNotContains('id', (new SavingsGoal)->getFillable());
     }
 }

@@ -122,6 +122,7 @@ class ManageBudgets extends Component
 
         if ($sourceBudgets->isEmpty()) {
             session()->flash('budget_status', 'Tidak ada anggaran bulan lalu untuk disalin.');
+
             return;
         }
 
@@ -154,6 +155,7 @@ class ManageBudgets extends Component
 
         if ($copiedCount === 0) {
             session()->flash('budget_status', 'Semua kategori dari bulan lalu sudah punya anggaran bulan ini.');
+
             return;
         }
 
@@ -189,6 +191,7 @@ class ManageBudgets extends Component
 
         if (! $category || $category->type !== Category::TYPE_EXPENSE) {
             $this->addError('category_id', 'Kategori pengeluaran tidak ditemukan.');
+
             return;
         }
 
@@ -201,6 +204,7 @@ class ManageBudgets extends Component
 
         if ($exists) {
             $this->addError('category_id', 'Anggaran untuk kategori ini pada bulan tersebut sudah ada.');
+
             return;
         }
 

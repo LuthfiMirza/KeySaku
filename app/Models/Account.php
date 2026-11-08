@@ -10,9 +10,12 @@ class Account extends Model
 {
     use HasFactory;
 
-    public const TYPE_CASH       = 'cash';
-    public const TYPE_BANK       = 'bank';
-    public const TYPE_EWALLET    = 'ewallet';
+    public const TYPE_CASH = 'cash';
+
+    public const TYPE_BANK = 'bank';
+
+    public const TYPE_EWALLET = 'ewallet';
+
     public const TYPE_INVESTMENT = 'investment';
 
     protected $fillable = [
@@ -29,7 +32,7 @@ class Account extends Model
     protected function casts(): array
     {
         return [
-            'balance'   => 'decimal:2',
+            'balance' => 'decimal:2',
             'is_active' => 'boolean',
         ];
     }
@@ -52,11 +55,11 @@ class Account extends Model
     public static function typeLabel(string $type): string
     {
         return match ($type) {
-            self::TYPE_CASH       => 'Tunai',
-            self::TYPE_BANK       => 'Bank',
-            self::TYPE_EWALLET    => 'Dompet Digital',
+            self::TYPE_CASH => 'Tunai',
+            self::TYPE_BANK => 'Bank',
+            self::TYPE_EWALLET => 'Dompet Digital',
             self::TYPE_INVESTMENT => 'Investasi',
-            default               => $type,
+            default => $type,
         };
     }
 

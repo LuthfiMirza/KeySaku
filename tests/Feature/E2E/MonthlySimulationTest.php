@@ -7,11 +7,10 @@ use App\Livewire\Budgets\ManageBudgets;
 use App\Livewire\Savings\ManageSavingsGoals;
 use App\Livewire\Transactions\CreateTransaction;
 use App\Livewire\Transactions\EditTransaction;
+use App\Livewire\Transactions\VoiceTransaction;
 use App\Models\Account;
 use App\Models\Budget;
 use App\Models\Category;
-use App\Models\Household;
-use App\Models\SavingsContribution;
 use App\Models\SavingsGoal;
 use App\Models\Transaction;
 use App\Models\User;
@@ -80,7 +79,7 @@ class MonthlySimulationTest extends TestCase
 
         $this->assertEquals(500000, $kas->balance);
         $this->assertEquals(2000000, $bank->balance);
-        
+
         $totalBalance = $kas->balance + $bank->balance;
         $this->assertEquals(2500000, $totalBalance);
 
@@ -183,7 +182,7 @@ class MonthlySimulationTest extends TestCase
 
         $livewire = Livewire::actingAs($user)
             ->test(ManageBudgets::class);
-        
+
         // Expense makan saat ini 200k / 400k (50%) -> Aman
         $livewire->assertSee('Aman');
 
@@ -192,7 +191,7 @@ class MonthlySimulationTest extends TestCase
             ->set('type', Transaction::TYPE_EXPENSE)->set('category_id', $catMakan->id)
             ->set('account_id', $kas->id)->set('amount', '120000')->set('transaction_date', $date)
             ->call('save');
-        
+
         $livewire = Livewire::actingAs($user)->test(ManageBudgets::class);
         $livewire->assertSee('Mendekati Batas');
 
@@ -201,7 +200,7 @@ class MonthlySimulationTest extends TestCase
             ->set('type', Transaction::TYPE_EXPENSE)->set('category_id', $catMakan->id)
             ->set('account_id', $kas->id)->set('amount', '80000')->set('transaction_date', $date)
             ->call('save');
-        
+
         $livewire = Livewire::actingAs($user)->test(ManageBudgets::class);
         $livewire->assertSee('Mendekati Batas'); // Since > 100 is Lewat Batas, 100% is still Mendekati
 
@@ -241,7 +240,7 @@ class MonthlySimulationTest extends TestCase
             ->call('copyPreviousMonthBudgets');
         $count = Budget::where('month', now()->month)->where('year', now()->year)->count();
         $this->assertEquals(1, $count);
-        
+
         // Copy again -> no duplicates
         Livewire::actingAs($user)->test(ManageBudgets::class)
             ->call('copyPreviousMonthBudgets');
@@ -297,7 +296,7 @@ class MonthlySimulationTest extends TestCase
         $kas->refresh();
         $bank->refresh();
         $expectedKasAfterSavings = $expectedKas - 120000 - 80000 - 10000;
-        $this->assertEquals($expectedKasAfterSavings, $kas->balance, "Savings contributions MUST NOT affect account balance per current design.");
+        $this->assertEquals($expectedKasAfterSavings, $kas->balance, 'Savings contributions MUST NOT affect account balance per current design.');
         $this->assertEquals($expectedBank, $bank->balance);
 
         // Arsipkan
@@ -328,7 +327,7 @@ class MonthlySimulationTest extends TestCase
 
         // Soft delete
         // Let's use TransactionList to delete
-        Livewire::actingAs($user)->test(\App\Livewire\Transactions\EditTransaction::class, ['transaction' => $trx])
+        Livewire::actingAs($user)->test(EditTransaction::class, ['transaction' => $trx])
             ->call('delete');
 
         $kas->refresh();
@@ -344,35 +343,35 @@ class MonthlySimulationTest extends TestCase
         // ---------------------------------------------------------
         // Langkah 7: Suara
         // ---------------------------------------------------------
-        $parser = new VoiceTransactionParser();
+        $parser = new VoiceTransactionParser;
         $cases = [
-            "beli makan siang dua puluh ribu" => ['amount' => 20000],
-            "bayar transport lima belas ribu" => ['amount' => 15000],
-            "gaji masuk lima juta" => ['amount' => 5000000, 'type' => 'income'],
-            "seratus lima puluh ribu belanja" => ['amount' => 150000],
-            "setengah juta" => ['amount' => 500000],
-            "25rb" => ['amount' => 25000],
-            "Rp 25.000" => ['amount' => 25000],
-            "1,5 juta" => ['amount' => 1500000],
-            "hanya text tanpa angka" => ['amount' => null],
-            "BelI MakAn" => ['amount' => null],
+            'beli makan siang dua puluh ribu' => ['amount' => 20000],
+            'bayar transport lima belas ribu' => ['amount' => 15000],
+            'gaji masuk lima juta' => ['amount' => 5000000, 'type' => 'income'],
+            'seratus lima puluh ribu belanja' => ['amount' => 150000],
+            'setengah juta' => ['amount' => 500000],
+            '25rb' => ['amount' => 25000],
+            'Rp 25.000' => ['amount' => 25000],
+            '1,5 juta' => ['amount' => 1500000],
+            'hanya text tanpa angka' => ['amount' => null],
+            'BelI MakAn' => ['amount' => null],
         ];
 
         $allCategories = $household->categories()->get();
-        foreach($cases as $input => $expected) {
+        foreach ($cases as $input => $expected) {
             $parsed = $parser->parse($input, $allCategories);
             $this->assertEquals($expected['amount'], $parsed['amount'], "Failed parsing: $input");
         }
-        
+
         // Simpan hasil
-        Livewire::actingAs($user)->test(\App\Livewire\Transactions\VoiceTransaction::class)
+        Livewire::actingAs($user)->test(VoiceTransaction::class)
             ->set('transcript', 'beli makan siang dua puluh ribu kategori makanan') // beli makan siang = expense, 20000 = amount, kategori makanan = category
             ->call('parse')
             ->call('save')
             ->assertRedirect(route('transactions.index'));
 
-        // 
-            
+        //
+
         $voiceTrx = $household->transactions()->where('raw_voice_text', 'beli makan siang dua puluh ribu kategori makanan')->first();
         $this->assertNotNull($voiceTrx);
         $this->assertEquals(Transaction::SOURCE_VOICE, $voiceTrx->source);
@@ -404,7 +403,7 @@ class MonthlySimulationTest extends TestCase
             ->set('category_id', $catMakan->id)
             ->set('account_id', $kas->id)
             ->set('transaction_date', $date);
-            
+
         $livewireCreate->set('amount', '0')->call('save')->assertHasErrors(['amount']);
         $livewireCreate->set('amount', '999999999999999')->call('save')->assertHasNoErrors(); // Should work if BIGINT/VARCHAR handles it
     }

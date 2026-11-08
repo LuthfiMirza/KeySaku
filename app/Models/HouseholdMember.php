@@ -11,6 +11,7 @@ class HouseholdMember extends Model
     use HasFactory;
 
     public const ROLE_OWNER = 'owner';
+
     public const ROLE_MEMBER = 'member';
 
     protected $fillable = [

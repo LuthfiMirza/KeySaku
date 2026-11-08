@@ -28,7 +28,7 @@ class CategoryManager extends Component
             'icon' => ['nullable', 'string', 'max:50'],
         ]);
 
-        $category = $this->editingCategory ?? new Category();
+        $category = $this->editingCategory ?? new Category;
         $category->fill($validated);
         $category->user_id = auth()->id();
         $category->household_id = auth()->user()->household->id;
@@ -64,6 +64,7 @@ class CategoryManager extends Component
                 'category_error',
                 "Kategori ini masih dipakai oleh {$transactionCount} transaksi. Hapus atau pindahkan transaksi tersebut lebih dulu."
             );
+
             return;
         }
 
@@ -103,5 +104,4 @@ class CategoryManager extends Component
     {
         return auth()->user()->household->categories();
     }
-
 }

@@ -9,7 +9,6 @@ use App\Livewire\Transactions\CreateTransaction;
 use App\Models\Budget;
 use App\Models\Category;
 use App\Models\SavingsGoal;
-use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;

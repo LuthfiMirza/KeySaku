@@ -48,9 +48,9 @@ class UserWithoutHouseholdTest extends TestCase
     public function register_endpoint_always_creates_household(): void
     {
         $response = $this->post(route('register'), [
-            'name'                  => 'Test User',
-            'email'                 => 'testuser@example.com',
-            'password'              => 'password123',
+            'name' => 'Test User',
+            'email' => 'testuser@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
@@ -68,11 +68,11 @@ class UserWithoutHouseholdTest extends TestCase
         $inviteCode = $owner->household->invite_code;
 
         $this->post(route('register'), [
-            'name'                  => 'New Member',
-            'email'                 => 'newmember@example.com',
-            'password'              => 'password123',
+            'name' => 'New Member',
+            'email' => 'newmember@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
-            'invite_code'           => $inviteCode,
+            'invite_code' => $inviteCode,
         ])->assertRedirect();
 
         $newMember = User::where('email', 'newmember@example.com')->firstOrFail();
@@ -106,6 +106,6 @@ class UserWithoutHouseholdTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertRedirect('/login')
-                 ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors('email');
     }
 }

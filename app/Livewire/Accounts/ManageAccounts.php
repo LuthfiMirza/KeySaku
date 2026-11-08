@@ -11,13 +11,18 @@ class ManageAccounts extends Component
 {
     // Form state
     public bool $showForm = false;
+
     public ?int $editingId = null;
 
-    public string $name     = '';
-    public string $type     = Account::TYPE_CASH;
-    public string $balance  = '';
-    public string $icon     = '';
-    public string $color    = '#6366f1';
+    public string $name = '';
+
+    public string $type = Account::TYPE_CASH;
+
+    public string $balance = '';
+
+    public string $icon = '';
+
+    public string $color = '#6366f1';
 
     // Delete confirmation
     public ?int $confirmDeleteId = null;
@@ -28,9 +33,9 @@ class ManageAccounts extends Component
     public function openCreate(): void
     {
         $this->reset(['editingId', 'name', 'balance', 'icon']);
-        $this->type      = Account::TYPE_CASH;
-        $this->color     = '#6366f1';
-        $this->showForm  = true;
+        $this->type = Account::TYPE_CASH;
+        $this->color = '#6366f1';
+        $this->showForm = true;
         $this->statusMessage = null;
     }
 
@@ -42,23 +47,23 @@ class ManageAccounts extends Component
         }
 
         $this->editingId = $id;
-        $this->name      = $account->name;
-        $this->type      = $account->type;
-        $this->balance   = (string) $account->balance;
-        $this->icon      = (string) ($account->icon ?? '');
-        $this->color     = $account->color ?? '#6366f1';
-        $this->showForm  = true;
+        $this->name = $account->name;
+        $this->type = $account->type;
+        $this->balance = (string) $account->balance;
+        $this->icon = (string) ($account->icon ?? '');
+        $this->color = $account->color ?? '#6366f1';
+        $this->showForm = true;
         $this->statusMessage = null;
     }
 
     public function save(): void
     {
         $validated = $this->validate([
-            'name'    => ['required', 'string', 'max:100'],
-            'type'    => ['required', Rule::in(Account::types())],
+            'name' => ['required', 'string', 'max:100'],
+            'type' => ['required', Rule::in(Account::types())],
             'balance' => ['required', 'numeric', 'min:0'],
-            'icon'    => ['nullable', 'string', 'max:50'],
-            'color'   => ['required', 'string', 'max:20'],
+            'icon' => ['nullable', 'string', 'max:50'],
+            'color' => ['required', 'string', 'max:20'],
         ]);
 
         $household = auth()->user()->household;
@@ -73,14 +78,14 @@ class ManageAccounts extends Component
         } else {
             $household->accounts()->create([
                 ...$validated,
-                'user_id'   => auth()->id(),
+                'user_id' => auth()->id(),
                 'is_active' => true,
             ]);
             $this->statusMessage = 'Akun berhasil ditambahkan.';
         }
 
         $this->reset(['showForm', 'editingId', 'name', 'balance', 'icon']);
-        $this->type  = Account::TYPE_CASH;
+        $this->type = Account::TYPE_CASH;
         $this->color = '#6366f1';
     }
 
@@ -120,7 +125,7 @@ class ManageAccounts extends Component
     public function cancelForm(): void
     {
         $this->reset(['showForm', 'editingId', 'name', 'balance', 'icon']);
-        $this->type  = Account::TYPE_CASH;
+        $this->type = Account::TYPE_CASH;
         $this->color = '#6366f1';
     }
 
@@ -129,7 +134,7 @@ class ManageAccounts extends Component
         $household = auth()->user()->household;
 
         return view('livewire.accounts.manage-accounts', [
-            'accounts'   => $household->accounts()->orderBy('name')->get(),
+            'accounts' => $household->accounts()->orderBy('name')->get(),
             'typeLabels' => collect(Account::types())->mapWithKeys(
                 fn (string $t) => [$t => Account::typeLabel($t)]
             ),

@@ -15,14 +15,14 @@ class EnsureHouseholdExists
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && !$request->user()->household) {
+        if ($request->user() && ! $request->user()->household) {
             auth()->logout();
-            
+
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            
+
             return redirect('/login')->withErrors([
-                'email' => 'Akun Anda tidak memiliki Household. Silakan hubungi administrator.'
+                'email' => 'Akun Anda tidak memiliki Household. Silakan hubungi administrator.',
             ]);
         }
 

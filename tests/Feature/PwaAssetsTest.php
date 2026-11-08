@@ -36,7 +36,7 @@ class PwaAssetsTest extends TestCase
             if (isset($icon['sizes']) && preg_match('/^(\d+)x\d+$/', $icon['sizes'], $matches)) {
                 $expectedSize = (int) $matches[1];
                 $imageSize = getimagesize($iconPath);
-                
+
                 $this->assertNotFalse($imageSize, "File is not a valid image: {$src}");
                 $this->assertEquals($expectedSize, $imageSize[0], "Width mismatch for {$src}");
                 $this->assertEquals($expectedSize, $imageSize[1], "Height mismatch for {$src}");

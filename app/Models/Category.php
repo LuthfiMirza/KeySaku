@@ -10,9 +10,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
-    use HasFactory, BelongsToUser;
+    use BelongsToUser, HasFactory;
 
     public const TYPE_INCOME = 'income';
+
     public const TYPE_EXPENSE = 'expense';
 
     protected $fillable = [

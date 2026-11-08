@@ -2,11 +2,14 @@
 
 namespace Tests\Feature\Transactions;
 
+use App\Livewire\Transactions\CreateTransaction;
+use App\Livewire\Transactions\TransferTransaction;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -29,8 +32,11 @@ class TransferTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Account $accountA;
+
     private Account $accountB;
+
     private Category $categoryExpense;
 
     protected function setUp(): void
@@ -38,24 +44,24 @@ class TransferTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $household  = $this->user->household;
+        $household = $this->user->household;
 
         $this->accountA = Account::create([
             'household_id' => $household->id,
-            'user_id'      => $this->user->id,
-            'name'         => 'BCA',
-            'type'         => Account::TYPE_BANK,
-            'balance'      => 500_000,
-            'is_active'    => true,
+            'user_id' => $this->user->id,
+            'name' => 'BCA',
+            'type' => Account::TYPE_BANK,
+            'balance' => 500_000,
+            'is_active' => true,
         ]);
 
         $this->accountB = Account::create([
             'household_id' => $household->id,
-            'user_id'      => $this->user->id,
-            'name'         => 'GoPay',
-            'type'         => Account::TYPE_EWALLET,
-            'balance'      => 100_000,
-            'is_active'    => true,
+            'user_id' => $this->user->id,
+            'name' => 'GoPay',
+            'type' => Account::TYPE_EWALLET,
+            'balance' => 100_000,
+            'is_active' => true,
         ]);
 
         $this->categoryExpense = $household->categories()
@@ -77,8 +83,8 @@ class TransferTest extends TestCase
     /** @test [CONFIRMED] CreateTransaction component does not support transfer type */
     public function create_transaction_rejects_transfer_type(): void
     {
-        \Livewire\Livewire::actingAs($this->user)
-            ->test(\App\Livewire\Transactions\CreateTransaction::class)
+        Livewire::actingAs($this->user)
+            ->test(CreateTransaction::class)
             ->set('type', 'transfer')
             ->set('amount', '50000')
             ->set('transaction_date', now()->toDateString())
@@ -90,7 +96,7 @@ class TransferTest extends TestCase
     public function no_transfer_livewire_component_exists(): void
     {
         $this->assertFalse(
-            class_exists(\App\Livewire\Transactions\TransferTransaction::class),
+            class_exists(TransferTransaction::class),
             'TransferTransaction Livewire component should not exist yet (feature not implemented)'
         );
     }
@@ -105,18 +111,18 @@ class TransferTest extends TestCase
         $originalBalance = (float) $this->accountA->balance;
 
         Transaction::create([
-            'user_id'          => $this->user->id,
-            'household_id'     => $this->user->household->id,
-            'category_id'      => $this->categoryExpense->id,
-            'account_id'       => $this->accountA->id,
-            'type'             => Transaction::TYPE_EXPENSE,
-            'amount'           => 50_000,
+            'user_id' => $this->user->id,
+            'household_id' => $this->user->household->id,
+            'category_id' => $this->categoryExpense->id,
+            'account_id' => $this->accountA->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 50_000,
             'transaction_date' => now()->toDateString(),
-            'source'           => Transaction::SOURCE_MANUAL,
+            'source' => Transaction::SOURCE_MANUAL,
         ]);
 
         $this->assertDatabaseHas('accounts', [
-            'id'      => $this->accountA->id,
+            'id' => $this->accountA->id,
             'balance' => $originalBalance - 50_000,
         ]);
     }
@@ -127,20 +133,20 @@ class TransferTest extends TestCase
         $originalBalance = (float) $this->accountA->balance;
 
         $tx = Transaction::create([
-            'user_id'          => $this->user->id,
-            'household_id'     => $this->user->household->id,
-            'category_id'      => $this->categoryExpense->id,
-            'account_id'       => $this->accountA->id,
-            'type'             => Transaction::TYPE_EXPENSE,
-            'amount'           => 50_000,
+            'user_id' => $this->user->id,
+            'household_id' => $this->user->household->id,
+            'category_id' => $this->categoryExpense->id,
+            'account_id' => $this->accountA->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 50_000,
             'transaction_date' => now()->toDateString(),
-            'source'           => Transaction::SOURCE_MANUAL,
+            'source' => Transaction::SOURCE_MANUAL,
         ]);
 
         $tx->delete();
 
         $this->assertDatabaseHas('accounts', [
-            'id'      => $this->accountA->id,
+            'id' => $this->accountA->id,
             'balance' => $originalBalance, // restored
         ]);
     }
@@ -151,21 +157,21 @@ class TransferTest extends TestCase
         $originalBalance = (float) $this->accountA->balance;
 
         $tx = Transaction::create([
-            'user_id'          => $this->user->id,
-            'household_id'     => $this->user->household->id,
-            'category_id'      => $this->categoryExpense->id,
-            'account_id'       => $this->accountA->id,
-            'type'             => Transaction::TYPE_EXPENSE,
-            'amount'           => 50_000,
+            'user_id' => $this->user->id,
+            'household_id' => $this->user->household->id,
+            'category_id' => $this->categoryExpense->id,
+            'account_id' => $this->accountA->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 50_000,
             'transaction_date' => now()->toDateString(),
-            'source'           => Transaction::SOURCE_MANUAL,
+            'source' => Transaction::SOURCE_MANUAL,
         ]);
 
         $tx->delete();
         $tx->restore();
 
         $this->assertDatabaseHas('accounts', [
-            'id'      => $this->accountA->id,
+            'id' => $this->accountA->id,
             'balance' => $originalBalance - 50_000,
         ]);
     }
@@ -174,14 +180,14 @@ class TransferTest extends TestCase
     public function updating_transaction_amount_adjusts_account_balance(): void
     {
         $tx = Transaction::create([
-            'user_id'          => $this->user->id,
-            'household_id'     => $this->user->household->id,
-            'category_id'      => $this->categoryExpense->id,
-            'account_id'       => $this->accountA->id,
-            'type'             => Transaction::TYPE_EXPENSE,
-            'amount'           => 50_000,
+            'user_id' => $this->user->id,
+            'household_id' => $this->user->household->id,
+            'category_id' => $this->categoryExpense->id,
+            'account_id' => $this->accountA->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 50_000,
             'transaction_date' => now()->toDateString(),
-            'source'           => Transaction::SOURCE_MANUAL,
+            'source' => Transaction::SOURCE_MANUAL,
         ]);
 
         $balanceAfterCreate = (float) $this->accountA->fresh()->balance;
@@ -190,7 +196,7 @@ class TransferTest extends TestCase
         $tx->update(['amount' => 75_000]);
 
         $this->assertDatabaseHas('accounts', [
-            'id'      => $this->accountA->id,
+            'id' => $this->accountA->id,
             'balance' => $balanceAfterCreate - 25_000,
         ]);
     }
@@ -202,14 +208,14 @@ class TransferTest extends TestCase
         $balanceB = (float) $this->accountB->balance;
 
         $tx = Transaction::create([
-            'user_id'          => $this->user->id,
-            'household_id'     => $this->user->household->id,
-            'category_id'      => $this->categoryExpense->id,
-            'account_id'       => $this->accountA->id,
-            'type'             => Transaction::TYPE_EXPENSE,
-            'amount'           => 50_000,
+            'user_id' => $this->user->id,
+            'household_id' => $this->user->household->id,
+            'category_id' => $this->categoryExpense->id,
+            'account_id' => $this->accountA->id,
+            'type' => Transaction::TYPE_EXPENSE,
+            'amount' => 50_000,
             'transaction_date' => now()->toDateString(),
-            'source'           => Transaction::SOURCE_MANUAL,
+            'source' => Transaction::SOURCE_MANUAL,
         ]);
 
         // Move the transaction from accountA to accountB
@@ -217,12 +223,12 @@ class TransferTest extends TestCase
 
         // AccountA should be restored to original balance
         $this->assertDatabaseHas('accounts', [
-            'id'      => $this->accountA->id,
+            'id' => $this->accountA->id,
             'balance' => $balanceA,
         ]);
         // AccountB should now be decremented
         $this->assertDatabaseHas('accounts', [
-            'id'      => $this->accountB->id,
+            'id' => $this->accountB->id,
             'balance' => $balanceB - 50_000,
         ]);
     }

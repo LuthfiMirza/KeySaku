@@ -58,7 +58,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        (new ProvisionHouseholdForUser())->handle(
+        (new ProvisionHouseholdForUser)->handle(
             $user,
             $inviteCode,
             $normalizedBalance !== '' ? (float) $normalizedBalance : 0,

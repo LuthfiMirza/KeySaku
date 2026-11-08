@@ -37,10 +37,10 @@ class TransactionObserver
     {
         $oldAccountId = $transaction->getOriginal('account_id');
         $newAccountId = $transaction->account_id;
-        $oldType      = $transaction->getOriginal('type');
-        $newType      = $transaction->type;
-        $oldAmount    = (float) $transaction->getOriginal('amount');
-        $newAmount    = (float) $transaction->amount;
+        $oldType = $transaction->getOriginal('type');
+        $newType = $transaction->type;
+        $oldAmount = (float) $transaction->getOriginal('amount');
+        $newAmount = (float) $transaction->amount;
 
         // Revert the old account effect
         if ($oldAccountId) {

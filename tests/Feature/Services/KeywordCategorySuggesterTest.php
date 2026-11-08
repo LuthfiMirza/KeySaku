@@ -19,7 +19,7 @@ class KeywordCategorySuggesterTest extends TestCase
         $categories = $user->household->categories()->get();
         $transportasi = $categories->firstWhere('name', 'Transportasi');
 
-        $suggestion = (new KeywordCategorySuggester())->suggest(
+        $suggestion = (new KeywordCategorySuggester)->suggest(
             'beli bensin buat motor',
             Category::TYPE_EXPENSE,
             $categories
@@ -35,7 +35,7 @@ class KeywordCategorySuggesterTest extends TestCase
         $user = User::factory()->create();
         $categories = $user->household->categories()->get();
 
-        $suggestion = (new KeywordCategorySuggester())->suggest(
+        $suggestion = (new KeywordCategorySuggester)->suggest(
             'xyzxyz random text',
             Category::TYPE_EXPENSE,
             $categories
@@ -50,7 +50,7 @@ class KeywordCategorySuggesterTest extends TestCase
         $categories = $user->household->categories()->get();
 
         // "gaji" is an income keyword; asking for expense should yield nothing.
-        $suggestion = (new KeywordCategorySuggester())->suggest(
+        $suggestion = (new KeywordCategorySuggester)->suggest(
             'terima gaji bulan ini',
             Category::TYPE_EXPENSE,
             $categories
@@ -64,7 +64,7 @@ class KeywordCategorySuggesterTest extends TestCase
         $user = User::factory()->create();
         $categories = $user->household->categories()->get();
 
-        $suggestion = (new KeywordCategorySuggester())->suggest('   ', Category::TYPE_EXPENSE, $categories);
+        $suggestion = (new KeywordCategorySuggester)->suggest('   ', Category::TYPE_EXPENSE, $categories);
 
         $this->assertNull($suggestion);
     }

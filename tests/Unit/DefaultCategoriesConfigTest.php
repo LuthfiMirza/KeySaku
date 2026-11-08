@@ -7,12 +7,12 @@ use PHPUnit\Framework\TestCase;
 
 class DefaultCategoriesConfigTest extends TestCase
 {
-    public function test_config_contains_thirteen_entries_with_expected_structure(): void
+    public function test_config_contains_expected_structure_and_counts(): void
     {
         $defaults = require __DIR__.'/../../config/default-categories.php';
 
         $this->assertIsArray($defaults);
-        $this->assertCount(13, $defaults);
+        $this->assertCount(20, $defaults);
 
         $validTypes = [Category::TYPE_EXPENSE, Category::TYPE_INCOME];
 
@@ -29,7 +29,7 @@ class DefaultCategoriesConfigTest extends TestCase
         $expenseCount = count(array_filter($defaults, fn ($e) => $e['type'] === Category::TYPE_EXPENSE));
         $incomeCount = count(array_filter($defaults, fn ($e) => $e['type'] === Category::TYPE_INCOME));
 
-        $this->assertSame(8, $expenseCount);
-        $this->assertSame(5, $incomeCount);
+        $this->assertSame(13, $expenseCount);
+        $this->assertSame(7, $incomeCount);
     }
 }
