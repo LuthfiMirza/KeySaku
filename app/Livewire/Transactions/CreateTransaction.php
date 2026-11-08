@@ -31,7 +31,13 @@ class CreateTransaction extends Component
 
         $this->transaction_date = now()->toDateString();
         $this->category_id = $this->categories()->first()?->id;
-        $this->account_id = $this->accounts()->first()?->id;
+
+        $requestedAccount = request()->query('account_id');
+        if ($requestedAccount && $this->accounts()->whereKey($requestedAccount)->exists()) {
+            $this->account_id = (int) $requestedAccount;
+        } else {
+            $this->account_id = $this->accounts()->first()?->id;
+        }
     }
 
     public function updatedType(): void
