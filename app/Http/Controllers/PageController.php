@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -60,10 +61,23 @@ class PageController extends Controller
         ]);
 
         $normalized = preg_replace('/\D+/', '', $request->input('initial_balance'));
+        $newBalance = $normalized !== '' ? (float) $normalized : 0;
 
-        $request->user()->household->update([
-            'initial_balance' => $normalized !== '' ? (float) $normalized : 0,
+        $household = $request->user()->household;
+        $oldBalance = (float) $household->initial_balance;
+        $diff = $newBalance - $oldBalance;
+
+        $household->update([
+            'initial_balance' => $newBalance,
         ]);
+
+        // Selaraskan juga ke akun kas utama jika ada
+        $primaryAccount = $household->accounts()->where('type', Account::TYPE_CASH)->first()
+            ?? $household->accounts()->first();
+
+        if ($primaryAccount) {
+            $primaryAccount->increment('balance', $diff);
+        }
 
         return back()->with('settings_status', 'Saldo awal berhasil diperbarui.');
     }
