@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Models\Account;
 use App\Models\Household;
 use App\Models\HouseholdMember;
 use App\Models\User;
@@ -45,6 +46,18 @@ class ProvisionHouseholdForUser
         ]);
 
         $this->seedDefaultCategories($household, $user);
+
+        // Buat akun kas default agar user langsung memiliki dompet/kas aktif
+        Account::create([
+            'household_id' => $household->id,
+            'user_id' => $user->id,
+            'name' => 'Kas Tunai',
+            'type' => Account::TYPE_CASH,
+            'balance' => $initialBalance,
+            'color' => '#10b981',
+            'icon' => '💵',
+            'is_active' => true,
+        ]);
 
         return $household;
     }
