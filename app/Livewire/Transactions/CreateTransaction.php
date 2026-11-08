@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Transactions;
 
-use App\Models\Category;
 use App\Models\Transaction;
 use App\Services\CategorySuggester;
 use Illuminate\Contracts\View\View;
@@ -14,7 +13,7 @@ class CreateTransaction extends Component
     public string $type = Transaction::TYPE_EXPENSE;
 
     public ?int $category_id = null;
-    
+
     public ?int $account_id = null;
 
     public string $amount = '';
@@ -25,6 +24,11 @@ class CreateTransaction extends Component
 
     public function mount(): void
     {
+        $requestedType = request()->query('type');
+        if (in_array($requestedType, [Transaction::TYPE_EXPENSE, Transaction::TYPE_INCOME], true)) {
+            $this->type = $requestedType;
+        }
+
         $this->transaction_date = now()->toDateString();
         $this->category_id = $this->categories()->first()?->id;
         $this->account_id = $this->accounts()->first()?->id;
@@ -70,18 +74,21 @@ class CreateTransaction extends Component
 
         if (! $category) {
             $this->addError('category_id', 'Kategori tidak ditemukan.');
+
             return;
         }
 
         if ($category->type !== $validated['type']) {
             $this->addError('category_id', 'Kategori tidak sesuai dengan jenis transaksi.');
+
             return;
         }
-        
-        if (!empty($validated['account_id'])) {
+
+        if (! empty($validated['account_id'])) {
             $account = $household->accounts()->whereKey($validated['account_id'])->first();
             if (! $account) {
                 $this->addError('account_id', 'Akun tidak ditemukan.');
+
                 return;
             }
         }
@@ -122,7 +129,7 @@ class CreateTransaction extends Component
             ->where('type', $this->type)
             ->orderBy('name');
     }
-    
+
     private function accounts()
     {
         return auth()->user()->household
@@ -133,6 +140,32 @@ class CreateTransaction extends Component
 
     private function normalizeAmount(string $amount): string
     {
-        return preg_replace('/\D+/', '', $amount) ?: '';
+        $cleaned = trim($amount);
+        if ($cleaned === '') {
+            return '';
+        }
+
+        // Hapus teks mata uang seperti "Rp", "IDR", dll.
+        $cleaned = trim(preg_replace('/[^\d.,]/', '', $cleaned));
+
+        // Format ribuan Indonesia dengan titik dan kemungkinan desimal koma (contoh: 50.000 atau 1.500.000 atau 50.000,50)
+        if (preg_match('/^[0-9]{1,3}(?:\.[0-9]{3})+(?:,[0-9]+)?$/', $cleaned)) {
+            $cleaned = str_replace('.', '', $cleaned);
+            $cleaned = str_replace(',', '.', $cleaned);
+
+            return $cleaned;
+        }
+
+        // Jika koma digunakan sebagai pemisah desimal murni (contoh: 50,50)
+        if (preg_match('/^[0-9]+,[0-9]+$/', $cleaned)) {
+            return str_replace(',', '.', $cleaned);
+        }
+
+        // Jika sudah berupa angka valid (contoh: 50000 atau 50000.50)
+        if (is_numeric($cleaned)) {
+            return $cleaned;
+        }
+
+        return preg_replace('/\D+/', '', $cleaned) ?: '';
     }
 }

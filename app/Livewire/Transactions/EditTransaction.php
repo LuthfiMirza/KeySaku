@@ -14,7 +14,7 @@ class EditTransaction extends Component
     public string $type = Transaction::TYPE_EXPENSE;
 
     public ?int $category_id = null;
-    
+
     public ?int $account_id = null;
 
     public string $amount = '';
@@ -45,6 +45,8 @@ class EditTransaction extends Component
     {
         abort_unless(auth()->user()->can('update', $this->transaction), 404);
 
+        $this->amount = $this->normalizeAmount($this->amount);
+
         $validated = $this->validate([
             'type' => ['required', Rule::in(Transaction::types())],
             'category_id' => ['required', 'integer'],
@@ -53,7 +55,7 @@ class EditTransaction extends Component
             'transaction_date' => ['required', 'date'],
             'note' => ['nullable', 'string', 'max:1000'],
         ]);
-        
+
         $household = auth()->user()->household;
 
         $category = $household
@@ -63,18 +65,21 @@ class EditTransaction extends Component
 
         if (! $category) {
             $this->addError('category_id', 'Kategori tidak ditemukan.');
+
             return;
         }
 
         if ($category->type !== $validated['type']) {
             $this->addError('category_id', 'Kategori tidak sesuai dengan jenis transaksi.');
+
             return;
         }
-        
-        if (!empty($validated['account_id'])) {
+
+        if (! empty($validated['account_id'])) {
             $account = $household->accounts()->whereKey($validated['account_id'])->first();
             if (! $account) {
                 $this->addError('account_id', 'Akun tidak ditemukan.');
+
                 return;
             }
         }
@@ -117,12 +122,43 @@ class EditTransaction extends Component
             ->where('type', $this->type)
             ->orderBy('name');
     }
-    
+
     private function accounts()
     {
         return auth()->user()->household
             ->accounts()
             ->where('is_active', true)
             ->orderBy('name');
+    }
+
+    private function normalizeAmount(string $amount): string
+    {
+        $cleaned = trim($amount);
+        if ($cleaned === '') {
+            return '';
+        }
+
+        // Hapus teks mata uang seperti "Rp", "IDR", dll.
+        $cleaned = trim(preg_replace('/[^\d.,]/', '', $cleaned));
+
+        // Format ribuan Indonesia dengan titik dan kemungkinan desimal koma (contoh: 50.000 atau 1.500.000 atau 50.000,50)
+        if (preg_match('/^[0-9]{1,3}(?:\.[0-9]{3})+(?:,[0-9]+)?$/', $cleaned)) {
+            $cleaned = str_replace('.', '', $cleaned);
+            $cleaned = str_replace(',', '.', $cleaned);
+
+            return $cleaned;
+        }
+
+        // Jika koma digunakan sebagai pemisah desimal murni (contoh: 50,50)
+        if (preg_match('/^[0-9]+,[0-9]+$/', $cleaned)) {
+            return str_replace(',', '.', $cleaned);
+        }
+
+        // Jika sudah berupa angka valid (contoh: 50000 atau 50000.50)
+        if (is_numeric($cleaned)) {
+            return $cleaned;
+        }
+
+        return preg_replace('/\D+/', '', $cleaned) ?: '';
     }
 }

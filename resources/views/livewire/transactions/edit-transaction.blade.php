@@ -32,7 +32,7 @@
                 <label for="amount" class="block text-sm font-semibold text-slate-700">Nominal</label>
                 <div class="mt-2 flex rounded-2xl border border-slate-200 bg-white/80 shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
                     <span class="flex items-center px-4 text-sm font-bold text-slate-400">Rp</span>
-                    <input id="amount" type="number" min="0" step="0.01" wire:model="amount" class="block w-full rounded-r-2xl border-0 bg-transparent px-2 py-3 text-sm focus:ring-0" placeholder="50000">
+                    <input id="amount" type="text" inputmode="numeric" wire:model="amount" class="block w-full rounded-r-2xl border-0 bg-transparent px-2 py-3 text-sm focus:ring-0" placeholder="50000">
                 </div>
                 @error('amount')
                     <p class="mt-2 text-xs font-medium text-rose-500">{{ $message }}</p>
