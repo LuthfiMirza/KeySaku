@@ -55,18 +55,25 @@
     }
 
     .dock-glass {
-        background: rgba(255, 255, 255, 0.88);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.68) 0%, rgba(255, 255, 255, 0.42) 100%);
+        backdrop-filter: blur(30px) saturate(200%) contrast(102%);
+        -webkit-backdrop-filter: blur(30px) saturate(200%) contrast(102%);
         border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 
+            0 20px 40px -8px rgba(18, 19, 22, 0.12),
+            0 6px 14px -2px rgba(18, 19, 22, 0.04),
+            inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95),
+            inset 0 -1px 1px 0 rgba(0, 0, 0, 0.03);
     }
 
     .glass {
-        background-color: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.5) 100%);
+        backdrop-filter: blur(24px) saturate(190%);
+        -webkit-backdrop-filter: blur(24px) saturate(190%);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        box-shadow: 
+            0 12px 32px -4px rgba(18, 19, 22, 0.08),
+            inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
     }
 
     .safe-bottom {

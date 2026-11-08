@@ -1,11 +1,11 @@
 <nav class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-40px)] max-w-[360px]" aria-label="Navigasi Utama">
-    <div class="bg-white/85 backdrop-blur-xl rounded-full p-2 flex items-center justify-between border border-white/60 shadow-[0_12px_32px_rgba(0,0,0,0.08)]">
+    <div class="dock-glass rounded-full p-2 flex items-center justify-between transition-all duration-300">
         {{-- 1. Home (Dashboard / Beranda) --}}
         @php
             $isHome = request()->routeIs('dashboard');
         @endphp
         <a href="{{ route('dashboard') }}"
-           class="flex items-center justify-center transition-all duration-300 {{ $isHome ? 'bg-[#121316] text-white rounded-full p-3 shadow-md' : 'text-[#8E8E93] hover:text-[#121316] p-3 hover:bg-slate-100/50 rounded-full' }}"
+           class="flex items-center justify-center transition-all duration-300 {{ $isHome ? 'bg-[#121316] text-white rounded-full p-3 shadow-[0_4px_14px_rgba(18,19,22,0.25)] ring-1 ring-white/10' : 'text-[#8E8E93] hover:text-[#121316] p-3 hover:bg-white/40 rounded-full active:scale-95' }}"
            aria-label="Beranda"
            title="Beranda">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -19,7 +19,7 @@
             $isAnalytics = request()->routeIs('reports.*');
         @endphp
         <a href="{{ route('reports.index') }}"
-           class="flex items-center justify-center transition-all duration-300 {{ $isAnalytics ? 'bg-[#121316] text-white rounded-full p-3 shadow-md' : 'text-[#8E8E93] hover:text-[#121316] p-3 hover:bg-slate-100/50 rounded-full' }}"
+           class="flex items-center justify-center transition-all duration-300 {{ $isAnalytics ? 'bg-[#121316] text-white rounded-full p-3 shadow-[0_4px_14px_rgba(18,19,22,0.25)] ring-1 ring-white/10' : 'text-[#8E8E93] hover:text-[#121316] p-3 hover:bg-white/40 rounded-full active:scale-95' }}"
            aria-label="Analitik Keuangan"
            title="Analitik Keuangan">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@
             $isBudget = request()->routeIs('budgets.*') || request()->routeIs('savings.*');
         @endphp
         <a href="{{ route('budgets.index') }}"
-           class="flex items-center justify-center transition-all duration-300 {{ $isBudget ? 'bg-[#121316] text-white rounded-full p-3 shadow-md' : 'text-[#8E8E93] hover:text-[#121316] p-3 hover:bg-slate-100/50 rounded-full' }}"
+           class="flex items-center justify-center transition-all duration-300 {{ $isBudget ? 'bg-[#121316] text-white rounded-full p-3 shadow-[0_4px_14px_rgba(18,19,22,0.25)] ring-1 ring-white/10' : 'text-[#8E8E93] hover:text-[#121316] p-3 hover:bg-white/40 rounded-full active:scale-95' }}"
            aria-label="Anggaran & Tabungan"
            title="Anggaran & Tabungan">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -42,20 +42,20 @@
             <span class="sr-only">Anggaran</span>
         </a>
 
-        {{-- 4. Voice / Add (Perekam Transaksi Suara AI & Catat Transaksi) --}}
+        {{-- 4. Voice / Add (Menu Input Transaksi Suara AI & Manual Form) --}}
         <button type="button"
-                x-on:click="showVoiceModal = true"
-                class="flex items-center justify-center text-[#8E8E93] hover:text-white p-3 hover:bg-[#121316] rounded-full transition-all duration-300 relative group active:scale-95"
-                aria-label="Rekam Suara AI / Catat Transaksi"
-                title="Perekam Suara AI">
+                x-on:click="showAddMenu = true"
+                class="flex items-center justify-center text-[#8E8E93] hover:text-[#121316] p-3 hover:bg-white/40 rounded-full transition-all duration-300 relative group active:scale-95"
+                aria-label="Tambah Transaksi"
+                title="Tambah Transaksi">
             <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF8E53] opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FF6B6B]"></span>
             </span>
             <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-12 0v1.5a6 6 0 0 0 6 6ZM12 18.75v3.75m-3.75 0h7.5M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
-            <span class="sr-only">Input Suara AI</span>
+            <span class="sr-only">Tambah Transaksi</span>
         </button>
     </div>
 </nav>

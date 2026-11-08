@@ -9,12 +9,17 @@
             </svg>
         </a>
 
-        {{-- Center Account Pill with icon •••• 6281 --}}
+        {{-- Center Account Pill --}}
+        @php
+            $headerAccount = auth()->user()?->household?->accounts()->where('is_active', true)->first();
+            $headerAccountLabel = $headerAccount ? $headerAccount->name : 'Semua Akun';
+        @endphp
         <a href="{{ route('accounts') }}"
-           class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#F0EBEB] shadow-[0_4px_16px_rgba(18,19,22,0.03)] hover:border-slate-300 transition active:scale-98">
+           class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#F0EBEB] shadow-[0_4px_16px_rgba(18,19,22,0.03)] hover:border-slate-300 transition active:scale-98"
+           title="Kelola Akun & Dompet">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-xs font-semibold text-[#121316] tracking-tight">•••• 6281</span>
-            <svg class="w-3.5 h-3.5 text-[#8E8E93]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <span class="text-xs font-semibold text-[#121316] tracking-tight max-w-[120px] truncate">{{ $headerAccountLabel }}</span>
+            <svg class="w-3.5 h-3.5 text-[#8E8E93] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
             </svg>
         </a>
