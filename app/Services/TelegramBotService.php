@@ -1255,7 +1255,19 @@ class TelegramBotService
             return;
         }
 
-        $account = $household->accounts()->first();
+        $activeAccounts = $household->accounts()->where('is_active', true)->get();
+        $account = null;
+
+        foreach ($activeAccounts as $acc) {
+            if (stripos($text, strtolower($acc->name)) !== false) {
+                $account = $acc;
+                break;
+            }
+        }
+
+        if (! $account) {
+            $account = $activeAccounts->first();
+        }
         $note = trim((string) ($draft['note'] ?? ''));
         if ($note === '') {
             $note = $category->name;

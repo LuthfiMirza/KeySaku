@@ -41,11 +41,15 @@ class TelegramBotTest extends TestCase
         $this->user = User::factory()->create();
         $this->household = $this->user->household;
 
-        $this->account = Account::create([
+        $this->account = $this->household->accounts()->first() ?? Account::create([
             'household_id' => $this->household->id,
             'user_id' => $this->user->id,
             'name' => 'Dompet Kas',
             'type' => Account::TYPE_CASH,
+            'balance' => 500000,
+        ]);
+        $this->account->update([
+            'name' => 'Dompet Kas',
             'balance' => 500000,
         ]);
 
