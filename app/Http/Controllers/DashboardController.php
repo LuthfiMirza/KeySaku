@@ -130,7 +130,7 @@ class DashboardController extends Controller
                 'topSavingsGoals' => $topSavingsGoals,
             ],
             'latestTransactions' => $household->transactions()
-                ->with('category')
+                ->with(['category', 'account'])
                 ->latest('transaction_date')
                 ->latest('id')
                 ->limit(3)

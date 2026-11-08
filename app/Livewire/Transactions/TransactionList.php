@@ -15,6 +15,8 @@ class TransactionList extends Component
 
     public string $categoryId = 'all';
 
+    public string $accountId = 'all';
+
     public function mount(): void
     {
         $this->month = now()->format('Y-m');
@@ -30,6 +32,7 @@ class TransactionList extends Component
         return view('livewire.transactions.transaction-list', [
             'transactions' => $this->transactions(),
             'categories' => $this->categories(),
+            'accounts' => auth()->user()->household->accounts()->orderBy('name')->get(),
         ]);
     }
 
@@ -37,7 +40,7 @@ class TransactionList extends Component
     {
         $query = auth()->user()->household
             ->transactions()
-            ->with('category')
+            ->with(['category', 'account'])
             ->latest('transaction_date')
             ->latest('id');
 
@@ -55,6 +58,10 @@ class TransactionList extends Component
 
         if ($this->categoryId !== 'all') {
             $query->where('category_id', $this->categoryId);
+        }
+
+        if ($this->accountId !== 'all') {
+            $query->where('account_id', $this->accountId);
         }
 
         return $query->get();

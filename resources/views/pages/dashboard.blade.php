@@ -4,13 +4,13 @@
     @php
         $firstExpense = $monthlyExpenseByCategory->first();
         $secondExpense = $monthlyExpenseByCategory->skip(1)->first();
-        $topCategoryName = $firstExpense['category']?->name ?? 'Dining & Delivery';
-        $topCategoryAmount = $firstExpense ? \App\Support\Money::format($firstExpense['total']) : 'Rp 831.000';
-        $topCategoryBadge = $firstExpense ? $firstExpense['percentage'].'% dari total' : '-12% vs last month';
+        $topCategoryName = $firstExpense['category']?->name ?? 'Belum ada data';
+        $topCategoryAmount = $firstExpense ? \App\Support\Money::format($firstExpense['total']) : 'Rp 0';
+        $topCategoryBadge = $firstExpense ? $firstExpense['percentage'].'% dari total' : '-';
 
-        $favCategoryName = $secondExpense['category']?->name ?? 'Transport & Fuel';
-        $favCategoryAmount = $secondExpense ? \App\Support\Money::format($secondExpense['total']) : 'Rp 215.000';
-        $favCategoryBadge = $secondExpense ? 'x'.max(1, count($latestTransactions)).' transaksi' : 'x9 transactions';
+        $favCategoryName = $secondExpense['category']?->name ?? 'Belum ada data';
+        $favCategoryAmount = $secondExpense ? \App\Support\Money::format($secondExpense['total']) : 'Rp 0';
+        $favCategoryBadge = $secondExpense ? 'x'.max(1, count($latestTransactions)).' transaksi' : '-';
     @endphp
 
     <div class="px-5 pt-3 space-y-6 pb-6">
@@ -25,8 +25,8 @@
             <div class="relative z-10">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-black/60 font-medium tracking-wider uppercase">Total balance</p>
-                        <p class="text-[11px] text-white/80 font-medium">Total Saldo</p>
+                        <p class="text-xs text-black/60 font-medium tracking-wider uppercase">Saldo Utama</p>
+                        <p class="text-[11px] text-white/80 font-medium">Total Akumulasi</p>
                     </div>
                     <span class="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-semibold text-white border border-white/30">
                         {{ auth()->user()->preferred_currency ?? 'IDR' }}
@@ -68,41 +68,41 @@
 
                 {{-- 3 Circular Action Buttons with labels below --}}
                 <div class="mt-5 pt-4 border-t border-white/25 grid grid-cols-3 gap-2">
-                    {{-- Send Button --}}
+                    {{-- Keluar / Kirim Button --}}
                     <div class="flex flex-col items-center">
-                        <a href="{{ route('transactions.create') }}"
+                        <a href="{{ route('transactions.create', ['type' => 'expense']) }}"
                            class="w-13 h-13 rounded-full bg-[#121316] text-white flex items-center justify-center shadow-lg shadow-black/20 hover:scale-105 active:scale-95 transition"
-                           aria-label="Send / Kirim Pengeluaran">
+                           aria-label="Catat Pengeluaran">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
                             </svg>
                         </a>
-                        <span class="text-xs font-semibold text-[#121316] mt-2">Send</span>
+                        <span class="text-xs font-semibold text-[#121316] mt-2">Keluar</span>
                     </div>
 
-                    {{-- Request Button --}}
+                    {{-- Masuk / Terima Button --}}
                     <div class="flex flex-col items-center">
-                        <a href="{{ route('transactions.create') }}"
+                        <a href="{{ route('transactions.create', ['type' => 'income']) }}"
                            class="w-13 h-13 rounded-full bg-[#121316] text-white flex items-center justify-center shadow-lg shadow-black/20 hover:scale-105 active:scale-95 transition"
-                           aria-label="Request / Terima Pemasukan">
+                           aria-label="Catat Pemasukan">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 4.5-15 15m0 0h11.25m-11.25 0V8.25" />
                             </svg>
                         </a>
-                        <span class="text-xs font-semibold text-[#121316] mt-2">Request</span>
+                        <span class="text-xs font-semibold text-[#121316] mt-2">Masuk</span>
                     </div>
 
-                    {{-- Add Button --}}
+                    {{-- Suara AI Button --}}
                     <div class="flex flex-col items-center">
                         <button type="button"
                                 x-on:click="showVoiceModal = true"
                                 class="w-13 h-13 rounded-full bg-[#121316] text-white flex items-center justify-center shadow-lg shadow-black/20 hover:scale-105 active:scale-95 transition"
-                                aria-label="Add / Tambah Transaksi">
+                                aria-label="Catat dengan Suara AI">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-12 0v1.5a6 6 0 0 0 6 6ZM12 18.75v3.75m-3.75 0h7.5M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" />
                             </svg>
                         </button>
-                        <span class="text-xs font-semibold text-[#121316] mt-2">Add</span>
+                        <span class="text-xs font-semibold text-[#121316] mt-2">Suara AI</span>
                     </div>
                 </div>
             </div>
@@ -110,7 +110,7 @@
 
         {{-- Metrics Grid (2 Columns) --}}
         <div class="grid grid-cols-2 gap-3.5">
-            {{-- Card 1: Highest expense --}}
+            {{-- Card 1: Pengeluaran Terbesar --}}
             <div class="card-porcelain rounded-[28px] p-4 relative overflow-hidden transition hover:shadow-md">
                 <div class="flex items-center justify-between mb-2.5">
                     <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center text-sm shadow-sm">
@@ -120,12 +120,12 @@
                         {{ $topCategoryBadge }}
                     </span>
                 </div>
-                <p class="text-[11px] font-medium text-[#8E8E93] uppercase tracking-wider">Highest expense</p>
+                <p class="text-[11px] font-medium text-[#8E8E93] uppercase tracking-wider">Pengeluaran Terbesar</p>
                 <h3 class="text-sm font-bold text-[#121316] mt-0.5 truncate">{{ $topCategoryName }}</h3>
                 <p class="text-lg font-extrabold text-[#121316] mt-1.5 tabular-nums">{{ $topCategoryAmount }}</p>
             </div>
 
-            {{-- Card 2: Favorite spending --}}
+            {{-- Card 2: Kategori Terbanyak --}}
             <div class="card-porcelain rounded-[28px] p-4 relative overflow-hidden transition hover:shadow-md">
                 <div class="flex items-center justify-between mb-2.5">
                     <span class="w-8 h-8 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center text-sm shadow-sm">
@@ -135,7 +135,7 @@
                         {{ $favCategoryBadge }}
                     </span>
                 </div>
-                <p class="text-[11px] font-medium text-[#8E8E93] uppercase tracking-wider">Favorite spending</p>
+                <p class="text-[11px] font-medium text-[#8E8E93] uppercase tracking-wider">Kategori Terbanyak</p>
                 <h3 class="text-sm font-bold text-[#121316] mt-0.5 truncate">{{ $favCategoryName }}</h3>
                 <p class="text-lg font-extrabold text-[#121316] mt-1.5 tabular-nums">{{ $favCategoryAmount }}</p>
             </div>
@@ -322,7 +322,12 @@
                                     </span>
                                     <div class="min-w-0">
                                         <p class="truncate text-sm font-bold text-[#121316]">{{ $transaction->category?->name ?? 'Tanpa kategori' }}</p>
-                                        <p class="truncate text-xs text-[#8E8E93] mt-0.5">{{ $transaction->note ?: $transaction->transaction_date->format('d M Y') }}</p>
+                                        <p class="truncate text-xs text-[#8E8E93] mt-0.5">
+                                            {{ $transaction->note ?: $transaction->transaction_date->format('d M Y') }}
+                                            @if ($transaction->account)
+                                                • <span class="font-medium text-[#121316]/70">{{ $transaction->account->name }}</span>
+                                            @endif
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="text-right shrink-0">

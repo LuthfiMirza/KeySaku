@@ -12,11 +12,11 @@
                 <input id="month" type="month" wire:model.live="month" class="mt-2 block w-full rounded-2xl border-slate-200 bg-white/80 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 <div>
                     <label for="type" class="block text-xs font-bold uppercase tracking-wide text-slate-400">Jenis</label>
-                    <select id="type" wire:model.live="type" class="mt-2 block w-full rounded-2xl border-slate-200 bg-white/80 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="all">Semua</option>
+                    <select id="type" wire:model.live="type" class="mt-2 block w-full rounded-2xl border-slate-200 bg-white/80 px-3 py-2.5 text-xs shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="all">Semua Jenis</option>
                         <option value="income">Pemasukan</option>
                         <option value="expense">Pengeluaran</option>
                     </select>
@@ -24,10 +24,20 @@
 
                 <div>
                     <label for="categoryId" class="block text-xs font-bold uppercase tracking-wide text-slate-400">Kategori</label>
-                    <select id="categoryId" wire:model.live="categoryId" class="mt-2 block w-full rounded-2xl border-slate-200 bg-white/80 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="all">Semua</option>
+                    <select id="categoryId" wire:model.live="categoryId" class="mt-2 block w-full rounded-2xl border-slate-200 bg-white/80 px-3 py-2.5 text-xs shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="all">Semua Kategori</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->icon }} {{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="accountId" class="block text-xs font-bold uppercase tracking-wide text-slate-400">Akun</label>
+                    <select id="accountId" wire:model.live="accountId" class="mt-2 block w-full rounded-2xl border-slate-200 bg-white/80 px-3 py-2.5 text-xs shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="all">Semua Akun</option>
+                        @foreach ($accounts as $acc)
+                            <option value="{{ $acc->id }}">{{ $acc->icon }} {{ $acc->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -70,9 +80,14 @@
                                 <div class="min-w-0">
                                     <p class="truncate text-sm font-bold text-slate-800">{{ $transaction->category?->name ?? 'Tanpa kategori' }}</p>
                                     <p class="mt-0.5 line-clamp-2 text-xs text-slate-400">{{ $transaction->note ?: 'Tidak ada catatan' }}</p>
-                                    <div class="mt-2 flex items-center gap-2">
-                                        <span class="rounded-full px-2 py-1 text-[10px] font-bold {{ $badgeClass }}">{{ $typeLabel }}</span>
+                                    <div class="mt-2 flex flex-wrap items-center gap-1.5">
+                                        <span class="rounded-full px-2 py-0.5 text-[10px] font-bold {{ $badgeClass }}">{{ $typeLabel }}</span>
                                         <span class="text-[10px] font-medium text-slate-400">{{ $transaction->transaction_date->format('d M Y') }}</span>
+                                        @if ($transaction->account)
+                                            <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">
+                                                {{ $transaction->account->icon ?? '💳' }} {{ $transaction->account->name }}
+                                            </span>
+                                        @endif
                                         <a href="{{ route('transactions.edit', $transaction) }}" class="text-[10px] font-bold text-indigo-600">Edit</a>
                                     </div>
                                 </div>
