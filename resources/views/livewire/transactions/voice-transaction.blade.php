@@ -260,11 +260,18 @@
                     </div>
 
                     <div class="p-3 rounded-2xl bg-[#FCF8F8] border border-black/5">
-                        <span class="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider block mb-1.5">Metode / Akun</span>
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200">
-                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-                            GoPay
-                        </span>
+                        <label for="voice_selected_account" class="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider block mb-1.5">Metode / Akun</label>
+                        @if ($accounts->isEmpty())
+                            <span class="text-xs font-semibold text-[#8E8E93]">Tanpa Akun</span>
+                        @else
+                            <select id="voice_selected_account" wire:model.live="selectedAccountId" class="w-full text-xs font-bold rounded-xl border border-black/10 bg-white py-1 px-2 text-[#121316] focus:border-[#FF6B6B] focus:ring-1 focus:ring-[#FF6B6B]">
+                                @foreach ($accounts as $acc)
+                                    <option value="{{ $acc->id }}">
+                                        {{ $acc->icon }} {{ $acc->name }} ({{ \App\Support\Money::format($acc->balance) }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        @endif
                     </div>
                 </div>
 

@@ -15,6 +15,17 @@ class VoiceTransaction extends Component
 
     public ?array $parsedDraft = null;
 
+    public ?int $selectedAccountId = null;
+
+    public function mount(): void
+    {
+        $this->selectedAccountId = auth()->user()->household
+            ?->accounts()
+            ?->where('is_active', true)
+            ?->first()
+            ?->id;
+    }
+
     public function parse(VoiceTransactionParser $parser): void
     {
         $this->resetValidation();
@@ -26,10 +37,25 @@ class VoiceTransaction extends Component
             'transcript.max' => 'Transkrip terlalu panjang.',
         ]);
 
+        $household = auth()->user()->household;
+
         $this->parsedDraft = $parser->parse(
             $this->transcript,
-            auth()->user()->household->categories()->get()
+            $household->categories()->get()
         );
+
+        // Deteksi apakah nama akun disebutkan dalam transkrip
+        $accounts = $household->accounts()->where('is_active', true)->get();
+        foreach ($accounts as $account) {
+            if (stripos($this->transcript, strtolower($account->name)) !== false) {
+                $this->selectedAccountId = $account->id;
+                break;
+            }
+        }
+
+        if (! $this->selectedAccountId && $accounts->isNotEmpty()) {
+            $this->selectedAccountId = $accounts->first()->id;
+        }
     }
 
     public function getCanSaveProperty(): bool
@@ -87,10 +113,19 @@ class VoiceTransaction extends Component
             return null;
         }
 
+        $account = null;
+        if ($this->selectedAccountId) {
+            $account = $household->accounts()->where('is_active', true)->whereKey($this->selectedAccountId)->first();
+        }
+        if (! $account) {
+            $account = $household->accounts()->where('is_active', true)->first();
+        }
+
         Transaction::create([
             'user_id' => auth()->id(),
             'household_id' => $household->id,
             'category_id' => $category->id,
+            'account_id' => $account?->id,
             'type' => $type,
             'amount' => $amount,
             'transaction_date' => $this->parsedDraft['transaction_date'],
@@ -152,8 +187,11 @@ class VoiceTransaction extends Component
 
     public function render(): View
     {
+        $household = auth()->user()->household;
+
         return view('livewire.transactions.voice-transaction', [
-            'hasCategories' => auth()->user()->household->categories()->exists(),
+            'hasCategories' => $household->categories()->exists(),
+            'accounts' => $household->accounts()->where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 }
