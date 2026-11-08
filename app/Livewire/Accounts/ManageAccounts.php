@@ -3,12 +3,17 @@
 namespace App\Livewire\Accounts;
 
 use App\Models\Account;
+use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class ManageAccounts extends Component
 {
+    // Selected cardholder state
+    public ?int $selectedAccountId = null;
+
     // Form state
     public bool $showForm = false;
 
@@ -29,6 +34,29 @@ class ManageAccounts extends Component
 
     // Status message
     public ?string $statusMessage = null;
+
+    public function mount(?int $accountId = null): void
+    {
+        $household = auth()->user()?->household;
+        if (! $household) {
+            return;
+        }
+
+        $targetId = $accountId ?: (int) request()->query('account_id');
+        if ($targetId && $household->accounts()->where('id', $targetId)->exists()) {
+            $this->selectedAccountId = $targetId;
+        } else {
+            $this->selectedAccountId = $household->accounts()->where('is_active', true)->first()?->id
+                ?? $household->accounts()->first()?->id;
+        }
+    }
+
+    public function selectAccount(int $id): void
+    {
+        if ($this->scopedAccount($id)) {
+            $this->selectedAccountId = $id;
+        }
+    }
 
     public function openCreate(): void
     {
@@ -74,13 +102,15 @@ class ManageAccounts extends Component
                 return;
             }
             $account->update($validated);
+            $this->selectedAccountId = $account->id;
             $this->statusMessage = 'Akun berhasil diperbarui.';
         } else {
-            $household->accounts()->create([
+            $newAccount = $household->accounts()->create([
                 ...$validated,
                 'user_id' => auth()->id(),
                 'is_active' => true,
             ]);
+            $this->selectedAccountId = $newAccount->id;
             $this->statusMessage = 'Akun berhasil ditambahkan.';
         }
 
@@ -107,8 +137,15 @@ class ManageAccounts extends Component
 
         $account = $this->scopedAccount($this->confirmDeleteId);
         if ($account) {
+            $deletedId = $account->id;
             $account->delete();
             $this->statusMessage = 'Akun berhasil dihapus.';
+
+            if ($this->selectedAccountId === $deletedId) {
+                $household = auth()->user()->household;
+                $this->selectedAccountId = $household->accounts()->where('is_active', true)->first()?->id
+                    ?? $household->accounts()->first()?->id;
+            }
         }
 
         $this->confirmDeleteId = null;
@@ -132,9 +169,52 @@ class ManageAccounts extends Component
     public function render(): View
     {
         $household = auth()->user()->household;
+        $accounts = $household->accounts()->orderBy('name')->get();
+
+        if (! $this->selectedAccountId && $accounts->isNotEmpty()) {
+            $this->selectedAccountId = $accounts->firstWhere('is_active', true)?->id
+                ?? $accounts->first()?->id;
+        }
+
+        $selectedAccount = $accounts->firstWhere('id', $this->selectedAccountId) ?? $accounts->first();
+
+        $startOfMonth = Carbon::now()->startOfMonth()->toDateString();
+        $endOfMonth = Carbon::now()->endOfMonth()->toDateString();
+
+        $selectedMonthlyIncome = 0.0;
+        $selectedMonthlyExpense = 0.0;
+        $selectedTransactions = collect();
+
+        if ($selectedAccount) {
+            $selectedTransactions = $selectedAccount->transactions()
+                ->with('category')
+                ->orderByDesc('transaction_date')
+                ->orderByDesc('id')
+                ->take(6)
+                ->get();
+
+            $selectedMonthlyIncome = (float) $selectedAccount->transactions()
+                ->where('type', Transaction::TYPE_INCOME)
+                ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
+                ->sum('amount');
+
+            $selectedMonthlyExpense = (float) $selectedAccount->transactions()
+                ->where('type', Transaction::TYPE_EXPENSE)
+                ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
+                ->sum('amount');
+        }
+
+        $totalBalance = (float) $accounts->where('is_active', true)->sum('balance');
+        $activeCount = $accounts->where('is_active', true)->count();
 
         return view('livewire.accounts.manage-accounts', [
-            'accounts' => $household->accounts()->orderBy('name')->get(),
+            'accounts' => $accounts,
+            'selectedAccount' => $selectedAccount,
+            'selectedTransactions' => $selectedTransactions,
+            'selectedMonthlyIncome' => $selectedMonthlyIncome,
+            'selectedMonthlyExpense' => $selectedMonthlyExpense,
+            'totalBalance' => $totalBalance,
+            'activeCount' => $activeCount,
             'typeLabels' => collect(Account::types())->mapWithKeys(
                 fn (string $t) => [$t => Account::typeLabel($t)]
             ),
